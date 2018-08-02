@@ -11,6 +11,8 @@
  */
 package com.tplink.cartoon.net;
 
+import com.tplink.cartoon.data.common.Constants;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -20,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    public static final String BASE_URL = "http://116.85.46.229:5000";
+    public static final String BASE_URL = Constants.TENCENTCOMICCHAPTERS;
 
     private static final int DISCOLLECT_TIME = 5;
     private final Retrofit mRetrofit;
@@ -49,4 +51,7 @@ public class RetrofitClient {
         return sClient;
     }
 
+    public ComicService getComicService(){
+        return mComicService;
+    }
 }

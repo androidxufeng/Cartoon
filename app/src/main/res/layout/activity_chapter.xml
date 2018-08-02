@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack">
+
+    <com.tplink.cartoon.ui.widget.ReaderMenuLayout
+        android:id="@+id/rl_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.tplink.cartoon.ui.widget.ComicReaderViewpager
+            android:id="@+id/vp_chapters"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <include layout="@layout/layout_reader_top"></include>
+
+        <include layout="@layout/layout_reader_bottom"></include>
+
+    </com.tplink.cartoon.ui.widget.ReaderMenuLayout>
+
+
+</RelativeLayout>

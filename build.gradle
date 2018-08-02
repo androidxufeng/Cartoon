@@ -41,6 +41,7 @@ ext {
     butterknife_version = '8.8.1'
     glide_version = '3.7.0'
     glide_transfor_version ='2.0.1'
+    photoView_version = '1.2.4'
 
     //test
     junit_version = '4.12'

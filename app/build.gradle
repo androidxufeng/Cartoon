@@ -49,6 +49,7 @@ dependencies {
     //Glide
     implementation "com.github.bumptech.glide:glide:$rootProject.ext.glide_version"
     implementation "jp.wasabeef:glide-transformations:$rootProject.ext.glide_transfor_version"
+    compile "com.commit451:PhotoView:$rootProject.ext.photoView_version"
 
     //test
     testImplementation "junit:junit:$rootProject.ext.junit_version"

@@ -11,7 +11,7 @@ package com.tplink.cartoon.net;
  * Ver 1.0, 18-7-30, xufeng, Create file
  */
 
-import com.tplink.cartoon.data.bean.Subject;
+import com.tplink.cartoon.data.bean.DBChapters;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
@@ -20,9 +20,7 @@ import retrofit2.http.Query;
 
 public interface ComicService {
 
-    @GET("top250")
-    Flowable<Subject> getTopMovie(@Query("start") int start, @Query("count") int count);
-
     @GET("getChapterList/{id}/{chapter}")
-    Flowable<Subject> getChapters(@Path("id") String id, @Path("chapter") String chapter);
+    Flowable<DBChapters> getChapters(@Path("id") String id, @Path("chapter") String chapter);
+
 }

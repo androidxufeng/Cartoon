@@ -14,7 +14,6 @@ import com.tplink.cartoon.utils.DisplayUtil;
 /**
  * Created by 皓然 on 2017/7/22.
  */
-
 public class ReaderMenuLayout extends RelativeLayout {
     private RelativeLayout mTop;
     private RelativeLayout mBottom;
@@ -43,6 +42,7 @@ public class ReaderMenuLayout extends RelativeLayout {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         mTop = (RelativeLayout) getChildAt(1);
         mBottom = (RelativeLayout) getChildAt(2);
     }

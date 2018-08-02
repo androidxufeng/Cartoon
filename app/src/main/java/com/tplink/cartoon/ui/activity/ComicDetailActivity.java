@@ -32,6 +32,7 @@ import com.tplink.cartoon.ui.view.IDetailView;
 import com.tplink.cartoon.ui.widget.DetailScrollView;
 import com.tplink.cartoon.ui.widget.NoScrollStaggeredGridLayoutManager;
 import com.tplink.cartoon.utils.DisplayUtil;
+import com.tplink.cartoon.utils.IntentUtil;
 
 import java.util.List;
 
@@ -94,6 +95,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     private float mScale;
     private float mDy;
     private Rect normal = new Rect();
+    private String mComicId;
 
     @Override
     protected void initPresenter() {
@@ -119,8 +121,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @Override
     protected void initData() {
-        String comicId = getIntent().getStringExtra(Constants.COMIC_ID);
-        mPresenter.getDetail(comicId);
+        mComicId = getIntent().getStringExtra(Constants.COMIC_ID);
+        mPresenter.getDetail(mComicId);
     }
 
     @Override
@@ -182,7 +184,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     }
 
     @OnClick({R.id.iv_oreder2, R.id.iv_order})
-    public void OrderList(ImageView Order) {
+    public void orderList(ImageView Order) {
         mAdapter.setOrder(!mAdapter.isOrder());
         if (!mAdapter.isOrder()) {
             mOrder2.setImageResource(R.drawable.daoxu);
@@ -193,9 +195,18 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         }
     }
 
+    @OnClick(R.id.btn_read)
+    public void startRead(View view){
+        IntentUtil.ToComicChapter(this,mComicId,"0",mComic.getChapters().get(0));
+    }
+
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
-
+        if (!mAdapter.isOrder()) {
+            position = mComic.getChapters().size() - position - 1;
+            Log.d("ComicDetailActivity", "position=" + position);
+        }
+        IntentUtil.ToComicChapter(this, mComicId, String.valueOf(position), mComic.getChapters().get(position));
     }
 
 
