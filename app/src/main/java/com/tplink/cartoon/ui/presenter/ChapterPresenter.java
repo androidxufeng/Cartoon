@@ -138,6 +138,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                 getNextChapterData(mComicId, mComicChapters, Constants.LEFT_TO_RIGHT);
             }
         } else {//当前章节
+            isLoadingdata = false;
             comicSize = mPreloadChapters.getNowlist().size();
             chapter_title = mComicChapterTitle.get(mComicChapters);
             now_postion = position - mPreloadChapters.getPrelist().size();
@@ -152,6 +153,9 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                 .subscribeWith(new DisposableSubscriber<DBChapters>() {
                     @Override
                     public void onNext(DBChapters chapters) {
+                        if (!isLoadingdata){
+                            return;
+                        }
                         mPreloadChapters.setPrelist(mPreloadChapters.getNowlist());
                         mPreloadChapters.setNowlist(mPreloadChapters.getNextlist());
                         if (chapters.getComiclist().size() == 1) {
@@ -186,6 +190,9 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                 .subscribeWith(new DisposableSubscriber<DBChapters>() {
                     @Override
                     public void onNext(DBChapters chapters) {
+                        if (!isLoadingdata){
+                            return;
+                        }
                         mPreloadChapters.setNextlist(mPreloadChapters.getNowlist());
                         mPreloadChapters.setNowlist(mPreloadChapters.getPrelist());
                         if (chapters.getComiclist().size() == 1) {
@@ -218,7 +225,12 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         if (x < 0.336) {
             mView.prePage();
         } else if (x < 0.666) {
-            mView.showMenu();
+            if (isLoadingdata) {
+                mView.showToast("正在加载数据，请稍候");
+            } else {
+                mView.showMenu();
+
+            }
         } else {
             mView.nextPage();
         }

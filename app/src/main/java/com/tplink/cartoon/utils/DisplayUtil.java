@@ -13,14 +13,42 @@ package com.tplink.cartoon.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.os.Environment;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Properties;
 
 public class DisplayUtil {
+
+    private static final File BUILD_PROP_FILE = new File(Environment.getRootDirectory(), "build.prop");
+    private static Properties sBuildProperties;
+    private static final Object sBuildPropertiesLock = new Object();
+    private static Properties getBuildProperties() {
+        synchronized (sBuildPropertiesLock) {
+            if (sBuildProperties == null) {
+                sBuildProperties = new Properties();
+                try {
+                    sBuildProperties.load(new FileInputStream(BUILD_PROP_FILE));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return sBuildProperties;
+    }
+
+    public static boolean isMIUI() {
+        return getBuildProperties().containsKey("ro.miui.ui.version.name");
+    }
 
     /**
      * 获取屏幕高度，包括虚拟导航栏的高度
@@ -139,6 +167,12 @@ public class DisplayUtil {
         return (int) (dipValue * density + 0.5f);
     }
 
+    public static int dp2px(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                Resources.getSystem().getDisplayMetrics());
+    }
+
+
     /**
      * 将px值转换为sp值，保证文字大小不变
      *
@@ -161,5 +195,10 @@ public class DisplayUtil {
     public static int sp2px(Context context, float spValue) {
         float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    public static int sp2px(int sp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp,
+                Resources.getSystem().getDisplayMetrics());
     }
 }

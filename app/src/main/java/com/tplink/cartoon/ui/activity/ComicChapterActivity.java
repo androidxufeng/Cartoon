@@ -17,6 +17,8 @@ import com.tplink.cartoon.ui.source.chapter.ChapterDataSource;
 import com.tplink.cartoon.ui.view.IChapterView;
 import com.tplink.cartoon.ui.widget.ComicReaderViewpager;
 import com.tplink.cartoon.ui.widget.ReaderMenuLayout;
+import com.tplink.cartoon.ui.widget.ZBubbleSeekBar;
+import com.xw.repo.BubbleSeekBar;
 
 import java.util.ArrayList;
 
@@ -41,7 +43,12 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     ImageView mBack;
     @BindView(R.id.tv_title)
     TextView mTitle;
+    @BindView(R.id.sb_seekbar)
+    ZBubbleSeekBar mSeekBar;
+
     private ChapterViewpagerAdapter mAdapter;
+
+    private boolean isSelecting;
 
     @OnClick(R.id.iv_back)
     public void finish(View view) {
@@ -67,7 +74,8 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     public void fillData(PreloadChapters data) {
         mPresenter.setPreloadChapters(data);
         mAdapter.setDatas(data);
-        mViewpager.setCurrentItem(data.getPrelist().size(), false);
+        mViewpager.setCurrentItem(data.getPreSize(), false);
+        mSeekBar.setmMax(data.getNowSize());
     }
 
     @Override
@@ -82,14 +90,16 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     @Override
     public void nextChapter(PreloadChapters data, int loadingPosition) {
         mAdapter.setDatas(data);
-        mViewpager.setCurrentItem(data.getPrelist().size() + loadingPosition, false);
+        mViewpager.setCurrentItem(data.getPreSize() + loadingPosition, false);
+        mSeekBar.setmMax(data.getNowSize());
         showToast("完成了预加载");
     }
 
     @Override
     public void preChapter(PreloadChapters data, int loadingPosition) {
         mAdapter.setDatas(data);
-        mViewpager.setCurrentItem(data.getPrelist().size() + data.getNowlist().size() + loadingPosition - 1, false);
+        mViewpager.setCurrentItem(data.getPreSize() + data.getNowSize() + loadingPosition - 1, false);
+        mSeekBar.setmMax(data.getNowSize());
         showToast("完成了预加载");
     }
 
@@ -157,11 +167,32 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
             @Override
             public void onPageSelected(int position) {
+                if (!isSelecting && menuLayout.isShow()) {
+                    menuLayout.setVisibility(View.GONE);
+                    mSeekBar.setProgress(position - mPresenter.getPreloadChapters().getPrelist().size() + 1);
+                }
                 mPresenter.loadMoreData(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        mSeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
+            @Override
+            public void onProgressChanged(int progress, float progressFloat) {
+                mViewpager.setCurrentItem(progress + mPresenter.getPreloadChapters().getPreSize() - 1);
+                //isSelecting = true;
+            }
+
+            @Override
+            public void getProgressOnActionUp(int progress, float progressFloat) {
+                menuLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void getProgressOnFinally(int progress, float progressFloat) {
             }
         });
     }

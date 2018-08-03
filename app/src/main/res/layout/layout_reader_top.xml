@@ -1,38 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_top"
+    android:visibility="gone"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:background="@drawable/reader_top"
-    android:paddingTop="20dp"
-    android:visibility="gone">
-
-    <ImageView
-        android:id="@+id/iv_back"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/back_btn" />
-
-    <ImageView
-        android:id="@+id/iv_more"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/more_btn" />
-
-    <TextView
-        android:id="@+id/tv_title"
+    android:layout_height="110dp">
+    <RelativeLayout
+        android:id="@+id/rl_top"
+        android:paddingTop="20dp"
+        android:background="@drawable/reader_top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@+id/iv_back"
-        android:gravity="center_vertical"
-        android:textColor="@color/colorBottom"
-        android:textSize="15dp" />
+        android:layout_height="60dp"
+        >
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/back_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            />
+        <ImageView
+            android:layout_marginTop="10dp"
+            android:id="@+id/iv_more"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/more_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
+            />
+
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/iv_back"
+            android:gravity="center_vertical"
+            android:id="@+id/tv_title"
+            android:textSize="15dp"
+            android:textColor="@color/colorBottom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+    <include layout="@layout/layout_reader_progressbar"/>
 
 </RelativeLayout>

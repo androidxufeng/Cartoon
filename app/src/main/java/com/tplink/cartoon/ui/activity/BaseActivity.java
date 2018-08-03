@@ -51,10 +51,9 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         initWindow();
         //初始化ButterKnife
         ButterKnife.bind(this);
-        initView();
         initPresenter();
         checkPresenterIsNull();
-
+        initView();
         initData();
     }
 
