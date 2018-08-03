@@ -145,4 +145,22 @@ public class DBChapters extends BaseBean {
     public void setComiclist(List<String> comiclist) {
         this.comiclist = comiclist;
     }
+
+    @Override
+    public String toString() {
+        return "DBChapters{" +
+                "id=" + id +
+                ", comic_id=" + comic_id +
+                ", title='" + title + '\'' +
+                ", chapters_title='" + chapters_title + '\'' +
+                ", chapters=" + chapters +
+                ", num=" + num +
+                ", current_num=" + current_num +
+                ", create_time=" + create_time +
+                ", update_time=" + update_time +
+                ", stateInte=" + stateInte +
+                ", comiclist=" + comiclist +
+                ", chapters_path=" + chapters_path +
+                '}';
+    }
 }

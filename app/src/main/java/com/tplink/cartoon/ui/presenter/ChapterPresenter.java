@@ -30,38 +30,57 @@ import io.reactivex.subscribers.DisposableSubscriber;
 public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChapterActivity> {
 
     private final CompositeDisposable mCompositeDisposable;
-    private PreloadChapters mPreloadChapters = new PreloadChapters();
+    //当前三话漫画
+    private PreloadChapters mPreloadChapters;
+    //漫画阅读方向
+    private int mDirect;
     private int mComicChapters;
     private List<String> mComicChapterTitle;
+    private String mComicId;
+    private int mComicSize;
+    //以中间的章节为分界限，前面时负值
+    private int mLoadingPosition;
+    private boolean isLoadingdata;
 
     public ChapterPresenter(ChapterDataSource dataSource, ComicChapterActivity view) {
         super(dataSource, view);
         mCompositeDisposable = new CompositeDisposable();
+        mPreloadChapters = new PreloadChapters();
+        mDirect = Constants.LEFT_TO_RIGHT;
     }
 
-    public void init(List<String> comicChapterTitle, int Chapters) {
-        //判断如果是点进上次点击的那一话
+    public void init(String comicId, List<String> comicChapterTitle, int Chapters) {
+        mComicId = comicId;
         this.mComicChapterTitle = comicChapterTitle;
         this.mComicChapters = Chapters;
     }
 
-    public void getChapterData(String id, final int chapter) {
+    public PreloadChapters getPreloadChapters() {
+        return mPreloadChapters;
+    }
+
+    public void setPreloadChapters(PreloadChapters preloadChapters) {
+        this.mPreloadChapters = preloadChapters;
+    }
+
+    public void getChapterData() {
 
         for (int i = 0; i < 3; i++) {
-            DisposableSubscriber<DBChapters> disposable = mDataSource.getChapterData(id, chapter - 1 + i)
+            final int finalI = i;
+            DisposableSubscriber<DBChapters> disposable = mDataSource.getChapterData(mComicId, mComicChapters - 1 + i)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableSubscriber<DBChapters>() {
                         @Override
                         public void onNext(DBChapters chapters) {
-                            Log.d("ceshi", "onNext: "+chapters.getTitle());
+                            Log.d("ceshi", "onNext: " + chapters);
                             //分别设置三个章节
-                            if (mComicChapters - 1 == chapters.getChapters()) {
+                            if (finalI == 0) {
                                 if (mComicChapters - 1 < 0) {
                                     mPreloadChapters.setPrelist(new ArrayList<String>());
                                 }
                                 mPreloadChapters.setPrelist(chapters.getComiclist());
-                            } else if (mComicChapters == chapters.getChapters()) {
+                            } else if (finalI == 1) {
                                 mPreloadChapters.setNowlist(chapters.getComiclist());
                             } else {
                                 if (mComicChapters + 1 > mComicChapterTitle.size()) {
@@ -70,6 +89,8 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                                 mPreloadChapters.setNextlist(chapters.getComiclist());
                             }
                             //三个章节都不为NULL
+                            Log.d("ceshi", "onNext: mpreload = " + mPreloadChapters);
+
                             if (mPreloadChapters.isNotNull()) {
                                 if (mPreloadChapters.getNowSize() == 1) {
                                     mView.showToast("该章节是腾讯付费章节，处于版权问题不以展示，请去腾讯观看");
@@ -92,17 +113,57 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
             mCompositeDisposable.add(disposable);
 
         }
-
     }
 
-    public void getMoreChapterData(String id, int chapter, final int position, int direction) {
-        DisposableSubscriber<DBChapters> disposable = mDataSource.loadMoreData(id, chapter, position, direction)
+    public void loadMoreData(int position) {
+        String chapter_title = null;
+        int now_postion = 0;
+        int comicSize = 0;
+        if (position < mPreloadChapters.getPrelist().size()) {
+            mLoadingPosition = position - mPreloadChapters.getPrelist().size() + 1;
+            chapter_title = mComicChapterTitle.get(mComicChapters - 1);//前一章
+            comicSize = mPreloadChapters.getPrelist().size();
+            now_postion = position;
+            if (!isLoadingdata) {
+                isLoadingdata = true;
+                getPreChapterData(mComicId, mComicChapters, Constants.LEFT_TO_RIGHT);
+            }
+        } else if (position >= mPreloadChapters.getPrelist().size() + mPreloadChapters.getNowlist().size()) {//后一章
+            mLoadingPosition = position - mPreloadChapters.getPrelist().size() - mPreloadChapters.getNowlist().size();
+            comicSize = mPreloadChapters.getNextlist().size();
+            chapter_title = mComicChapterTitle.get(mComicChapters + 1);
+            now_postion = position - mPreloadChapters.getPrelist().size() - mPreloadChapters.getNowlist().size();
+            if (!isLoadingdata) {
+                isLoadingdata = true;
+                getNextChapterData(mComicId, mComicChapters, Constants.LEFT_TO_RIGHT);
+            }
+        } else {//当前章节
+            comicSize = mPreloadChapters.getNowlist().size();
+            chapter_title = mComicChapterTitle.get(mComicChapters);
+            now_postion = position - mPreloadChapters.getPrelist().size();
+        }
+        setTitle(chapter_title, comicSize, now_postion, mDirect);
+    }
+
+    public void getNextChapterData(String id, int chapter, int direction) {
+        DisposableSubscriber<DBChapters> disposable = mDataSource.loadNextData(id, chapter, direction)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<DBChapters>() {
                     @Override
                     public void onNext(DBChapters chapters) {
-//                        mView.fillData(chapters);
+                        mPreloadChapters.setPrelist(mPreloadChapters.getNowlist());
+                        mPreloadChapters.setNowlist(mPreloadChapters.getNextlist());
+                        if (chapters.getComiclist().size() == 1) {
+                            mPreloadChapters.setNextlist(new ArrayList<String>());
+                        } else {
+                            mPreloadChapters.setNextlist(chapters.getComiclist());
+                        }
+                        mComicChapters++;
+                        mView.nextChapter(mPreloadChapters, mLoadingPosition);
+                        mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" + (1 + mLoadingPosition) +
+                                "/" + mPreloadChapters.getNowlist().size());
+                        isLoadingdata = false;
                     }
 
                     @Override
@@ -117,6 +178,41 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                 });
         mCompositeDisposable.add(disposable);
     }
+
+    public void getPreChapterData(String id, int chapter, int direction) {
+        DisposableSubscriber<DBChapters> disposable = mDataSource.loadPreData(id, chapter, direction)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<DBChapters>() {
+                    @Override
+                    public void onNext(DBChapters chapters) {
+                        mPreloadChapters.setNextlist(mPreloadChapters.getNowlist());
+                        mPreloadChapters.setNowlist(mPreloadChapters.getPrelist());
+                        if (chapters.getComiclist().size() == 1) {
+                            mPreloadChapters.setPrelist(new ArrayList<String>());
+                        } else {
+                            mPreloadChapters.setPrelist(chapters.getComiclist());
+                        }
+                        mComicChapters--;
+                        mView.preChapter(mPreloadChapters, mLoadingPosition);
+                        mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" + (mPreloadChapters.getNowlist().size()
+                                + mLoadingPosition) + "/" + mPreloadChapters.getNowlist().size());
+                        isLoadingdata = false;
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        mView.showErrorView(t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mView.getDataFinish();
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+    }
+
 
     public void clickScreen(float x, float y) {
         if (x < 0.336) {

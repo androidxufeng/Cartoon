@@ -14,6 +14,7 @@ package com.tplink.cartoon.ui.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -53,6 +54,7 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         mDatas.addAll(datas.getPrelist());
         mDatas.addAll(datas.getNowlist());
         mDatas.addAll(datas.getNextlist());
+        Log.d("ceshi", "setDatas: data  "+mDatas);
         notifyDataSetChanged();
     }
 

@@ -31,8 +31,8 @@ public class IntentUtil {
     public static void ToComicChapter(Context context, String id, int chapters, ArrayList<String> ChapterTitle) {
         Intent intent = new Intent(context, ComicChapterActivity.class);
         intent.putExtra(Constants.COMIC_ID, id);
-        intent.putExtra(Constants.COMIC_CHAPERS, chapters);
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPER_TITLE, ChapterTitle);
+        intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, ChapterTitle);
         context.startActivity(intent);
     }
 }

@@ -12,7 +12,6 @@ package com.tplink.cartoon.ui.source.chapter;
  */
 
 import com.tplink.cartoon.data.bean.DBChapters;
-import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.net.RetrofitClient;
 
 import io.reactivex.Flowable;
@@ -22,19 +21,21 @@ public class ChapterDataSource implements IChapterDataSource {
     public Flowable<DBChapters> getChapterData(String id, int chapter) {
         return RetrofitClient.getInstance()
                 .getComicService()
-//                .getChapters(id, chapter);
                 .getChapters(id, chapter);
     }
 
-    public Flowable<DBChapters> loadMoreData(String id, int chapter, final int poistion, int direction) {
-        int new_chapter;
-        if (poistion == 0) {
-            new_chapter = chapter - 1;
-        } else {
-            new_chapter = chapter + 1;
-        }
+    @Override
+    public Flowable<DBChapters> loadNextData(String id, int chapter, int direction) {
         return RetrofitClient.getInstance()
-                .getComicService().getChapters(id, new_chapter);
-
+                .getComicService()
+                .getChapters(id, chapter + 2);
     }
+
+    @Override
+    public Flowable<DBChapters> loadPreData(String id, int chapter, int direction) {
+        return RetrofitClient.getInstance()
+                .getComicService()
+                .getChapters(id, chapter - 2);
+    }
+
 }

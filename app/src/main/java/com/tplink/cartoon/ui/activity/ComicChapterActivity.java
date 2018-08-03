@@ -41,15 +41,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     ImageView mBack;
     @BindView(R.id.tv_title)
     TextView mTitle;
-    private String mComicId;
-    private int mComicChapters;
-    private ArrayList<String> mComicChapterTitle;
     private ChapterViewpagerAdapter mAdapter;
-    private int mComicSize;
-    private PreloadChapters mChapters;
-    private int mComicPostion;
-    private boolean mIsScrolled;
-    private boolean isLoadingdata;
 
     @OnClick(R.id.iv_back)
     public void finish(View view) {
@@ -73,11 +65,9 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @Override
     public void fillData(PreloadChapters data) {
-        mChapters = data;
+        mPresenter.setPreloadChapters(data);
         mAdapter.setDatas(data);
-        mComicSize = data.getNextlist().size();
         mViewpager.setCurrentItem(data.getPrelist().size(), false);
-        setTitle(mComicChapterTitle + "-1/" + mComicSize);
     }
 
     @Override
@@ -90,13 +80,17 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     }
 
     @Override
-    public void nextChapter(PreloadChapters data) {
-
+    public void nextChapter(PreloadChapters data, int loadingPosition) {
+        mAdapter.setDatas(data);
+        mViewpager.setCurrentItem(data.getPrelist().size() + loadingPosition, false);
+        showToast("完成了预加载");
     }
 
     @Override
-    public void preChapter(PreloadChapters data) {
-
+    public void preChapter(PreloadChapters data, int loadingPosition) {
+        mAdapter.setDatas(data);
+        mViewpager.setCurrentItem(data.getPrelist().size() + data.getNowlist().size() + loadingPosition - 1, false);
+        showToast("完成了预加载");
     }
 
 
@@ -107,18 +101,18 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @Override
     public void prePage() {
-        int postion = mViewpager.getCurrentItem() - 1;
-        if (postion >= 0) {
-            mViewpager.setCurrentItem(postion);
+        int position = mViewpager.getCurrentItem() - 1;
+        if (position >= 0) {
+            mViewpager.setCurrentItem(position);
         } else {
         }
     }
 
     @Override
     public void nextPage() {
-        int postion = mViewpager.getCurrentItem() + 1;
-        if (postion < mAdapter.getCount()) {
-            mViewpager.setCurrentItem(postion);
+        int position = mViewpager.getCurrentItem() + 1;
+        if (position < mAdapter.getCount()) {
+            mViewpager.setCurrentItem(position);
         } else {
         }
     }
@@ -130,8 +124,12 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @Override
     protected void initPresenter() {
+        Intent intent = getIntent();
+        String comicId = intent.getStringExtra(Constants.COMIC_ID);
+        int comicChapter = intent.getIntExtra(Constants.COMIC_CHAPTERS, 0);
+        ArrayList comicChapterTitle = intent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
         mPresenter = new ChapterPresenter(new ChapterDataSource(), this);
-        mPresenter.init(mComicChapterTitle, mComicChapters);
+        mPresenter.init(comicId, comicChapterTitle, comicChapter);
     }
 
     @Override
@@ -142,10 +140,6 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     @Override
     protected void initView() {
         setNavigation();
-        Intent intent = getIntent();
-        mComicId = intent.getStringExtra(Constants.COMIC_ID);
-        mComicChapters = intent.getIntExtra(Constants.COMIC_CHAPERS, 0);
-        mComicChapterTitle = intent.getStringArrayListExtra(Constants.COMIC_CHAPER_TITLE);
         mAdapter = new ChapterViewpagerAdapter(this);
         mViewpager.setOffscreenPageLimit(4);
         mAdapter.setListener(new ChapterViewpagerAdapter.OnceClickListener() {
@@ -163,51 +157,18 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
             @Override
             public void onPageSelected(int position) {
-                String chapter_title = null;
-                int now_postion = 0;
-                if (position < mChapters.getPrelist().size()) {
-                    chapter_title = mComicChapterTitle.get(mComicChapters - 1);
-                    mComicSize = mChapters.getPrelist().size();
-                    now_postion = position;
-                } else if (position >= mChapters.getPrelist().size() + mChapters.getNowlist().size()) {
-                    mComicSize = mChapters.getNextlist().size();
-                    chapter_title = mComicChapterTitle.get(mComicChapters + 1);
-                    now_postion = position - mChapters.getPrelist().size() - mChapters.getNowlist().size();
-                } else {
-                    mComicSize = mChapters.getNowlist().size();
-                    chapter_title = mComicChapterTitle.get(mComicChapters);
-                    now_postion = position - mChapters.getPrelist().size();
-                }
-                mComicPostion = position;
-                mPresenter.setTitle(chapter_title, mComicSize, now_postion, mAdapter.getDirection());
+                mPresenter.loadMoreData(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                switch (state) {
-                    case ViewPager.SCROLL_STATE_DRAGGING:
-                        mIsScrolled = false;
-                        break;
-                    case ViewPager.SCROLL_STATE_SETTLING:
-                        mIsScrolled = true;
-                        break;
-                    case ViewPager.SCROLL_STATE_IDLE:
-                        if (!mIsScrolled) {
-                            if (!isLoadingdata) {
-                                //mPresenter.loadMoreData(comic_id,comic_chapters,comic_postion,mAdapter.getDirection());
-                                isLoadingdata = true;
-                            }
-                        }
-                        mIsScrolled = true;
-                        break;
-                }
             }
         });
     }
 
     @Override
     protected void initData() {
-        mPresenter.getChapterData(mComicId, mComicChapters);
+        mPresenter.getChapterData();
     }
 
 
