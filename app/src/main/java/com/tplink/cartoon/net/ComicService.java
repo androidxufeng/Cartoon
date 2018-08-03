@@ -12,15 +12,14 @@ package com.tplink.cartoon.net;
  */
 
 import com.tplink.cartoon.data.bean.DBChapters;
+import com.tplink.cartoon.data.bean.PreloadChapters;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface ComicService {
 
     @GET("getChapterList/{id}/{chapter}")
-    Flowable<DBChapters> getChapters(@Path("id") String id, @Path("chapter") String chapter);
-
+    Flowable<DBChapters> getChapters(@Path("id") String id, @Path("chapter") int chapter);
 }

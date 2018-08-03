@@ -23,11 +23,11 @@ public interface IChapterView<T> extends BaseView {
     //弹出菜单
     void showMenu();
     //下一章
-    void nextChapter();
+    void nextChapter(T data);
     //前一章
-    void preChapter();
+    void preChapter(T data);
     //切换预览模式
-    void SwitchModel(int a);
+    void switchModel(int a);
     //前一页
     void prePage();
     //下一页

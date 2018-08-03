@@ -11,11 +11,14 @@ package com.tplink.cartoon.ui.source.chapter;
  */
 
 import com.tplink.cartoon.data.bean.DBChapters;
+import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.ui.source.IDataSource;
 
 import io.reactivex.Flowable;
 
-public interface IChapterDataSource extends IDataSource{
+public interface IChapterDataSource extends IDataSource {
 
-    Flowable<DBChapters> getChapterData(String id, String chapter);
+    Flowable<DBChapters> getChapterData(String id, int chapter);
+
+    Flowable<DBChapters> loadMoreData(String id, int chapter, final int poistion, int direction);
 }

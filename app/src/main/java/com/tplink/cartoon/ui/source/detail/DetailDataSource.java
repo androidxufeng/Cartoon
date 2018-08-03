@@ -69,7 +69,7 @@ public class DetailDataSource implements IDetailDataSource, IDataSource {
         //设置章节数
         Element DivChapter = doc.getElementsByAttributeValue("class", "chapter-page-all works-chapter-list").get(0);
         List<Element> ElementChapters = DivChapter.getElementsByAttributeValue("target", "_blank");
-        List<String> chapters = new ArrayList<>();
+        ArrayList<String> chapters = new ArrayList<>();
         for (int i = 0; i < ElementChapters.size(); i++) {
             chapters.add(ElementChapters.get(i).select("a").text());
         }

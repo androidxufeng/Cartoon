@@ -11,6 +11,7 @@ package com.tplink.cartoon.data.bean;
  * Ver 1.0, 18-7-27, xufeng, Create file
  */
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Comic extends BaseBean {
@@ -30,7 +31,7 @@ public class Comic extends BaseBean {
     /**
      * 章节标题
      */
-    protected List<String> chapters;
+    protected ArrayList<String> chapters;
     /**
      * 标签
      */
@@ -90,11 +91,11 @@ public class Comic extends BaseBean {
         this.author = author;
     }
 
-    public List<String> getChapters() {
+    public ArrayList<String> getChapters() {
         return chapters;
     }
 
-    public void setChapters(List<String> chapters) {
+    public void setChapters(ArrayList<String> chapters) {
         this.chapters = chapters;
     }
 

@@ -2,7 +2,6 @@ package com.tplink.cartoon.ui.activity;
 
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -10,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
-import com.tplink.cartoon.data.bean.DBChapters;
+import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.ChapterViewpagerAdapter;
 import com.tplink.cartoon.ui.presenter.ChapterPresenter;
@@ -19,6 +18,8 @@ import com.tplink.cartoon.ui.view.IChapterView;
 import com.tplink.cartoon.ui.widget.ComicReaderViewpager;
 import com.tplink.cartoon.ui.widget.ReaderMenuLayout;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -26,7 +27,7 @@ import butterknife.OnClick;
  * Created by xu
  */
 
-public class ComicChapterActivity extends BaseActivity<ChapterPresenter> implements IChapterView<DBChapters> {
+public class ComicChapterActivity extends BaseActivity<ChapterPresenter> implements IChapterView<PreloadChapters> {
 
     @BindView(R.id.vp_chapters)
     ComicReaderViewpager mViewpager;
@@ -41,10 +42,14 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     @BindView(R.id.tv_title)
     TextView mTitle;
     private String mComicId;
-    private String mComicChapters;
-    private String mComicChapterTitle;
+    private int mComicChapters;
+    private ArrayList<String> mComicChapterTitle;
     private ChapterViewpagerAdapter mAdapter;
     private int mComicSize;
+    private PreloadChapters mChapters;
+    private int mComicPostion;
+    private boolean mIsScrolled;
+    private boolean isLoadingdata;
 
     @OnClick(R.id.iv_back)
     public void finish(View view) {
@@ -67,12 +72,11 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     }
 
     @Override
-    public void fillData(DBChapters data) {
-        mAdapter.setDatas(data.getComiclist());
-        if (mAdapter.getDirection() == Constants.RIGHT_TO_LEFT) {
-            mViewpager.setCurrentItem(data.getComiclist().size() - 1, false);//关闭切换动画
-        }
-        mComicSize = data.getComiclist().size();
+    public void fillData(PreloadChapters data) {
+        mChapters = data;
+        mAdapter.setDatas(data);
+        mComicSize = data.getNextlist().size();
+        mViewpager.setCurrentItem(data.getPrelist().size(), false);
         setTitle(mComicChapterTitle + "-1/" + mComicSize);
     }
 
@@ -86,17 +90,18 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     }
 
     @Override
-    public void nextChapter() {
+    public void nextChapter(PreloadChapters data) {
 
     }
 
     @Override
-    public void preChapter() {
+    public void preChapter(PreloadChapters data) {
 
     }
 
+
     @Override
-    public void SwitchModel(int a) {
+    public void switchModel(int a) {
 
     }
 
@@ -106,7 +111,6 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         if (postion >= 0) {
             mViewpager.setCurrentItem(postion);
         } else {
-            preChapter();
         }
     }
 
@@ -116,7 +120,6 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         if (postion < mAdapter.getCount()) {
             mViewpager.setCurrentItem(postion);
         } else {
-            nextChapter();
         }
     }
 
@@ -128,6 +131,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     @Override
     protected void initPresenter() {
         mPresenter = new ChapterPresenter(new ChapterDataSource(), this);
+        mPresenter.init(mComicChapterTitle, mComicChapters);
     }
 
     @Override
@@ -140,8 +144,8 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         setNavigation();
         Intent intent = getIntent();
         mComicId = intent.getStringExtra(Constants.COMIC_ID);
-        mComicChapters = intent.getStringExtra(Constants.COMIC_CHAPERS);
-        mComicChapterTitle = intent.getStringExtra(Constants.COMIC_CHAPER_TITLE);
+        mComicChapters = intent.getIntExtra(Constants.COMIC_CHAPERS, 0);
+        mComicChapterTitle = intent.getStringArrayListExtra(Constants.COMIC_CHAPER_TITLE);
         mAdapter = new ChapterViewpagerAdapter(this);
         mViewpager.setOffscreenPageLimit(4);
         mAdapter.setListener(new ChapterViewpagerAdapter.OnceClickListener() {
@@ -159,12 +163,44 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
             @Override
             public void onPageSelected(int position) {
-                mPresenter.setTitle(mComicChapterTitle, mComicSize, position, mAdapter.getDirection());
+                String chapter_title = null;
+                int now_postion = 0;
+                if (position < mChapters.getPrelist().size()) {
+                    chapter_title = mComicChapterTitle.get(mComicChapters - 1);
+                    mComicSize = mChapters.getPrelist().size();
+                    now_postion = position;
+                } else if (position >= mChapters.getPrelist().size() + mChapters.getNowlist().size()) {
+                    mComicSize = mChapters.getNextlist().size();
+                    chapter_title = mComicChapterTitle.get(mComicChapters + 1);
+                    now_postion = position - mChapters.getPrelist().size() - mChapters.getNowlist().size();
+                } else {
+                    mComicSize = mChapters.getNowlist().size();
+                    chapter_title = mComicChapterTitle.get(mComicChapters);
+                    now_postion = position - mChapters.getPrelist().size();
+                }
+                mComicPostion = position;
+                mPresenter.setTitle(chapter_title, mComicSize, now_postion, mAdapter.getDirection());
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                switch (state) {
+                    case ViewPager.SCROLL_STATE_DRAGGING:
+                        mIsScrolled = false;
+                        break;
+                    case ViewPager.SCROLL_STATE_SETTLING:
+                        mIsScrolled = true;
+                        break;
+                    case ViewPager.SCROLL_STATE_IDLE:
+                        if (!mIsScrolled) {
+                            if (!isLoadingdata) {
+                                //mPresenter.loadMoreData(comic_id,comic_chapters,comic_postion,mAdapter.getDirection());
+                                isLoadingdata = true;
+                            }
+                        }
+                        mIsScrolled = true;
+                        break;
+                }
             }
         });
     }

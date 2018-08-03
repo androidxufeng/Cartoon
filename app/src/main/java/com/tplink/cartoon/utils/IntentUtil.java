@@ -18,6 +18,8 @@ import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 
+import java.util.ArrayList;
+
 public class IntentUtil {
 
     public static void ToComicDetail(Context context, String id) {
@@ -26,11 +28,11 @@ public class IntentUtil {
         context.startActivity(intent);
     }
 
-    public static void ToComicChapter(Context context, String id, String chapters, String ChapterTitle) {
+    public static void ToComicChapter(Context context, String id, int chapters, ArrayList<String> ChapterTitle) {
         Intent intent = new Intent(context, ComicChapterActivity.class);
         intent.putExtra(Constants.COMIC_ID, id);
         intent.putExtra(Constants.COMIC_CHAPERS, chapters);
-        intent.putExtra(Constants.COMIC_CHAPER_TITLE, ChapterTitle);
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPER_TITLE, ChapterTitle);
         context.startActivity(intent);
     }
 }

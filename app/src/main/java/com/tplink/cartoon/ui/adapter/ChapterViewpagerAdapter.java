@@ -12,18 +12,14 @@ package com.tplink.cartoon.ui.adapter;
  */
 
 import android.content.Context;
-import android.graphics.Color;
-import android.media.MediaMetadata;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
 
 import java.util.ArrayList;
@@ -52,9 +48,23 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         notifyDataSetChanged();
     }
 
-    public void setDatas(List<String> datas) {
+    public void setDatas(PreloadChapters datas) {
         mDatas.clear();
-        mDatas.addAll(datas);
+        mDatas.addAll(datas.getPrelist());
+        mDatas.addAll(datas.getNowlist());
+        mDatas.addAll(datas.getNextlist());
+        notifyDataSetChanged();
+    }
+
+    public void setNextDatas(List<String> mdatas) {
+        mDatas.addAll(mdatas);
+        notifyDataSetChanged();
+    }
+
+    public void setPreDatas(List<String> mdatas) {
+        for (int i = 0; i < mdatas.size(); i++) {
+            this.mDatas.add(0, mdatas.get(mdatas.size() - 1 - i));
+        }
         notifyDataSetChanged();
     }
 
@@ -105,7 +115,7 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         this.listener = listener;
     }
 
-    public interface OnceClickListener{
-        void onClick(View view,float x, float y);
+    public interface OnceClickListener {
+        void onClick(View view, float x, float y);
     }
 }
