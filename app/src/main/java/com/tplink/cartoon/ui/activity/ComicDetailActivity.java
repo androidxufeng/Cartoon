@@ -1,5 +1,6 @@
 package com.tplink.cartoon.ui.activity;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
 import android.util.Log;
@@ -30,8 +31,6 @@ import com.tplink.cartoon.ui.widget.DetailScrollView;
 import com.tplink.cartoon.ui.widget.IndexItemView;
 import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.IntentUtil;
-
-import java.net.ConnectException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -119,7 +118,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     private String mComicId;
 
     @Override
-    protected void initPresenter() {
+    protected void initPresenter(Intent intent) {
         mPresenter = new DetailPresenter(new DetailDataSource(), this);
     }
 
@@ -146,18 +145,13 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @Override
     public void getDataFinish() {
-//        mAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void showErrorView(Throwable throwable) {
+    public void showErrorView(String throwable) {
         mRLloading.setVisibility(View.VISIBLE);
         mReload.setVisibility(View.VISIBLE);
-        if (throwable instanceof ConnectException) {
-            mLoadingText.setText("无法访问服务器接口");
-        } else {
-            mLoadingText.setText("未知错误" + throwable.toString());
-        }
+        mLoadingText.setText(throwable);
     }
 
     @Override
@@ -195,9 +189,9 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     }
 
     @Override
-    public void orderData(LinearLayout linearLayout) {
-        mIndex.removeAllViews();
-        mIndex.addView(linearLayout);
+    public void orderData(int res) {
+        mOrder.setImageResource(res);
+        mOrder2.setImageResource(res);
     }
 
     @Override
@@ -207,9 +201,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
             Log.d("ComicDetailActivity", "position=" + position);
         }
         IntentUtil.toComicChapter(ComicDetailActivity.this,
-                mPresenter.getComic().getId(),
                 position,
-                mPresenter.getComic().getChapters());
+                mPresenter.getComic());
     }
 
     @OnClick({R.id.iv_oreder2, R.id.iv_order})
@@ -227,7 +220,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @OnClick(R.id.btn_read)
     public void startRead(View view) {
-        IntentUtil.toComicChapter(this, mComicId, 0, mComic.getChapters());
+//        IntentUtil.toComicChapter(this,);
     }
 
 
@@ -276,7 +269,6 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
         @Override
         public void isBlurTransform(float y) {
-            //Log.d("DetailActivity","y="+y+",gettopview="+y);
             mHeaderViewBg.setAlpha(1 - y);
         }
 

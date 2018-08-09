@@ -11,13 +11,7 @@ package com.tplink.cartoon.ui.view;
  * Ver 1.0, 18-8-2, xufeng, Create file
  */
 
-public interface IChapterView<T> extends BaseView {
-    //获取数据完成
-    void getDataFinish();
-    //展示错误页面
-    void showErrorView(Throwable throwable);
-    //填充数据
-    void fillData(T data);
+public interface IChapterView<T> extends ILoadDataView<T> {
     //弹出菜单
     void showMenu();
     //下一章

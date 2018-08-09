@@ -1,136 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/colorBgDark"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/rl_normal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <ImageView
-            android:src="@drawable/pic_default"
             android:id="@+id/iv_image"
-            android:scaleType="fitXY"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/pic_default" />
+
         <ImageView
-            android:src="@drawable/pic_default"
-            android:alpha="0"
             android:id="@+id/iv_image_bg"
-            android:scaleType="fitXY"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="200dp"
+            android:alpha="0"
+            android:scaleType="fitXY"
+            android:src="@drawable/pic_default" />
+
         <LinearLayout
-            android:background="@drawable/text_bg"
-            android:layout_below="@id/iv_image"
             android:id="@+id/ll_text"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_below="@id/iv_image"
             android:layout_marginTop="-60dp"
-            android:paddingLeft="20dp"
+            android:background="@drawable/text_bg"
             android:orientation="vertical"
-            >
+            android:paddingLeft="20dp">
+
             <TextView
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20dp"
                 android:textColor="@color/colorBg"
-                />
+                android:textSize="20dp" />
+
             <TextView
                 android:id="@+id/tv_author_tag"
-                android:textSize="12dp"
-                android:textColor="@color/colorBg"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBg"
+                android:textSize="12dp" />
         </LinearLayout>
+
         <com.tplink.cartoon.ui.widget.DetailScrollView
-            android:paddingTop="60dp"
             android:id="@+id/sv_comic"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="60dp"
             android:scrollbars="none">
+
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
+
                 <RelativeLayout
-                    android:layout_marginTop="140dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="140dp">
+
                     <LinearLayout
                         android:id="@+id/ll_loading"
-                        android:background="@color/colorBg"
                         android:layout_width="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_height="80dp">
+                        android:layout_height="80dp"
+                        android:background="@color/colorBg"
+                        android:orientation="horizontal">
+
                         <LinearLayout
-                            android:gravity="center_vertical"
-                            android:layout_weight="2"
                             android:layout_width="0dp"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"
+                            android:gravity="center_vertical">
+
                             <ImageView
-                                android:layout_marginLeft="10dp"
-                                android:src="@drawable/collect"
                                 android:layout_width="22dp"
                                 android:layout_height="22dp"
-                                />
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/collect" />
+
                             <TextView
-                                android:layout_marginLeft="2dp"
-                                android:textSize="13dp"
-                                android:textColor="@color/colorTextColor"
-                                android:text="收藏"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="收藏"
+                                android:textColor="@color/colorTextColor"
+                                android:textSize="13dp" />
+
                             <TextView
                                 android:id="@+id/tv_collects"
-                                android:textSize="10dp"
-                                android:textColor="@color/colorBottom"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/colorBottom"
+                                android:textSize="10dp" />
                         </LinearLayout>
 
                         <Button
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:textColor="@color/colorBg"
-                            android:background="@drawable/detail_read_btn"
-                            android:layout_gravity="center"
-                            android:text="开始阅读"
-                            android:gravity="center"
                             android:id="@+id/btn_read"
                             android:layout_width="0dp"
                             android:layout_height="50dp"
-                            android:layout_weight="4" />
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="4"
+                            android:background="@drawable/detail_read_btn"
+                            android:gravity="center"
+                            android:text="开始阅读"
+                            android:textColor="@color/colorBg" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:background="@color/colorBgDark"
                         android:id="@+id/ll_info"
-                        android:layout_below="@id/ll_loading"
-                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ll_loading"
+                        android:background="@color/colorBgDark"
+                        android:orientation="vertical">
 
                         <LinearLayout
-                            android:background="@color/colorBg"
-                            android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            >
+                            android:background="@color/colorBg"
+                            android:orientation="horizontal">
+
                             <View
-                                android:layout_marginLeft="10dp"
-                                android:layout_gravity="center_vertical"
-                                android:background="@color/colorAccent"
                                 android:layout_width="3dp"
                                 android:layout_height="15dp"
-                                />
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:background="@color/colorAccent" />
+
                             <TextView
-                                android:background="@color/colorBg"
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
-                                android:paddingLeft="8dp"
+                                android:background="@color/colorBg"
                                 android:gravity="center_vertical"
+                                android:paddingLeft="8dp"
                                 android:text="详情"
                                 android:textColor="@color/colorTextColor"
                                 android:textSize="13dp" />
@@ -148,18 +159,20 @@
                             android:textSize="11dp" />
 
                         <LinearLayout
-                            android:paddingTop="20dp"
-                            android:paddingBottom="20dp"
-                            android:background="@color/colorBg"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:background="@color/colorBg"
+                            android:orientation="horizontal"
+                            android:paddingBottom="20dp"
+                            android:paddingTop="20dp">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
+
                                 <TextView
                                     android:id="@+id/tv_popularity"
                                     android:layout_width="match_parent"
@@ -177,17 +190,19 @@
                                     android:textColor="@color/colorTextColorLight"
                                     android:textSize="12dp" />
                             </LinearLayout>
+
                             <View
-                                android:background="@color/colorBottom"
                                 android:layout_width="0.5dp"
                                 android:layout_height="match_parent"
-                                />
+                                android:background="@color/colorBottom" />
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:layout_weight="1"
                                 android:orientation="vertical">
+
                                 <TextView
                                     android:id="@+id/tv_point"
                                     android:layout_width="match_parent"
@@ -205,11 +220,12 @@
                                     android:textColor="@color/colorTextColorLight"
                                     android:textSize="12dp" />
                             </LinearLayout>
+
                             <View
-                                android:background="@color/colorBottom"
                                 android:layout_width="0.5dp"
                                 android:layout_height="match_parent"
-                                />
+                                android:background="@color/colorBottom" />
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -238,112 +254,109 @@
                         </LinearLayout>
 
                         <RelativeLayout
-                            android:background="@color/colorBg"
-                            android:layout_marginTop="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            >
+                            android:layout_marginTop="10dp"
+                            android:background="@color/colorBg">
+
                             <View
                                 android:id="@+id/v_index"
-                                android:layout_marginLeft="10dp"
-                                android:layout_centerVertical="true"
-                                android:background="@color/colorAccent"
                                 android:layout_width="3dp"
                                 android:layout_height="15dp"
-                                />
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="10dp"
+                                android:background="@color/colorAccent" />
+
                             <TextView
-                                android:layout_toRightOf="@id/v_index"
-                                android:background="@color/colorBg"
                                 android:layout_width="wrap_content"
                                 android:layout_height="40dp"
-                                android:paddingLeft="8dp"
+                                android:layout_toRightOf="@id/v_index"
+                                android:background="@color/colorBg"
                                 android:gravity="center_vertical"
+                                android:paddingLeft="8dp"
                                 android:text="目录"
                                 android:textColor="@color/colorTextColor"
                                 android:textSize="13dp" />
+
                             <ImageView
                                 android:id="@+id/iv_oreder2"
-                                android:layout_marginRight="10dp"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerVertical="true"
-                                android:src="@drawable/zhengxu"
-                                android:layout_width="15dp"
-                                android:layout_height="15dp" />
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/zhengxu" />
 
                         </RelativeLayout>
                     </LinearLayout>
+
                     <LinearLayout
-                        android:background="@color/colorBg"
                         android:id="@+id/ll_index"
-                        android:layout_below="@id/ll_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
-                    </LinearLayout>
-                    <android.support.v7.widget.RecyclerView
+                        android:layout_below="@id/ll_info"
                         android:background="@color/colorBg"
-                        android:layout_below="@id/ll_info"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/recycle_view">
-                    </android.support.v7.widget.RecyclerView>
+                        android:orientation="vertical"/>
+
                     <ImageView
-                        android:background="@color/colorBg"
-                        android:layout_centerHorizontal="true"
-                        android:layout_below="@id/ll_index"
-                        android:src="@drawable/bottom"
                         android:layout_width="match_parent"
-                        android:layout_height="400dp"/>
+                        android:layout_height="400dp"
+                        android:layout_below="@id/ll_index"
+                        android:layout_centerHorizontal="true"
+                        android:background="@color/colorBg"
+                        android:src="@drawable/bottom" />
                 </RelativeLayout>
+
                 <View
-                    android:background="@color/colorTrans"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    />
+                    android:background="@color/colorTrans" />
             </RelativeLayout>
         </com.tplink.cartoon.ui.widget.DetailScrollView>
+
         <RelativeLayout
-            android:layout_marginTop="60dp"
-            android:visibility="gone"
             android:id="@+id/ll_detail"
-            android:background="@color/colorBg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:layout_marginTop="60dp"
+            android:background="@color/colorBg"
+            android:visibility="gone">
+
             <View
                 android:id="@+id/iv_index"
-                android:layout_marginLeft="10dp"
-                android:layout_centerVertical="true"
-                android:background="@color/colorAccent"
                 android:layout_width="3dp"
                 android:layout_height="15dp"
-                />
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:background="@color/colorAccent" />
+
             <TextView
                 android:id="@+id/tv_tab"
-                android:layout_toRightOf="@id/iv_index"
-                android:background="@color/colorBg"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:paddingLeft="8dp"
+                android:layout_toRightOf="@id/iv_index"
+                android:background="@color/colorBg"
                 android:gravity="center_vertical"
+                android:paddingLeft="8dp"
                 android:text="详情"
                 android:textColor="@color/colorTextColor"
                 android:textSize="13dp" />
+
             <ImageView
-                android:visibility="gone"
                 android:id="@+id/iv_order"
-                android:layout_marginRight="10dp"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
                 android:src="@drawable/zhengxu"
-                android:layout_width="15dp"
-                android:layout_height="15dp"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
     </RelativeLayout>
 
-    <include layout="@layout/layout_actionbar"/>
-    <include layout="@layout/layout_loading"/>
+    <include layout="@layout/layout_actionbar" />
+
+    <include layout="@layout/layout_loading" />
 
 </RelativeLayout>

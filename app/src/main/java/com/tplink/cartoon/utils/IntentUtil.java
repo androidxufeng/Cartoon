@@ -21,6 +21,7 @@ import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.activity.IndexActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class IntentUtil {
 
@@ -31,17 +32,29 @@ public class IntentUtil {
         context.startActivity(intent);
     }
 
-    public static void toComicChapter(Context context, String comicId, int chapters, ArrayList<String> ChapterTitle) {
+    public static void toComicChapter(Context context, int chapters, String id, String title, List<String> chapter_titles) {
         Intent intent = new Intent(context, ComicChapterActivity.class);
-        intent.putExtra(Constants.COMIC_ID, comicId);
         intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, ChapterTitle);
+        intent.putExtra(Constants.COMIC_ID, id);
+        intent.putExtra(Constants.COMIC_TITLE, title);
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) chapter_titles);
         context.startActivity(intent);
     }
 
-    public static void toIndex(Context context, Comic comic) {
+    public static void toComicChapter(Context context, int chapters, Comic comic) {
+        Intent intent = new Intent(context, ComicChapterActivity.class);
+        intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
+        intent.putExtra(Constants.COMIC_ID, comic.getId());
+        intent.putExtra(Constants.COMIC_TITLE, comic.getTitle());
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) comic.getChapters());
+        context.startActivity(intent);
+    }
+
+    public static void toIndex(Context context, String id, List<String> ChapterTitles, String title) {
         Intent intent = new Intent(context, IndexActivity.class);
-        intent.putExtra(Constants.COMIC, comic);
+        intent.putExtra(Constants.COMIC_ID, id);
+        intent.putExtra(Constants.COMIC_TITLE, title);
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) ChapterTitles);
         context.startActivity(intent);
     }
 }

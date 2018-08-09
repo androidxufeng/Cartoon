@@ -15,10 +15,12 @@ import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.source.detail.DetailDataSource;
 import com.tplink.cartoon.ui.widget.IndexItemView;
+import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -56,7 +58,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
                     @Override
                     public void onError(Throwable t) {
-                        mView.showErrorView(t);
+                        mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                     }
 
                     @Override
@@ -70,10 +72,12 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
     public void orderIndex(LinearLayout mlayout) {
         for (int position = 0; position < mComic.getChapters().size(); position++) {
             IndexItemView itemView = (IndexItemView) mlayout.getChildAt(position);
-            TextView textView = (TextView) itemView.getChildAt(0);
+            TextView textView = itemView.getTextView();
             if (!isOrder()) {
                 textView.setText((position + 1) + " - " + mComic.getChapters().get(position));
+                mView.orderData(R.drawable.zhengxu);
             } else {
+                mView.orderData(R.drawable.daoxu);
                 textView.setText((mComic.getChapters().size() - position) + " - " + mComic.getChapters().get(mComic.getChapters().size() - 1 - position));
             }
         }

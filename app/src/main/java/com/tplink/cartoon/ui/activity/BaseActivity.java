@@ -11,6 +11,7 @@ package com.tplink.cartoon.ui.activity;
  * Ver 1.0, 18-7-30, xufeng, Create file
  */
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     /**
      * 初始化Presenter
      */
-    protected abstract void initPresenter();
+    protected abstract void initPresenter(Intent intent);
 
     protected abstract int getLayout();
 
@@ -51,7 +52,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
         initWindow();
         //初始化ButterKnife
         ButterKnife.bind(this);
-        initPresenter();
+        initPresenter(getIntent());
         checkPresenterIsNull();
         initView();
         initData();

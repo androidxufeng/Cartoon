@@ -11,14 +11,8 @@ package com.tplink.cartoon.ui.view;
  * Ver 1.0, 18-8-1, xufeng, Create file
  */
 
-import android.widget.LinearLayout;
 
-public interface IDetailView<T> extends BaseView {
-    void getDataFinish();
+public interface IDetailView<T> extends ILoadDataView<T> {
 
-    void showErrorView(Throwable throwable);
-
-    void fillData(T data);
-
-    void orderData(LinearLayout linearLayout);
+    void orderData(int res);
 }

@@ -11,6 +11,7 @@ package com.tplink.cartoon.ui.activity;
  * Ver 1.0, 18-8-9, xufeng, Create file
  */
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -20,15 +21,17 @@ import android.widget.TextView;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.DetailAdapter;
 import com.tplink.cartoon.ui.presenter.IndexPresenter;
 import com.tplink.cartoon.ui.source.Index.IndexDataSource;
 import com.tplink.cartoon.ui.view.IIndexView;
+import com.tplink.cartoon.utils.IntentUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class IndexActivity extends BaseActivity<IndexPresenter> implements IIndexView {
+public class IndexActivity extends BaseActivity<IndexPresenter> implements IIndexView, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_index)
     RecyclerView mRecyclerView;
     @BindView(R.id.iv_order)
@@ -39,7 +42,8 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
     TextView mDownload;
 
     private DetailAdapter mAdapter;
-    private Comic mComic;
+
+    private Intent mIntent;
 
 
     @OnClick({R.id.iv_order})
@@ -58,7 +62,7 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
     }
 
     @Override
-    protected void initPresenter() {
+    protected void initPresenter(Intent intent) {
         mPresenter = new IndexPresenter(new IndexDataSource(), this);
     }
 
@@ -69,16 +73,24 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
     @Override
     protected void initView() {
-        mComic = (Comic) getIntent().getSerializableExtra(Constants.COMIC);
+        mIntent = getIntent();
         mAdapter = new DetailAdapter(this, R.layout.item_chapter);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter.updateWithClear(mComic.getChapters());
-        mTitle.setText(mComic.getTitle());
+        mAdapter.updateWithClear(mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE));
+        mAdapter.setOnItemClickListener(this);
+        mTitle.setText(getIntent().getStringExtra(Constants.COMIC_TITLE));
         mDownload.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void initData() {
+    }
+
+    @Override
+    public void onItemClick(RecyclerView parent, View view, int position) {
+        IntentUtil.toComicChapter(IndexActivity.this, position,
+                mIntent.getStringExtra(Constants.COMIC_ID), mIntent.getStringExtra(Constants.COMIC_TITLE),
+                mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE));
     }
 }

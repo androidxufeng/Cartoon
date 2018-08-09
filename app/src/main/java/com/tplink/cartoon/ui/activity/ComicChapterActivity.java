@@ -22,9 +22,6 @@ import com.tplink.cartoon.ui.widget.ZBubbleSeekBar;
 import com.tplink.cartoon.utils.IntentUtil;
 import com.xw.repo.BubbleSeekBar;
 
-import org.w3c.dom.Text;
-
-import java.net.ConnectException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -72,12 +69,13 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @OnClick(R.id.iv_index)
     public void toIndex(View view) {
-//        IntentUtil.toIndex(ComicChapterActivity.this,nComic);
+        IntentUtil.toIndex(ComicChapterActivity.this, mPresenter.getComicId(),
+                mPresenter.getComicChapterTitle(), getIntent().getStringExtra(Constants.COMIC_TITLE));
     }
 
     private ChapterViewpagerAdapter mAdapter;
 
-    @OnClick({R.id.iv_back,R.id.iv_back_color})
+    @OnClick({R.id.iv_back, R.id.iv_back_color})
     public void finish(View view) {
         this.finish();
     }
@@ -89,14 +87,10 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
 
     @Override
-    public void showErrorView(Throwable throwable) {
+    public void showErrorView(String error) {
         mRLloading.setVisibility(View.VISIBLE);
         mReload.setVisibility(View.VISIBLE);
-        if (throwable instanceof ConnectException) {
-            mLoadingText.setText("无法访问服务器接口");
-        } else {
-            mLoadingText.setText("未知错误" + throwable.toString());
-        }
+        mLoadingText.setText(error);
     }
 
     @Override
@@ -172,13 +166,21 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     }
 
     @Override
-    protected void initPresenter() {
-        Intent intent = getIntent();
+    protected void initPresenter(Intent intent) {
         String comicId = intent.getStringExtra(Constants.COMIC_ID);
         int comicChapter = intent.getIntExtra(Constants.COMIC_CHAPTERS, 0);
         ArrayList comicChapterTitle = intent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
         mPresenter = new ChapterPresenter(new ChapterDataSource(), this);
         mPresenter.init(comicId, comicChapterTitle, comicChapter);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mRLloading.setVisibility(View.VISIBLE);
+        mLoadingText.setText("正在加载,请稍后...");
+        initPresenter(intent);
+        initView();
     }
 
     @Override

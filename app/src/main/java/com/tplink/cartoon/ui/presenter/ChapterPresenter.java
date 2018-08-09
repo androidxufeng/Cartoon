@@ -18,6 +18,7 @@ import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.source.chapter.ChapterDataSource;
+import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +118,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
 
                         @Override
                         public void onError(Throwable t) {
-                            mView.showErrorView(t);
+                            mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                         }
 
                         @Override
@@ -187,7 +188,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                     @Override
                     public void onError(Throwable t) {
                         isLoadingdata = false;
-                        mView.showErrorView(t);
+                        mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                     }
 
                     @Override
@@ -225,7 +226,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                     @Override
                     public void onError(Throwable t) {
                         isLoadingdata = false;
-                        mView.showErrorView(t);
+                        mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                     }
 
                     @Override
