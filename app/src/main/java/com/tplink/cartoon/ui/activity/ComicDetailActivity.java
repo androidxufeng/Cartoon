@@ -226,7 +226,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @OnClick(R.id.btn_read)
     public void startRead(View view) {
-        IntentUtil.ToComicChapter(this, mComicId, 0, mComic.getChapters());
+        IntentUtil.toComicChapter(this, mComicId, 0, mComic.getChapters());
     }
 
     @Override
@@ -235,7 +235,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
             position = mComic.getChapters().size() - position - 1;
             Log.d("ComicDetailActivity", "position=" + position);
         }
-        IntentUtil.ToComicChapter(this, mComicId, position, mComic.getChapters());
+        IntentUtil.toComicChapter(this, mComicId, position, mComic.getChapters());
     }
 
 

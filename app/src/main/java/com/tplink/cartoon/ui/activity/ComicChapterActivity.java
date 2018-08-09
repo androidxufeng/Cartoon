@@ -19,6 +19,7 @@ import com.tplink.cartoon.ui.view.IChapterView;
 import com.tplink.cartoon.ui.widget.ComicReaderViewpager;
 import com.tplink.cartoon.ui.widget.ReaderMenuLayout;
 import com.tplink.cartoon.ui.widget.ZBubbleSeekBar;
+import com.tplink.cartoon.utils.IntentUtil;
 import com.xw.repo.BubbleSeekBar;
 
 import java.net.ConnectException;
@@ -58,11 +59,17 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     ImageView mReload;
 
     @OnClick(R.id.iv_error)
-    public void reload(View view){
+    public void reload(View view) {
         mPresenter.getChapterData();
         mRLloading.setVisibility(View.VISIBLE);
         mReload.setVisibility(View.GONE);
         mLoadingText.setText("正在重新加载，请稍后");
+    }
+
+    @OnClick(R.id.iv_index)
+    public void toIndex(View view) {
+        IntentUtil.toIndex(ComicChapterActivity.this, mPresenter.getComicId(),
+                mPresenter.getComicChapters(), (ArrayList<String>) mPresenter.getComicChapterTitle());
     }
 
     private ChapterViewpagerAdapter mAdapter;

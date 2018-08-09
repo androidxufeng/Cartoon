@@ -43,6 +43,16 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     private List<String> mComicChapterTitle;
     private String mComicId;
     private int mComicSize;
+
+    public List<String> getComicChapterTitle() {
+        return mComicChapterTitle;
+    }
+
+    public String getComicId() {
+
+        return mComicId;
+    }
+
     //以中间的章节为分界限，前面时负值
     private int mLoadingPosition;
     private boolean isLoadingdata;
