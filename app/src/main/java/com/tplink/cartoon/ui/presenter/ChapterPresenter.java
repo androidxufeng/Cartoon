@@ -34,6 +34,11 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     private PreloadChapters mPreloadChapters;
     //漫画阅读方向
     private int mDirect;
+
+    public int getComicChapters() {
+        return mComicChapters;
+    }
+
     private int mComicChapters;
     private List<String> mComicChapterTitle;
     private String mComicId;
@@ -167,16 +172,17 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                         mView.nextChapter(mPreloadChapters, mLoadingPosition);
                         mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" + (1 + mLoadingPosition) +
                                 "/" + mPreloadChapters.getNowlist().size());
-                        isLoadingdata = false;
                     }
 
                     @Override
                     public void onError(Throwable t) {
+                        isLoadingdata = false;
                         mView.showErrorView(t);
                     }
 
                     @Override
                     public void onComplete() {
+                        isLoadingdata = false;
                         mView.getDataFinish();
                     }
                 });
@@ -204,16 +210,17 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                         mView.preChapter(mPreloadChapters, mLoadingPosition);
                         mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" + (mPreloadChapters.getNowlist().size()
                                 + mLoadingPosition) + "/" + mPreloadChapters.getNowlist().size());
-                        isLoadingdata = false;
                     }
 
                     @Override
                     public void onError(Throwable t) {
+                        isLoadingdata = false;
                         mView.showErrorView(t);
                     }
 
                     @Override
                     public void onComplete() {
+                        isLoadingdata = false;
                         mView.getDataFinish();
                     }
                 });

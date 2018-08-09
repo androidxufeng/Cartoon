@@ -1,6 +1,7 @@
 package com.tplink.cartoon.ui.activity;
 
 import android.graphics.Rect;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -34,6 +35,7 @@ import com.tplink.cartoon.ui.widget.NoScrollStaggeredGridLayoutManager;
 import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.net.ConnectException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -90,6 +92,24 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     ImageView mOrder2;
     @BindView(R.id.btn_read)
     Button mRead;
+
+    @BindView(R.id.iv_loading)
+    ImageView mLoading;
+    @BindView(R.id.rl_loading)
+    RelativeLayout mRLloading;
+    @BindView(R.id.tv_loading)
+    TextView mLoadingText;
+    @BindView(R.id.iv_error)
+    ImageView mReload;
+
+    @OnClick(R.id.iv_error)
+    public void reload(View view) {
+        mPresenter.getDetail(mComicId);
+        mRLloading.setVisibility(View.VISIBLE);
+        mReload.setVisibility(View.GONE);
+        mLoadingText.setText("正在重新加载，请稍后");
+    }
+
     private DetailAdapter mAdapter;
     private Comic mComic;
     private float mScale;
@@ -109,7 +129,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @Override
     protected void initView() {
-        NoScrollStaggeredGridLayoutManager layoutManager = new NoScrollStaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        NoScrollStaggeredGridLayoutManager layoutManager = new NoScrollStaggeredGridLayoutManager
+                (1, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
         mAdapter = new DetailAdapter(this, R.layout.item_chapter);
@@ -117,6 +138,10 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         mIvBack.setOnClickListener(this);
         mScrollView.setScaleTopListener(new MyScaleTopListener());
         mAdapter.setOnItemClickListener(this);
+        //动画
+        mLoading.setImageResource(R.drawable.loading_list);
+        AnimationDrawable animationDrawable = (AnimationDrawable) mLoading.getDrawable();
+        animationDrawable.start();
     }
 
     @Override
@@ -131,25 +156,29 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     }
 
     @Override
-    public void showEmptyView() {
-        // TODO
-    }
-
-    @Override
     public void showErrorView(Throwable throwable) {
-
+        mRLloading.setVisibility(View.VISIBLE);
+        mReload.setVisibility(View.VISIBLE);
+        if (throwable instanceof ConnectException) {
+            mLoadingText.setText("无法访问服务器接口");
+        } else {
+            mLoadingText.setText("未知错误" + throwable.toString());
+        }
     }
 
     @Override
     public void fillData(Comic comic) {
+        mRLloading.setVisibility(View.GONE);
         mComic = comic;
         Glide.with(this)
                 .load(comic.getCover())
+                .placeholder(R.drawable.pic_default)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .bitmapTransform(new CenterCrop(this))
                 .into(mHeaderView);
         Glide.with(this)
                 .load(comic.getCover())
+                .placeholder(R.drawable.pic_default)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .bitmapTransform(new BlurTransformation(this, 10), new CenterCrop(this))
                 .into(mHeaderViewBg);
@@ -196,8 +225,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     }
 
     @OnClick(R.id.btn_read)
-    public void startRead(View view){
-        IntentUtil.ToComicChapter(this,mComicId,0,mComic.getChapters());
+    public void startRead(View view) {
+        IntentUtil.ToComicChapter(this, mComicId, 0, mComic.getChapters());
     }
 
     @Override
@@ -287,7 +316,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
                     if (mActionBarTitle.getVisibility() == View.GONE) {
                         mActionBarTitle.setVisibility(View.VISIBLE);
                         AnimationSet animationSet = new AnimationSet(true);
-                        TranslateAnimation trans = new TranslateAnimation(0, 0, DisplayUtil.dip2px(getApplicationContext(), 12), 0);
+                        TranslateAnimation trans = new TranslateAnimation(0, 0,
+                                DisplayUtil.dip2px(getApplicationContext(), 12), 0);
                         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
                         animationSet.addAnimation(trans);
                         animationSet.addAnimation(alphaAnimation);
@@ -304,7 +334,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
                     if (mActionBarTitle.getVisibility() == View.VISIBLE) {
                         mActionBarTitle.setVisibility(View.GONE);
                         AnimationSet animationSet = new AnimationSet(true);
-                        TranslateAnimation trans = new TranslateAnimation(0, 0, 0, DisplayUtil.dip2px(getApplicationContext(), 12));
+                        TranslateAnimation trans = new TranslateAnimation(0, 0, 0,
+                                DisplayUtil.dip2px(getApplicationContext(), 12));
                         AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
                         animationSet.addAnimation(trans);
                         animationSet.addAnimation(alphaAnimation);

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
 
@@ -87,11 +88,13 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         if (mDirection == Constants.RIGHT_TO_LEFT) {
             Glide.with(mContext)
                     .load(mDatas.get(mDatas.size() - position - 1))
+                    .placeholder(R.drawable.pic_default_vertical)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
         } else {
             Glide.with(mContext)
                     .load(mDatas.get(position))
+                    .placeholder(R.drawable.pic_default_vertical)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
         }

@@ -1,6 +1,7 @@
 package com.tplink.cartoon.ui.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
@@ -20,6 +21,7 @@ import com.tplink.cartoon.ui.widget.ReaderMenuLayout;
 import com.tplink.cartoon.ui.widget.ZBubbleSeekBar;
 import com.xw.repo.BubbleSeekBar;
 
+import java.net.ConnectException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -46,9 +48,24 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     @BindView(R.id.sb_seekbar)
     ZBubbleSeekBar mSeekBar;
 
-    private ChapterViewpagerAdapter mAdapter;
+    @BindView(R.id.iv_loading)
+    ImageView mLoading;
+    @BindView(R.id.rl_loading)
+    RelativeLayout mRLloading;
+    @BindView(R.id.tv_loading)
+    TextView mLoadingText;
+    @BindView(R.id.iv_error)
+    ImageView mReload;
 
-    private boolean isSelecting;
+    @OnClick(R.id.iv_error)
+    public void reload(View view){
+        mPresenter.getChapterData();
+        mRLloading.setVisibility(View.VISIBLE);
+        mReload.setVisibility(View.GONE);
+        mLoadingText.setText("正在重新加载，请稍后");
+    }
+
+    private ChapterViewpagerAdapter mAdapter;
 
     @OnClick(R.id.iv_back)
     public void finish(View view) {
@@ -57,17 +74,19 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @Override
     public void getDataFinish() {
-
+        mRLloading.setVisibility(View.GONE);
     }
 
-    @Override
-    public void showEmptyView() {
-
-    }
 
     @Override
     public void showErrorView(Throwable throwable) {
-        showToast("加载数据失败" + throwable);
+        mRLloading.setVisibility(View.VISIBLE);
+        mReload.setVisibility(View.VISIBLE);
+        if (throwable instanceof ConnectException) {
+            mLoadingText.setText("无法访问服务器接口");
+        } else {
+            mLoadingText.setText("未知错误" + throwable.toString());
+        }
     }
 
     @Override
@@ -92,7 +111,11 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         mAdapter.setDatas(data);
         mViewpager.setCurrentItem(data.getPreSize() + loadingPosition, false);
         mSeekBar.setmMax(data.getNowSize());
-        showToast("完成了预加载");
+        //为什么第一页的时候需要单独再设置Progress?因为adapter的LIST并未发生改变，
+        // 所以调用刷新方法后没有调用onPageSelected方法，故没有设置Progress
+        if (mPresenter.getComicChapters() == 1) {
+            mSeekBar.setProgress(1);
+        }
     }
 
     @Override
@@ -100,7 +123,11 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         mAdapter.setDatas(data);
         mViewpager.setCurrentItem(data.getPreSize() + data.getNowSize() + loadingPosition - 1, false);
         mSeekBar.setmMax(data.getNowSize());
-        showToast("完成了预加载");
+        //为什么第一页的时候需要单独再设置Progress?因为adapter的LIST并未发生改变，
+        // 所以调用刷新方法后没有调用onPageSelected方法，故没有设置Progress
+        if (mPresenter.getComicChapters() == 0) {
+            mSeekBar.setProgress(data.getNowlist().size());
+        }
     }
 
 
@@ -115,6 +142,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         if (position >= 0) {
             mViewpager.setCurrentItem(position);
         } else {
+            showToast("没有啦");
         }
     }
 
@@ -124,6 +152,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         if (position < mAdapter.getCount()) {
             mViewpager.setCurrentItem(position);
         } else {
+            showToast("没有啦");
         }
     }
 
@@ -150,6 +179,9 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     @Override
     protected void initView() {
         setNavigation();
+        mLoading.setImageResource(R.drawable.loading_list);
+        AnimationDrawable animationDrawable = (AnimationDrawable) mLoading.getDrawable();
+        animationDrawable.start();
         mAdapter = new ChapterViewpagerAdapter(this);
         mViewpager.setOffscreenPageLimit(4);
         mAdapter.setListener(new ChapterViewpagerAdapter.OnceClickListener() {
@@ -167,7 +199,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
             @Override
             public void onPageSelected(int position) {
-                if (!isSelecting && menuLayout.isShow()) {
+                if (menuLayout.isShow()) {
                     menuLayout.setVisibility(View.GONE);
                     mSeekBar.setProgress(position - mPresenter.getPreloadChapters().getPrelist().size() + 1);
                 }
@@ -182,13 +214,12 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         mSeekBar.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
             @Override
             public void onProgressChanged(int progress, float progressFloat) {
-                mViewpager.setCurrentItem(progress + mPresenter.getPreloadChapters().getPreSize() - 1);
-                //isSelecting = true;
+
             }
 
             @Override
             public void getProgressOnActionUp(int progress, float progressFloat) {
-                menuLayout.setVisibility(View.VISIBLE);
+                mViewpager.setCurrentItem(progress + mPresenter.getPreloadChapters().getPreSize() - 1);
             }
 
             @Override

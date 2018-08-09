@@ -3,6 +3,8 @@ package com.tplink.cartoon.ui.activity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
@@ -19,6 +21,7 @@ import com.tplink.cartoon.utils.IntentUtil;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements IMainView, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.recycle_view)
@@ -26,6 +29,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
 
     @BindView(R.id.sv_comic)
     ZElasticRefreshScrollView mScrollView;
+
+    @BindView(R.id.rl_error_view)
+    RelativeLayout mErrorView;
+
+    @BindView(R.id.iv_error)
+    ImageView mReload;
+
+    @OnClick(R.id.iv_error)
+    public void reloadData(View view){
+        mErrorView.setVisibility(View.GONE);
+        mPresenter.loadData();
+    }
     private MainAdapter mAdapter;
     private int i = 3;
 
@@ -76,6 +91,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
     @Override
     public void getDataFinish() {
         mScrollView.setRefreshing(false);
+        if(mErrorView.isShown()){
+            mErrorView.setVisibility(View.GONE);
+        }
         mAdapter.notifyDataSetChanged();
     }
 
@@ -86,7 +104,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
 
     @Override
     public void showErrorView(Throwable throwable) {
-
+        mScrollView.setRefreshing(false);
+        mErrorView.setVisibility(View.VISIBLE);
     }
 
     @Override

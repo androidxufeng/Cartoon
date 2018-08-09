@@ -14,8 +14,6 @@ package com.tplink.cartoon.ui.view;
 public interface IDetailView<T> extends BaseView {
     void getDataFinish();
 
-    void showEmptyView();
-
     void showErrorView(Throwable throwable);
 
     void fillData(T data);

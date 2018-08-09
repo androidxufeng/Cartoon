@@ -12,11 +12,10 @@
         >
         <ImageView
             android:id="@+id/iv_back"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:src="@drawable/back_btn"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:src="@drawable/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="12.5dp"
             />
         <ImageView
             android:layout_marginTop="10dp"
@@ -39,6 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>
-    <include layout="@layout/layout_reader_progressbar"/>
+    <include layout="@layout/layout_reader_progressbar"></include>
 
 </RelativeLayout>
