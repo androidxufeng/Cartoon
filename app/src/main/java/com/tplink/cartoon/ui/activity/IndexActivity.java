@@ -15,8 +15,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.DetailAdapter;
 import com.tplink.cartoon.ui.presenter.IndexPresenter;
@@ -31,7 +33,13 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
     RecyclerView mRecyclerView;
     @BindView(R.id.iv_order)
     ImageView mIvOrder;
+    @BindView(R.id.tv_loading_title)
+    TextView mTitle;
+    @BindView(R.id.tv_downloaded)
+    TextView mDownload;
+
     private DetailAdapter mAdapter;
+    private Comic mComic;
 
 
     @OnClick({R.id.iv_order})
@@ -44,7 +52,7 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
         }
     }
 
-    @OnClick(R.id.iv_back)
+    @OnClick(R.id.iv_back_color)
     public void finish(View view) {
         this.finish();
     }
@@ -61,13 +69,16 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
     @Override
     protected void initView() {
+        mComic = (Comic) getIntent().getSerializableExtra(Constants.COMIC);
         mAdapter = new DetailAdapter(this, R.layout.item_chapter);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mAdapter.updateWithClear(mComic.getChapters());
+        mTitle.setText(mComic.getTitle());
+        mDownload.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void initData() {
-        mAdapter.updateWithClear(getIntent().getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE));
     }
 }

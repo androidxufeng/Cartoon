@@ -14,6 +14,7 @@ package com.tplink.cartoon.utils;
 import android.content.Context;
 import android.content.Intent;
 
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
@@ -23,25 +24,24 @@ import java.util.ArrayList;
 
 public class IntentUtil {
 
-    public static void toComicDetail(Context context, String id) {
+    public static void toComicDetail(Context context, String id, String title) {
         Intent intent = new Intent(context, ComicDetailActivity.class);
         intent.putExtra(Constants.COMIC_ID, id);
+        intent.putExtra(Constants.COMIC_TITLE, title);
         context.startActivity(intent);
     }
 
-    public static void toComicChapter(Context context, String id, int chapters, ArrayList<String> ChapterTitle) {
+    public static void toComicChapter(Context context, String comicId, int chapters, ArrayList<String> ChapterTitle) {
         Intent intent = new Intent(context, ComicChapterActivity.class);
-        intent.putExtra(Constants.COMIC_ID, id);
+        intent.putExtra(Constants.COMIC_ID, comicId);
         intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
         intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, ChapterTitle);
         context.startActivity(intent);
     }
 
-    public static void toIndex(Context context, String id, int chapters, ArrayList<String> ChapterTitles) {
+    public static void toIndex(Context context, Comic comic) {
         Intent intent = new Intent(context, IndexActivity.class);
-        intent.putExtra(Constants.COMIC_ID, id);
-        intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, ChapterTitles);
+        intent.putExtra(Constants.COMIC, comic);
         context.startActivity(intent);
     }
 }

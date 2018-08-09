@@ -22,6 +22,8 @@ import com.tplink.cartoon.ui.widget.ZBubbleSeekBar;
 import com.tplink.cartoon.utils.IntentUtil;
 import com.xw.repo.BubbleSeekBar;
 
+import org.w3c.dom.Text;
+
 import java.net.ConnectException;
 import java.util.ArrayList;
 
@@ -57,6 +59,8 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     TextView mLoadingText;
     @BindView(R.id.iv_error)
     ImageView mReload;
+    @BindView(R.id.tv_loading_title)
+    TextView mtvLoading;
 
     @OnClick(R.id.iv_error)
     public void reload(View view) {
@@ -68,13 +72,12 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @OnClick(R.id.iv_index)
     public void toIndex(View view) {
-        IntentUtil.toIndex(ComicChapterActivity.this, mPresenter.getComicId(),
-                mPresenter.getComicChapters(), (ArrayList<String>) mPresenter.getComicChapterTitle());
+//        IntentUtil.toIndex(ComicChapterActivity.this,nComic);
     }
 
     private ChapterViewpagerAdapter mAdapter;
 
-    @OnClick(R.id.iv_back)
+    @OnClick({R.id.iv_back,R.id.iv_back_color})
     public void finish(View view) {
         this.finish();
     }
@@ -231,6 +234,8 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
             @Override
             public void getProgressOnFinally(int progress, float progressFloat) {
+                //设置加载时候的标题
+                mtvLoading.setText(mPresenter.getComicChapterTitle().get(mPresenter.getComicChapters()));
             }
         });
     }

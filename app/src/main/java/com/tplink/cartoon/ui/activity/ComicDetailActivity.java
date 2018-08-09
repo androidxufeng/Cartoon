@@ -2,8 +2,6 @@ package com.tplink.cartoon.ui.activity;
 
 import android.graphics.Rect;
 import android.graphics.drawable.AnimationDrawable;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -25,18 +23,15 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
-import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
-import com.tplink.cartoon.ui.adapter.DetailAdapter;
 import com.tplink.cartoon.ui.presenter.DetailPresenter;
 import com.tplink.cartoon.ui.source.detail.DetailDataSource;
 import com.tplink.cartoon.ui.view.IDetailView;
 import com.tplink.cartoon.ui.widget.DetailScrollView;
-import com.tplink.cartoon.ui.widget.NoScrollStaggeredGridLayoutManager;
+import com.tplink.cartoon.ui.widget.IndexItemView;
 import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.IntentUtil;
 
 import java.net.ConnectException;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,13 +43,10 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
  */
 
 public class ComicDetailActivity extends BaseActivity<DetailPresenter> implements
-        IDetailView<Comic>, View.OnClickListener, BaseRecyclerAdapter.OnItemClickListener {
+        IDetailView<Comic>, IndexItemView.onItemClickLinstener {
 
     @BindView(R.id.iv_image)
     ImageView mHeaderView;
-
-    @BindView(R.id.recycle_view)
-    RecyclerView mRecycleView;
 
     @BindView(R.id.sv_comic)
     DetailScrollView mScrollView;
@@ -102,6 +94,11 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     @BindView(R.id.iv_error)
     ImageView mReload;
 
+    @BindView(R.id.tv_loading_title)
+    TextView mLoadingTitle;
+    @BindView(R.id.ll_index)
+    LinearLayout mIndex;
+
     @OnClick(R.id.iv_error)
     public void reload(View view) {
         mPresenter.getDetail(mComicId);
@@ -110,7 +107,11 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         mLoadingText.setText("正在重新加载，请稍后");
     }
 
-    private DetailAdapter mAdapter;
+    @OnClick({R.id.iv_back_color, R.id.iv_back})
+    public void OnFinish(View view) {
+        finish();
+    }
+
     private Comic mComic;
     private float mScale;
     private float mDy;
@@ -129,15 +130,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @Override
     protected void initView() {
-        NoScrollStaggeredGridLayoutManager layoutManager = new NoScrollStaggeredGridLayoutManager
-                (1, StaggeredGridLayoutManager.VERTICAL);
-        layoutManager.setScrollEnabled(false);
-        mRecycleView.setLayoutManager(layoutManager);
-        mAdapter = new DetailAdapter(this, R.layout.item_chapter);
-        mRecycleView.setAdapter(mAdapter);
-        mIvBack.setOnClickListener(this);
+        mLoadingTitle.setText(getIntent().getStringExtra(Constants.COMIC_TITLE));
         mScrollView.setScaleTopListener(new MyScaleTopListener());
-        mAdapter.setOnItemClickListener(this);
         //动画
         mLoading.setImageResource(R.drawable.loading_list);
         AnimationDrawable animationDrawable = (AnimationDrawable) mLoading.getDrawable();
@@ -152,7 +146,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @Override
     public void getDataFinish() {
-        mAdapter.notifyDataSetChanged();
+//        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -193,49 +187,47 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         mPoint.setText(comic.getPoint());
         //showToast(comic.getCollections());
         normal.set(mText.getLeft(), mText.getTop(), DisplayUtil.getMobileWidth(this), mText.getBottom());
-        List<String> datas = comic.getChapters();
-        if (datas != null && datas.size() != 0) {
-            mAdapter.updateWithClear(datas);
-        } else {
-            showToast("未取到数据");
+        for (int i = 0; i < comic.getChapters().size(); i++) {
+            IndexItemView indexItemView = new IndexItemView(this, comic.getChapters().get(i), i);
+            indexItemView.setListener(this);
+            mIndex.addView(indexItemView);
         }
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_back:
-                finish();
-                break;
-            default:
-                break;
+    public void orderData(LinearLayout linearLayout) {
+        mIndex.removeAllViews();
+        mIndex.addView(linearLayout);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        if (mPresenter.isOrder()) {
+            position = mComic.getChapters().size() - position - 1;
+            Log.d("ComicDetailActivity", "position=" + position);
         }
+        IntentUtil.toComicChapter(ComicDetailActivity.this,
+                mPresenter.getComic().getId(),
+                position,
+                mPresenter.getComic().getChapters());
     }
 
     @OnClick({R.id.iv_oreder2, R.id.iv_order})
-    public void orderList(ImageView Order) {
-        mAdapter.setOrder(!mAdapter.isOrder());
-        if (!mAdapter.isOrder()) {
-            mOrder2.setImageResource(R.drawable.daoxu);
-            mOrder.setImageResource(R.drawable.daoxu);
-        } else {
+    public void orderList(ImageView order) {
+        mPresenter.setOrder(!mPresenter.isOrder());
+        if (!mPresenter.isOrder()) {
             mOrder2.setImageResource(R.drawable.zhengxu);
             mOrder.setImageResource(R.drawable.zhengxu);
+        } else {
+            mOrder2.setImageResource(R.drawable.daoxu);
+            mOrder.setImageResource(R.drawable.daoxu);
         }
+        mPresenter.orderIndex(mIndex);
     }
 
     @OnClick(R.id.btn_read)
     public void startRead(View view) {
         IntentUtil.toComicChapter(this, mComicId, 0, mComic.getChapters());
-    }
-
-    @Override
-    public void onItemClick(RecyclerView parent, View view, int position) {
-        if (!mAdapter.isOrder()) {
-            position = mComic.getChapters().size() - position - 1;
-            Log.d("ComicDetailActivity", "position=" + position);
-        }
-        IntentUtil.toComicChapter(this, mComicId, position, mComic.getChapters());
     }
 
 

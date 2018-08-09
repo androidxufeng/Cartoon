@@ -37,10 +37,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
     ImageView mReload;
 
     @OnClick(R.id.iv_error)
-    public void reloadData(View view){
+    public void reloadData(View view) {
         mErrorView.setVisibility(View.GONE);
         mPresenter.loadData();
     }
+
     private MainAdapter mAdapter;
     private int i = 3;
 
@@ -91,7 +92,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
     @Override
     public void getDataFinish() {
         mScrollView.setRefreshing(false);
-        if(mErrorView.isShown()){
+        if (mErrorView.isShown()) {
             mErrorView.setVisibility(View.GONE);
         }
         mAdapter.notifyDataSetChanged();
@@ -144,6 +145,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
         Comic comic = mAdapter.getItems(position);
-        IntentUtil.toComicDetail(this, comic.getId());
+        IntentUtil.toComicDetail(this, comic.getId(), comic.getTitle());
     }
 }
