@@ -92,6 +92,7 @@ public class ReaderMenuLayout extends RelativeLayout {
                 isShow = true;
                 break;
             case View.INVISIBLE:
+                super.setVisibility(VISIBLE);
                 break;
 
             default:

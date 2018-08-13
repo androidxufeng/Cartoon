@@ -41,6 +41,14 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         mContext = context;
     }
 
+    public ChapterViewpagerAdapter(Context context,PreloadChapters preloadChapters,int direct) {
+        this(context);
+        mDatas.addAll(preloadChapters.getPrelist());
+        mDatas.addAll(preloadChapters.getNowlist());
+        mDatas.addAll(preloadChapters.getNextlist());
+        mDirection = direct;
+    }
+
     public int getDirection() {
         return mDirection;
     }
@@ -89,13 +97,11 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
             Glide.with(mContext)
                     .load(mDatas.get(mDatas.size() - position - 1))
                     .placeholder(R.drawable.pic_default_vertical)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
         } else {
             Glide.with(mContext)
                     .load(mDatas.get(position))
                     .placeholder(R.drawable.pic_default_vertical)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
         }
         imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {

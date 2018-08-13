@@ -66,6 +66,17 @@ public class Comic extends BaseBean {
      * 状态
      */
     protected String status;
+
+    public int getReadType() {
+        return readType;
+    }
+
+    public void setReadType(int readType) {
+        this.readType = readType;
+    }
+
+    protected int readType;
+
     public String getTitle() {
         return title;
     }

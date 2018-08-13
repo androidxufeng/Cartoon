@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
-import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.DetailAdapter;
@@ -47,7 +46,7 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
 
     @OnClick({R.id.iv_order})
-    public void OrderList(ImageView Order) {
+    public void OrderList(ImageView order) {
         mAdapter.setOrder(!mAdapter.isOrder());
         if (!mAdapter.isOrder()) {
             mIvOrder.setImageResource(R.drawable.daoxu);
@@ -89,8 +88,12 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
+        if (!mAdapter.isOrder()) {
+            position = mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE).size() - position - 1;
+        }
         IntentUtil.toComicChapter(IndexActivity.this, position,
                 mIntent.getStringExtra(Constants.COMIC_ID), mIntent.getStringExtra(Constants.COMIC_TITLE),
-                mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE));
+                mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE),
+                mIntent.getIntExtra(Constants.COMIC_READ_TYPE,Constants.LEFT_TO_RIGHT));
     }
 }

@@ -20,5 +20,6 @@
 
     </com.tplink.cartoon.ui.widget.ReaderMenuLayout>
 
+    <include layout="@layout/layout_switch_model"/>
     <include layout="@layout/layout_loading"/>
 </RelativeLayout>

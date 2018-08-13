@@ -130,6 +130,8 @@ public class ZBubbleSeekBar extends View {
     private boolean isTouchToSeekAnimEnd = true;
     private float mPreSecValue; // previous SectionValue
 
+    private boolean isLeftToRight = true;
+
     public ZBubbleSeekBar(Context context) {
         this(context, null);
     }
@@ -212,6 +214,17 @@ public class ZBubbleSeekBar extends View {
 
         initConfigByPriority();
         calculateRadiusOfBubble();
+    }
+
+    public void setSeekBarColor(boolean isLeftToRight) {
+        if (isLeftToRight) {
+            this.mTrackColor = Color.parseColor("#535252");
+            this.mSecondTrackColor = Color.parseColor("#ff9a6a");
+        } else {
+            this.mTrackColor = Color.parseColor("#ff9a6a");
+            this.mSecondTrackColor = Color.parseColor("#535252");
+        }
+        this.isLeftToRight = isLeftToRight;
     }
 
     private void initConfigByPriority() {
@@ -1092,7 +1105,12 @@ public class ZBubbleSeekBar extends View {
 
         void setProgressText(String progressText) {
             if (progressText != null && !mProgressText.equals(progressText)) {
-                mProgressText = progressText;
+                if (isLeftToRight) {
+                    mProgressText = progressText;
+                } else {
+                    float a = Float.parseFloat(progressText);
+                    mProgressText = (int) (getMax() - a) + 1 + "";
+                }
                 invalidate();
             }
         }
