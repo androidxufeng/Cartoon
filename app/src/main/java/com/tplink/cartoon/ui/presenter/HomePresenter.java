@@ -12,6 +12,7 @@ import com.tplink.cartoon.ui.source.IMainDataSource;
 import com.tplink.cartoon.ui.view.IHomeView;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -23,12 +24,24 @@ public class HomePresenter extends BasePresenter<IMainDataSource, IHomeView> {
 
     private final CompositeDisposable mDisposable;
 
+    private List<Comic> mDatas, mBanners;
+
+    public List<Comic> getBanners() {
+        return mBanners;
+    }
+
+    public List<Comic> getDatas() {
+        return mDatas;
+    }
+
     public HomePresenter(IMainDataSource dataSource, IHomeView view) {
         super(dataSource, view);
         mDisposable = new CompositeDisposable();
+        mDatas = new ArrayList<>();
+        mBanners = new ArrayList<>();
     }
 
-    public void subscribe(){
+    public void subscribe() {
 
     }
 
@@ -39,7 +52,17 @@ public class HomePresenter extends BasePresenter<IMainDataSource, IHomeView> {
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {
                     @Override
                     public void onNext(List<Comic> comics) {
-                        mView.fillData(comics);
+                        if (comics.size() > 12) {
+                            mView.fillData(comics);
+                            for (int i = 0; i < 4; i++) {
+                                mBanners.add(comics.get(i));
+                            }
+                            mView.fillBanner(mBanners);
+                            mDatas = comics;
+                        } else {
+                            mView.fillBanner(comics);
+                            mBanners = comics;
+                        }
                     }
 
                     @Override
