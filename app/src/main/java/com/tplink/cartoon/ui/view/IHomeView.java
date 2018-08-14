@@ -15,22 +15,7 @@ import com.tplink.cartoon.data.bean.BaseBean;
 
 import java.util.List;
 
-public interface IMainView<T extends BaseBean> extends BaseView {
-    void getDataFinish();
-
-    void showEmptyView();
-
-    void showErrorView(Throwable throwable);
-
-    void showRefresh();
-
-    void hideRefresh();
-
-    /**
-     * 填充数据
-     */
-    void fillData(List<T> data);
-
+public interface IHomeView<T extends BaseBean> extends BaseView {
     /**
      * 添加更多数据（用于刷新）
      *
@@ -42,5 +27,11 @@ public interface IMainView<T extends BaseBean> extends BaseView {
      * 没有更多
      */
     void hasNoMoreData();
+
+    void showErrorView(String throwable);
+
+    void fillData(List<T> data);
+
+    void getDataFinish();
 
 }

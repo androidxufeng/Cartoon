@@ -9,7 +9,8 @@ package com.tplink.cartoon.ui.presenter;
 
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.source.IMainDataSource;
-import com.tplink.cartoon.ui.view.IMainView;
+import com.tplink.cartoon.ui.view.IHomeView;
+import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
 import java.util.List;
 
@@ -18,11 +19,11 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
-public class MainPresenter extends BasePresenter<IMainDataSource, IMainView> {
+public class HomePresenter extends BasePresenter<IMainDataSource, IHomeView> {
 
     private final CompositeDisposable mDisposable;
 
-    public MainPresenter(IMainDataSource dataSource, IMainView view) {
+    public HomePresenter(IMainDataSource dataSource, IHomeView view) {
         super(dataSource, view);
         mDisposable = new CompositeDisposable();
     }
@@ -67,7 +68,7 @@ public class MainPresenter extends BasePresenter<IMainDataSource, IMainView> {
 
                     @Override
                     public void onError(Throwable t) {
-                        mView.showErrorView(t);
+                        mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                     }
 
                     @Override

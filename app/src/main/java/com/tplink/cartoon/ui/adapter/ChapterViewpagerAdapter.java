@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
@@ -41,7 +40,7 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         mContext = context;
     }
 
-    public ChapterViewpagerAdapter(Context context,PreloadChapters preloadChapters,int direct) {
+    public ChapterViewpagerAdapter(Context context, PreloadChapters preloadChapters, int direct) {
         this(context);
         mDatas.addAll(preloadChapters.getPrelist());
         mDatas.addAll(preloadChapters.getNowlist());
@@ -63,7 +62,7 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         mDatas.addAll(datas.getPrelist());
         mDatas.addAll(datas.getNowlist());
         mDatas.addAll(datas.getNextlist());
-        Log.d("ceshi", "setDatas: data  "+mDatas);
+        Log.d("ceshi", "setDatas: data  " + mDatas);
         notifyDataSetChanged();
     }
 

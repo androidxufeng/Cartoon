@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activity.HomeActivity">
+
+    <com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView
+        android:id="@+id/sv_comic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBg">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="160dp">
+
+                <RelativeLayout
+                    android:id="@+id/rl_loading"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="#f5f5ee">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_centerHorizontal="true"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_margin="5dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/loading" />
+
+                        <TextView
+                            android:id="@+id/tv_loading"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:gravity="center"
+                            android:text="努力加载中..." />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_loading"
+                    android:padding="10dp"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:layout_below="@id/recycle_view"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/bottom" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_error_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="500dp"
+                    android:background="@color/colorBgDark"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_error_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/error_bg" />
+
+                    <ImageView
+                        android:id="@+id/iv_error"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/iv_error_bg"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/btn_reload" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/top" />
+        </RelativeLayout>
+    </com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView>
+</RelativeLayout>

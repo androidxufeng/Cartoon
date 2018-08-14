@@ -18,6 +18,8 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 public interface IMainDataSource extends IDataSource {
+
     Flowable<List<Comic>> loadData();
+
     Flowable<List<Comic>> loadMoreData(int page);
 }

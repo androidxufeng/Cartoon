@@ -81,7 +81,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     public void toIndex(View view) {
         IntentUtil.toIndex(ComicChapterActivity.this, mPresenter.getComicId(),
                 mPresenter.getComicChapterTitle(), getIntent().getStringExtra(Constants.COMIC_TITLE)
-        ,mPresenter.getDirect());
+                , mPresenter.getDirect());
     }
 
     private ChapterViewpagerAdapter mAdapter;
@@ -108,12 +108,12 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     public void fillData(PreloadChapters data) {
         mPresenter.setPreloadChapters(data);
         mAdapter.setDatas(data);
-        if (mAdapter.getDirection() == Constants.RIGHT_TO_LEFT) {
-            mViewpager.setCurrentItem(data.getNextlist().size() + data.getNowlist().size() - 1, false);//关闭切换动画
-        } else {
-            mViewpager.setCurrentItem(data.getPrelist().size(), false);
-        }
         mSeekBar.setmMax(data.getNowSize());
+        if (mAdapter.getDirection() == Constants.RIGHT_TO_LEFT) {
+            mViewpager.setCurrentItem(data.getNextSize() + data.getNowSize() - 1, false);//关闭切换动画
+        } else {
+            mViewpager.setCurrentItem(data.getPreSize(), false);
+        }
     }
 
     @Override
@@ -140,7 +140,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
             if (mAdapter.getDirection() == Constants.LEFT_TO_RIGHT) {
                 mSeekBar.setProgress(1);
             } else {
-                mSeekBar.setProgress(data.getNowlist().size());
+                mSeekBar.setProgress(data.getNowSize());
             }
         }
     }
@@ -154,7 +154,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         // 所以调用刷新方法后没有调用onPageSelected方法，故没有设置Progress
         if (mPresenter.getComicChapters() == 0) {
             if (mAdapter.getDirection() == Constants.LEFT_TO_RIGHT) {
-                mSeekBar.setProgress(data.getNowlist().size());
+                mSeekBar.setProgress(data.getNowSize());
             } else {
                 mSeekBar.setProgress(1);
             }
@@ -176,14 +176,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
             mViewpager.setAdapter(mAdapter);
             mPresenter.setDirect(direct);
             mSwitchModel.setVisibility(View.GONE, direct);
-            initReaderModule();
-            if (direct == Constants.LEFT_TO_RIGHT) {
-                mNormal.setBackgroundResource(R.drawable.normal_model_press);
-                mJcomic.setBackgroundResource(R.drawable.btn_switchmodel_j_comic);
-            } else {
-                mNormal.setBackgroundResource(R.drawable.btn_switchmodel_normal);
-                mJcomic.setBackgroundResource(R.drawable.j_comic_model_press);
-            }
+            initReaderModule(direct);
             mViewpager.setCurrentItem(mPresenter.getPreloadChapters().getDataSize() - mViewpager.getCurrentItem() - 1, false);
         }
     }
@@ -293,30 +286,30 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
             @Override
             public void getProgressOnFinally(int progress, float progressFloat) {
-                //设置加载时候的标题
-                mtvLoading.setText(mPresenter.getComicChapterTitle().get(mPresenter.getComicChapters()));
-                mPresenter.getChapterData();
-                initReaderModule();
+
             }
-
-
         });
+        //设置加载时候的标题
+        mtvLoading.setText(mPresenter.getComicChapterTitle().get(mPresenter.getComicChapters()));
     }
 
     @Override
     protected void initData() {
         mPresenter.getChapterData();
+        initReaderModule(mPresenter.getDirect());
     }
 
     /**
      * 初始化阅读模式做一些处理
      */
-    private void initReaderModule() {
-        if (mAdapter.getDirection() == Constants.LEFT_TO_RIGHT) {
+    private void initReaderModule(int direct) {
+        if (direct == Constants.LEFT_TO_RIGHT) {
             mSeekBar.setSeekBarColor(true);
             mNormal.setBackgroundResource(R.drawable.normal_model_press);
+            mJcomic.setBackgroundResource(R.drawable.btn_switchmodel_j_comic);
         } else {
             mSeekBar.setSeekBarColor(false);
+            mNormal.setBackgroundResource(R.drawable.btn_switchmodel_normal);
             mJcomic.setBackgroundResource(R.drawable.j_comic_model_press);
         }
     }

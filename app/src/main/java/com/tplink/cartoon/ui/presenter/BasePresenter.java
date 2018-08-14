@@ -12,10 +12,9 @@ package com.tplink.cartoon.ui.presenter;
  */
 
 import com.tplink.cartoon.ui.source.IDataSource;
-import com.tplink.cartoon.ui.source.IMainDataSource;
 import com.tplink.cartoon.ui.view.BaseView;
 
-public class BasePresenter<M extends IDataSource ,V extends BaseView> {
+public class BasePresenter<M extends IDataSource, V extends BaseView> {
 
     protected final M mDataSource;
     protected final V mView;

@@ -1,19 +1,28 @@
-package com.tplink.cartoon.ui.activity;
+/*
+ *
+ * Description
+ *
+ * Author xufeng
+ *
+ * Ver 1.0, 18-8-14, xufeng, Create file
+ */
+package com.tplink.cartoon.ui.fragment;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.MainAdapter;
-import com.tplink.cartoon.ui.presenter.MainPresenter;
+import com.tplink.cartoon.ui.presenter.HomePresenter;
 import com.tplink.cartoon.ui.source.MainDataSource;
-import com.tplink.cartoon.ui.view.IMainView;
+import com.tplink.cartoon.ui.view.IHomeView;
 import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.ui.widget.NoScrollStaggeredGridLayoutManager;
 import com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView;
@@ -24,18 +33,20 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class MainActivity extends BaseActivity<MainPresenter> implements IMainView, BaseRecyclerAdapter.OnItemClickListener {
+public class HomeFragment extends BaseFragment<HomePresenter> implements
+        IHomeView<Comic>, BaseRecyclerAdapter.OnItemClickListener {
+
     @BindView(R.id.recycle_view)
     RecyclerView mRecycleView;
-
     @BindView(R.id.sv_comic)
     ZElasticRefreshScrollView mScrollView;
-
     @BindView(R.id.rl_error_view)
     RelativeLayout mErrorView;
-
     @BindView(R.id.iv_error)
     ImageView mReload;
+
+    private int i = 3;
+
 
     @OnClick(R.id.iv_error)
     public void reloadData(View view) {
@@ -44,29 +55,23 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
     }
 
     private MainAdapter mAdapter;
-    private int i = 3;
 
     @Override
-    protected void initPresenter(Intent intent) {
+    protected void initPresenter() {
         MainDataSource mainDataSource = new MainDataSource();
-        mPresenter = new MainPresenter(mainDataSource, this);
+        mPresenter = new HomePresenter(mainDataSource, this);
     }
 
     @Override
-    protected int getLayout() {
-        return R.layout.activity_main;
-    }
-
-    @Override
-    protected void initView() {
+    protected void initView(View view, Bundle savedInstanceState) {
         NoScrollStaggeredGridLayoutManager layoutManager = new NoScrollStaggeredGridLayoutManager(
                 2, StaggeredGridLayoutManager.VERTICAL);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
-        mAdapter = new MainAdapter(this, R.layout.item_image);
+        mAdapter = new MainAdapter(mActivity, R.layout.item_image);
         mRecycleView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-        mRecycleView.addItemDecoration(new DividerGridItemDecoration(this));
+        mRecycleView.addItemDecoration(new DividerGridItemDecoration(mActivity));
         mScrollView.setRefreshListener(new ZElasticRefreshScrollView.RefreshListener() {
             @Override
             public void onRefresh() {
@@ -83,11 +88,17 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
                 i++;
             }
         });
+        mPresenter.loadData();
     }
 
     @Override
-    protected void initData() {
-        mPresenter.loadData();
+    protected int getLayoutId() {
+        return R.layout.fragment_home;
+    }
+
+    @Override
+    public void showToast(String t) {
+        Toast.makeText(mActivity, t, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -100,28 +111,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
     }
 
     @Override
-    public void showEmptyView() {
-
-    }
-
-    @Override
-    public void showErrorView(Throwable throwable) {
+    public void showErrorView(String throwable) {
         mScrollView.setRefreshing(false);
         mErrorView.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void showRefresh() {
-
-    }
 
     @Override
-    public void hideRefresh() {
-
-    }
-
-    @Override
-    public void fillData(List data) {
+    public void fillData(List<Comic> data) {
         if (data != null && data.size() != 0) {
             mAdapter.updateWithClear(data);
         } else {
@@ -130,7 +127,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
     }
 
     @Override
-    public void appendMoreDataToView(List data) {
+    public void appendMoreDataToView(List<Comic> data) {
         if (data != null && data.size() != 0) {
             mAdapter.update(data);
         } else {
@@ -140,12 +137,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements IMainVi
 
     @Override
     public void hasNoMoreData() {
-
+        showToast("没有数据了");
     }
 
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
         Comic comic = mAdapter.getItems(position);
-        IntentUtil.toComicDetail(this, comic.getId(), comic.getTitle());
+        IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
     }
 }

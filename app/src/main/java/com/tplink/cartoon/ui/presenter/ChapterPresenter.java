@@ -74,7 +74,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         mDirect = Constants.LEFT_TO_RIGHT;
     }
 
-    public void init(String comicId, List<String> comicChapterTitle, int Chapters ,int type) {
+    public void init(String comicId, List<String> comicChapterTitle, int Chapters, int type) {
         mComicId = comicId;
         this.mComicChapterTitle = comicChapterTitle;
         this.mComicChapters = Chapters;
@@ -146,69 +146,68 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     }
 
     public void loadMoreData(int position, int direct) {
-        String chapter_title = null;
+        String chapterTitle = null;
         mDirect = direct;
-        int now_postion = 0;
-        int comicSize = 0;
+        int nowPostion = 0;
 
         switch (direct) {
             case Constants.LEFT_TO_RIGHT:
-                if (position < mPreloadChapters.getPrelist().size()) {
-                    mLoadingPosition = position - mPreloadChapters.getPrelist().size() + 1;
-                    chapter_title = mComicChapterTitle.get(mComicChapters - 1);//前一章
-                    comicSize = mPreloadChapters.getPrelist().size();
-                    now_postion = position;
+                if (position < mPreloadChapters.getPreSize()) {
+                    mLoadingPosition = position - mPreloadChapters.getPreSize() + 1;
+                    chapterTitle = mComicChapterTitle.get(mComicChapters - 1);//前一章
+                    mComicSize = mPreloadChapters.getPreSize();
+                    nowPostion = position;
                     if (!isLoadingdata) {
                         isLoadingdata = true;
-                        getPreChapterData(mComicId, mComicChapters, Constants.LEFT_TO_RIGHT);
+                        getPreChapterData(mComicId, mComicChapters, direct);
                     }
-                } else if (position >= mPreloadChapters.getPrelist().size() + mPreloadChapters.getNowlist().size()) {//后一章
-                    mLoadingPosition = position - mPreloadChapters.getPrelist().size() - mPreloadChapters.getNowlist().size();
-                    comicSize = mPreloadChapters.getNextlist().size();
-                    chapter_title = mComicChapterTitle.get(mComicChapters + 1);
-                    now_postion = position - mPreloadChapters.getPrelist().size() - mPreloadChapters.getNowlist().size();
+                } else if (position >= mPreloadChapters.getPreSize() + mPreloadChapters.getNowSize()) {//后一章
+                    mLoadingPosition = position - mPreloadChapters.getPreSize() - mPreloadChapters.getNowSize();
+                    mComicSize = mPreloadChapters.getNextSize();
+                    chapterTitle = mComicChapterTitle.get(mComicChapters + 1);
+                    nowPostion = position - mPreloadChapters.getPreSize() - mPreloadChapters.getNowSize();
                     if (!isLoadingdata) {
                         isLoadingdata = true;
-                        getNextChapterData(mComicId, mComicChapters, Constants.LEFT_TO_RIGHT);
+                        getNextChapterData(mComicId, mComicChapters, direct);
                     }
                 } else {//当前章节
                     isLoadingdata = false;
-                    comicSize = mPreloadChapters.getNowlist().size();
-                    chapter_title = mComicChapterTitle.get(mComicChapters);
-                    now_postion = position - mPreloadChapters.getPrelist().size();
+                    mComicSize = mPreloadChapters.getNowSize();
+                    chapterTitle = mComicChapterTitle.get(mComicChapters);
+                    nowPostion = position - mPreloadChapters.getPreSize();
                 }
                 break;
             case Constants.RIGHT_TO_LEFT:
-                if (position < mPreloadChapters.getNextlist().size()) {
-                    mLoadingPosition = position - mPreloadChapters.getNextlist().size() + 1;
-                    chapter_title = mComicChapterTitle.get(mComicChapters + 1);//后一章
-                    mComicSize = mPreloadChapters.getNextlist().size();
-                    now_postion = position;
+                if (position < mPreloadChapters.getNextSize()) {
+                    mLoadingPosition = position - mPreloadChapters.getNextSize() + 1;
+                    chapterTitle = mComicChapterTitle.get(mComicChapters + 1);//后一章
+                    mComicSize = mPreloadChapters.getNextSize();
+                    nowPostion = position;
                     if (!isLoadingdata) {
                         isLoadingdata = true;
-                        getNextChapterData(mComicId, mComicChapters, mDirect);
+                        getNextChapterData(mComicId, mComicChapters, direct);
                     }
-                } else if (position >= mPreloadChapters.getNextlist().size() + mPreloadChapters.getNowlist().size()) {//前一章
-                    mLoadingPosition = position - mPreloadChapters.getNextlist().size() - mPreloadChapters.getNowlist().size();
-                    mComicSize = mPreloadChapters.getPrelist().size();
-                    chapter_title = mComicChapterTitle.get(mComicChapters - 1);
-                    now_postion = position - mPreloadChapters.getNextlist().size() - mPreloadChapters.getNowlist().size();
+                } else if (position >= mPreloadChapters.getNextSize() + mPreloadChapters.getNowSize()) {//前一章
+                    mLoadingPosition = position - mPreloadChapters.getNextSize() - mPreloadChapters.getNowSize();
+                    mComicSize = mPreloadChapters.getPreSize();
+                    chapterTitle = mComicChapterTitle.get(mComicChapters - 1);
+                    nowPostion = position - mPreloadChapters.getNextSize() - mPreloadChapters.getNowSize();
                     if (!isLoadingdata) {
                         isLoadingdata = true;
-                        getPreChapterData(mComicId, mComicChapters, Constants.LEFT_TO_RIGHT);
+                        getPreChapterData(mComicId, mComicChapters, direct);
                     }
                 } else {//当前章节
                     isLoadingdata = false;
-                    mComicSize = mPreloadChapters.getNowlist().size();
-                    chapter_title = mComicChapterTitle.get(mComicChapters);
-                    now_postion = position - mPreloadChapters.getNextlist().size();
+                    mComicSize = mPreloadChapters.getNowSize();
+                    chapterTitle = mComicChapterTitle.get(mComicChapters);
+                    nowPostion = position - mPreloadChapters.getNextSize();
                 }
                 break;
             default:
                 break;
         }
 
-        setTitle(chapter_title, comicSize, now_postion, mDirect);
+        setTitle(chapterTitle, mComicSize, nowPostion, mDirect);
     }
 
     public void getNextChapterData(String id, int chapter, int direction) {
@@ -323,12 +322,12 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         }
     }
 
-    public void setTitle(String comic_chapter_title, int comic_size, int position, int direct) {
+    public void setTitle(String comicChapterTitle, int comicSize, int position, int direct) {
         String title = null;
         if (direct == Constants.LEFT_TO_RIGHT) {
-            title = comic_chapter_title + (position + 1) + "/" + comic_size;
+            title = comicChapterTitle + (position + 1) + "/" + comicSize;
         } else {
-            title = comic_chapter_title + (comic_size - position) + "/" + comic_size;
+            title = comicChapterTitle + (comicSize - position) + "/" + comicSize;
         }
         mView.setTitle(title);
     }
