@@ -53,6 +53,8 @@ dependencies {
 
     implementation 'com.xw.repo:bubbleseekbar:3.4-lite'
 
+    implementation "com.zhy:base-rvadapter:$rootProject.ext.rvadapter_version"
+
     //test
     testImplementation "junit:junit:$rootProject.ext.junit_version"
     androidTestImplementation "com.android.support.test:runner:$rootProject.ext.runner_version"

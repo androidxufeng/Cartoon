@@ -97,11 +97,6 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     }
 
     @Override
-    public void showToast(String t) {
-        Toast.makeText(mActivity, t, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
     public void getDataFinish() {
         mScrollView.setRefreshing(false);
         if (mErrorView.isShown()) {
@@ -144,5 +139,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     public void onItemClick(RecyclerView parent, View view, int position) {
         Comic comic = mAdapter.getItems(position);
         IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+    }
+
+    @Override
+    public void showToast(String t) {
+        Toast.makeText(mActivity, t, Toast.LENGTH_SHORT).show();
     }
 }

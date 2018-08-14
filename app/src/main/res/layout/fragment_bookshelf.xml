@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorBg"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TextView
+    android:background="@color/colorBg">
+
+    <View
+        android:id="@+id/v_top"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="@color/colorAccent" />
+
+    <RelativeLayout
+        android:id="@+id/rl_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/v_top"
+        android:background="@color/colorAccent">
+
+        <TextView
+            android:id="@+id/tv_loading_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/app_bookshelf"
+            android:textColor="@color/colorBg"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_bookshelf"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="this is BookShelf fragment" />
-</LinearLayout>
+        android:layout_below="@id/rl_actionbar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
+
+
+</RelativeLayout>
