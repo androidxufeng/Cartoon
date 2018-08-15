@@ -97,6 +97,8 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     TextView mLoadingTitle;
     @BindView(R.id.ll_index)
     LinearLayout mIndex;
+    @BindView(R.id.iv_collect)
+    ImageView mCollect;
 
     @OnClick(R.id.iv_error)
     public void reload(View view) {
@@ -111,15 +113,20 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         finish();
     }
 
+    @OnClick(R.id.iv_collect)
+    void selectComic(View v){
+        mPresenter.collectComic();
+    }
+
     private Comic mComic;
     private float mScale;
     private float mDy;
     private Rect normal = new Rect();
-    private String mComicId;
+    private Long mComicId;
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new DetailPresenter(new DetailDataSource(), this);
+        mPresenter = new DetailPresenter(new DetailDataSource(this), this);
     }
 
     @Override
@@ -139,7 +146,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @Override
     protected void initData() {
-        mComicId = getIntent().getStringExtra(Constants.COMIC_ID);
+        mComicId = getIntent().getLongExtra(Constants.COMIC_ID, 0);
         mPresenter.getDetail(mComicId);
     }
 
@@ -192,6 +199,11 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     public void orderData(int res) {
         mOrder.setImageResource(res);
         mOrder2.setImageResource(res);
+    }
+
+    @Override
+    public void setCollect() {
+        mCollect.setImageResource(R.drawable.collect_select);
     }
 
     @Override

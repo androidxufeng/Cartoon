@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.tplink.cartoon.utils.GlideImageLoader;
 
 /**
  * 万能的RecyclerView的ViewHolder
@@ -92,11 +93,7 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
      */
     public BaseRecyclerHolder setImageByUrl(int viewId,String url){
         ImageView iv = getView(viewId);
-        Glide.with(context)
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .dontAnimate()
-                .into(iv);
+        GlideImageLoader.loadImage(context,url,iv);
         return this;
     }
 }

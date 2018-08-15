@@ -20,7 +20,8 @@ public class BookShelfAdapter extends BaseRecyclerAdapter<Comic> {
 
     @Override
     public void convert(BaseRecyclerHolder holder, Comic item, int position) {
-        holder.setText(R.id.tv_title,item.getTitle());
-        holder.setImageByUrl(R.id.iv_image,item.getCover());
+        holder.setText(R.id.tv_title, item.getTitle());
+        holder.setImageByUrl(R.id.iv_image, item.getCover());
+        holder.setText(R.id.tv_index_reader, item.getChapters().size() + "话");
     }
 }

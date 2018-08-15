@@ -1,4 +1,11 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
+
+greendao {
+    schemaVersion 2
+    daoPackage 'com.tplink.cartoon.greendao'
+    targetGenDir 'src/main/java'
+}
 
 android {
     compileSdkVersion 27
@@ -56,6 +63,10 @@ dependencies {
     implementation "com.zhy:base-rvadapter:$rootProject.ext.rvadapter_version"
 
     implementation "com.youth.banner:banner:$rootProject.ext.banner_version"
+
+    //greenDao
+    implementation "org.greenrobot:greendao:$rootProject.ext.greenDao_version"
+    implementation "org.greenrobot:greendao-generator:$rootProject.ext.greenDao_version"
 
     //test
     testImplementation "junit:junit:$rootProject.ext.junit_version"

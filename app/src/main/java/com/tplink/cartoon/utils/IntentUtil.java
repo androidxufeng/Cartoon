@@ -25,7 +25,7 @@ import java.util.List;
 
 public class IntentUtil {
 
-    public static void toComicDetail(Context context, String id, String title) {
+    public static void toComicDetail(Context context, long id, String title) {
         Intent intent = new Intent(context, ComicDetailActivity.class);
         intent.putExtra(Constants.COMIC_ID, id);
         intent.putExtra(Constants.COMIC_TITLE, title);

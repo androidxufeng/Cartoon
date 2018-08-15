@@ -11,6 +11,7 @@ package com.tplink.cartoon.application;
 import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
+import com.tplink.cartoon.db.DaoManager;
 
 public class CartoonApp extends Application {
 
@@ -23,5 +24,7 @@ public class CartoonApp extends Application {
             return;
         }
         LeakCanary.install(this);
+        //初始化GreenDao
+        DaoManager.getInstance(this.getApplicationContext());
     }
 }

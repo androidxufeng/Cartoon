@@ -134,7 +134,6 @@ public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRe
                 return false;
             }
         });
-
         convert(holder, list.get(position), position);
 
     }

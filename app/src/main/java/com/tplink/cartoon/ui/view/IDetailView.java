@@ -15,4 +15,6 @@ package com.tplink.cartoon.ui.view;
 public interface IDetailView<T> extends ILoadDataView<T> {
 
     void orderData(int res);
+
+    void setCollect();
 }

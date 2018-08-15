@@ -65,7 +65,7 @@ public class MainDataSource implements IMainDataSource {
             Comic comic = new Comic();
             comic.setTitle(detail.get(i).select("a").attr("title"));
             comic.setCover(detail.get(i).select("img").attr("data-original"));
-            comic.setId(getID(infos.get(i).select("a").attr("href")));
+            comic.setId(Long.parseLong(getID(infos.get(i).select("a").attr("href"))));
             mdats.add(comic);
         }
         return mdats;

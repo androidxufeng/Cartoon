@@ -79,5 +79,4 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
     public void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
-
 }

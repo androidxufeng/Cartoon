@@ -22,6 +22,8 @@ public class Constants {
     public static final int RIGHT_TO_LEFT = 0;
     public static final int LEFT_TO_RIGHT = 1;
 
+    public static final String DB_NAME = "comic.db";
+
     //抓取腾讯漫画TOP
     public static String TENCENTTOPURL = "http://ac.qq.com/Comic/all/state/pink/search/hot/page/";
     //抓取腾讯漫画详情页面

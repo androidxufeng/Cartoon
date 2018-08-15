@@ -12,6 +12,7 @@ package com.tplink.cartoon.ui.presenter;
  */
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,7 +45,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
         mComic = new Comic();
     }
 
-    public void getDetail(final String comicId) {
+    public void getDetail(final long comicId) {
         DisposableSubscriber<Comic> disposable = mDataSource.getDetail(comicId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,6 +65,57 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                     @Override
                     public void onComplete() {
                         mView.getDataFinish();
+                    }
+                });
+
+        DisposableSubscriber<Boolean> disposable2 = mDataSource.isCollect(comicId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            mView.setCollect();
+                        }
+                    }
+
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+        mCompositeDisposable.add(disposable2);
+    }
+
+    public void collectComic() {
+        DisposableSubscriber<Boolean> disposable = mDataSource.collectComic(mComic)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            mView.setCollect();
+                        } else {
+                            mView.showToast("收藏失败");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        mView.showToast("收藏失败11111"+t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
                     }
                 });
         mCompositeDisposable.add(disposable);

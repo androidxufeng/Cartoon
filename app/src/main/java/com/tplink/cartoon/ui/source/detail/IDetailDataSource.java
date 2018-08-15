@@ -12,10 +12,15 @@ package com.tplink.cartoon.ui.source.detail;
  */
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.ui.source.IDataSource;
 
 import io.reactivex.Flowable;
 
-public interface IDetailDataSource {
+public interface IDetailDataSource extends IDataSource{
 
-    Flowable<Comic> getDetail(String comicId);
+    Flowable<Comic> getDetail(long comicId);
+
+    Flowable<Boolean> collectComic(Comic comic);
+
+    Flowable<Boolean> isCollect(long id);
 }

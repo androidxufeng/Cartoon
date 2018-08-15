@@ -13,6 +13,7 @@ package com.tplink.cartoon.ui.presenter;
 
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.fragment.BookShelfFragment;
+import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.source.MainDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
@@ -23,17 +24,17 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
-public class BookShelfPresenter extends BasePresenter<MainDataSource, BookShelfFragment> {
+public class BookShelfPresenter extends BasePresenter<BookShelfDataSource, BookShelfFragment> {
 
     private final CompositeDisposable mCompositeDisposable;
 
-    public BookShelfPresenter(MainDataSource dataSource, BookShelfFragment view) {
+    public BookShelfPresenter(BookShelfDataSource dataSource, BookShelfFragment view) {
         super(dataSource, view);
         mCompositeDisposable = new CompositeDisposable();
     }
 
     public void loadData() {
-        DisposableSubscriber<List<Comic>> disposable = mDataSource.loadMoreData(1)
+        DisposableSubscriber<List<Comic>> disposable = mDataSource.getCollectedComicList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {

@@ -11,10 +11,21 @@ package com.tplink.cartoon.data.bean;
  * Ver 1.0, 18-7-27, xufeng, Create file
  */
 
+import com.tplink.cartoon.utils.StringConverter;
+
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Comic extends BaseBean {
+
+    @Id
+    protected long id;
 
     /**
      * 标题
@@ -31,10 +42,12 @@ public class Comic extends BaseBean {
     /**
      * 章节标题
      */
-    protected ArrayList<String> chapters;
+    @Convert(columnType = String.class,converter = StringConverter.class)
+    protected List<String> chapters;
     /**
      * 标签
      */
+    @Convert(columnType = String.class,converter = StringConverter.class)
     protected List<String> tags;
     /**
      * 收藏数
@@ -102,7 +115,7 @@ public class Comic extends BaseBean {
         this.author = author;
     }
 
-    public ArrayList<String> getChapters() {
+    public List<String> getChapters() {
         return chapters;
     }
 
@@ -174,6 +187,14 @@ public class Comic extends BaseBean {
         this.status = status;
     }
 
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Comic{" +
@@ -190,6 +211,37 @@ public class Comic extends BaseBean {
                 ", updates='" + updates + '\'' +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    public void setChapters(List<String> chapters) {
+        this.chapters = chapters;
+    }
+
+    @Generated(hash = 1568780585)
+    public Comic(long id, String title, String cover, String author,
+                 List<String> chapters, List<String> tags, String collections,
+                 String describe, String point, String popularity, String topics,
+                 String updates, String status, int readType) {
+        this.id = id;
+        this.title = title;
+        this.cover = cover;
+        this.author = author;
+        this.chapters = chapters;
+        this.tags = tags;
+        this.collections = collections;
+        this.describe = describe;
+        this.point = point;
+        this.popularity = popularity;
+        this.topics = topics;
+        this.updates = updates;
+        this.status = status;
+        this.readType = readType;
+    }
+
+
+
+    @Generated(hash = 1347984162)
+    public Comic() {
     }
 
 
