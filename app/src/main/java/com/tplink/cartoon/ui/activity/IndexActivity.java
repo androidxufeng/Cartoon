@@ -30,7 +30,8 @@ import com.tplink.cartoon.utils.IntentUtil;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class IndexActivity extends BaseActivity<IndexPresenter> implements IIndexView, BaseRecyclerAdapter.OnItemClickListener {
+public class IndexActivity extends BaseActivity<IndexPresenter> implements IIndexView,
+        BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_index)
     RecyclerView mRecyclerView;
     @BindView(R.id.iv_order)
@@ -92,8 +93,8 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
             position = mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE).size() - position - 1;
         }
         IntentUtil.toComicChapter(IndexActivity.this, position,
-                mIntent.getStringExtra(Constants.COMIC_ID), mIntent.getStringExtra(Constants.COMIC_TITLE),
+                mIntent.getLongExtra(Constants.COMIC_ID, 0), mIntent.getStringExtra(Constants.COMIC_TITLE),
                 mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE),
-                mIntent.getIntExtra(Constants.COMIC_READ_TYPE,Constants.LEFT_TO_RIGHT));
+                mIntent.getIntExtra(Constants.COMIC_READ_TYPE, Constants.LEFT_TO_RIGHT));
     }
 }

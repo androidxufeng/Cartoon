@@ -16,11 +16,15 @@ import com.tplink.cartoon.ui.source.IDataSource;
 
 import io.reactivex.Flowable;
 
-public interface IDetailDataSource extends IDataSource{
+public interface IDetailDataSource extends IDataSource {
 
     Flowable<Comic> getDetail(long comicId);
 
-    Flowable<Boolean> collectComic(Comic comic);
+    Flowable<Boolean> saveComicToDB(Comic comic);
 
     Flowable<Boolean> isCollect(long id);
+
+    Flowable<Boolean> updateComicToDB(Comic comic);
+
+    Flowable<Comic> getComicFromDB(long comicId);
 }

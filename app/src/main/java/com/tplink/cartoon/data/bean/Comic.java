@@ -11,6 +11,8 @@ package com.tplink.cartoon.data.bean;
  * Ver 1.0, 18-7-27, xufeng, Create file
  */
 
+import android.text.BoringLayout;
+
 import com.tplink.cartoon.utils.StringConverter;
 
 import org.greenrobot.greendao.annotation.Convert;
@@ -80,7 +82,21 @@ public class Comic extends BaseBean {
      */
     protected String status;
 
-    private int currentChapter;
+    protected int currentChapter;
+
+    protected long updateTime;
+
+    protected long createTime;
+
+    public boolean isCollect() {
+        return isCollect;
+    }
+
+    public void setCollect(boolean collect) {
+        isCollect = collect;
+    }
+
+    protected boolean isCollect;
 
     public int getReadType() {
         return readType;
@@ -206,6 +222,22 @@ public class Comic extends BaseBean {
         this.currentChapter = currentChapter;
     }
 
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public long getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
+    }
+
     @Override
     public String toString() {
         return "Comic{" +
@@ -228,11 +260,20 @@ public class Comic extends BaseBean {
         this.chapters = chapters;
     }
 
-    @Generated(hash = 308500042)
+    public boolean getIsCollect() {
+        return this.isCollect;
+    }
+
+    public void setIsCollect(boolean isCollect) {
+        this.isCollect = isCollect;
+    }
+
+    @Generated(hash = 1733893838)
     public Comic(long id, String title, String cover, String author,
             List<String> chapters, List<String> tags, String collections,
             String describe, String point, String popularity, String topics,
-            String updates, String status, int currentChapter, int readType) {
+            String updates, String status, int currentChapter, long updateTime,
+            long createTime, boolean isCollect, int readType) {
         this.id = id;
         this.title = title;
         this.cover = cover;
@@ -247,6 +288,9 @@ public class Comic extends BaseBean {
         this.updates = updates;
         this.status = status;
         this.currentChapter = currentChapter;
+        this.updateTime = updateTime;
+        this.createTime = createTime;
+        this.isCollect = isCollect;
         this.readType = readType;
     }
 

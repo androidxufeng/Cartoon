@@ -17,4 +17,6 @@ public interface IDetailView<T> extends ILoadDataView<T> {
     void orderData(int res);
 
     void setCollect();
+
+    void setCurrent(int current);
 }

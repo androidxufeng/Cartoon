@@ -10,6 +10,7 @@ package com.tplink.cartoon.db;
 import android.content.Context;
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.greendao.ComicDao;
 import com.tplink.cartoon.greendao.DaoMaster;
 import com.tplink.cartoon.greendao.DaoSession;
 
@@ -125,4 +126,14 @@ public class DaoHelper<T> {
         List<T> list = session.loadAll(clazz);
         return list;
     }
+
+    public List<Comic> queryCollect() {
+        List<Comic> list = mDaoManager.getDaoSession().getComicDao().queryBuilder()
+                .where(ComicDao.Properties.IsCollect.eq(true))
+                .limit(1000)
+                .orderAsc(ComicDao.Properties.CreateTime)
+                .list();
+        return list;
+    }
 }
+

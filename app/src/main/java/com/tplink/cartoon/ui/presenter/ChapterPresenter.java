@@ -51,14 +51,14 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
 
     private int mComicChapters;
     private List<String> mComicChapterTitle;
-    private String mComicId;
+    private long mComicId;
     private int mComicSize;
 
     public List<String> getComicChapterTitle() {
         return mComicChapterTitle;
     }
 
-    public String getComicId() {
+    public long getComicId() {
 
         return mComicId;
     }
@@ -74,7 +74,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         mDirect = Constants.LEFT_TO_RIGHT;
     }
 
-    public void init(String comicId, List<String> comicChapterTitle, int Chapters, int type) {
+    public void init(long comicId, List<String> comicChapterTitle, int Chapters, int type) {
         mComicId = comicId;
         this.mComicChapterTitle = comicChapterTitle;
         this.mComicChapters = Chapters;
@@ -141,8 +141,34 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                         }
                     });
             mCompositeDisposable.add(disposable);
-
         }
+    }
+
+
+    public void updateComicCurrentChapter() {
+        DisposableSubscriber<Boolean> disposableSubscriber = mDataSource.updateComicCurrentChapter(mComicId, mComicChapters)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            mView.showToast("保存当前话成功" + (mComicChapters + 1));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+
+                    }
+                });
+        mCompositeDisposable.add(disposableSubscriber);
     }
 
     public void loadMoreData(int position, int direct) {
@@ -210,7 +236,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         setTitle(chapterTitle, mComicSize, nowPostion, mDirect);
     }
 
-    public void getNextChapterData(String id, int chapter, int direction) {
+    public void getNextChapterData(long id, int chapter, int direction) {
         DisposableSubscriber<DBChapters> disposable = mDataSource.loadNextData(id, chapter, direction)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -258,7 +284,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         mCompositeDisposable.add(disposable);
     }
 
-    public void getPreChapterData(String id, int chapter, int direction) {
+    public void getPreChapterData(long id, int chapter, int direction) {
         DisposableSubscriber<DBChapters> disposable = mDataSource.loadPreData(id, chapter, direction)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

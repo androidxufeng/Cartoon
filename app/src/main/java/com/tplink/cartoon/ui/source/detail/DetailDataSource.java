@@ -45,6 +45,11 @@ public class DetailDataSource implements IDetailDataSource {
             public void subscribe(FlowableEmitter<Comic> emitter) throws Exception {
                 Document doc = Jsoup.connect(Constants.TENCENTDETAIL + comicId).get();
                 Comic comic = transToComicDetail(doc);
+                //获取当前章节
+                Comic dbComic = mDaoHelper.findComic(comicId);
+                if (dbComic != null) {
+                    comic.setCurrentChapter(dbComic.getCurrentChapter());
+                }
                 emitter.onNext(comic);
                 emitter.onComplete();
             }
@@ -52,7 +57,7 @@ public class DetailDataSource implements IDetailDataSource {
     }
 
     @Override
-    public Flowable<Boolean> collectComic(final Comic comic) {
+    public Flowable<Boolean> saveComicToDB(final Comic comic) {
         return Flowable.create(new FlowableOnSubscribe<Boolean>() {
             @Override
             public void subscribe(FlowableEmitter<Boolean> emitter) throws Exception {
@@ -81,6 +86,43 @@ public class DetailDataSource implements IDetailDataSource {
                     emitter.onNext(true);
                 }
 
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<Boolean> updateComicToDB(final Comic comic) {
+        return Flowable.create(new FlowableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(FlowableEmitter<Boolean> emitter) throws Exception {
+                Comic dbComic = mDaoHelper.findComic(comic.getId());
+                if (dbComic != null) {
+                    if (mDaoHelper.update(comic)) {
+                        emitter.onNext(true);
+                    } else {
+                        emitter.onNext(false);
+                    }
+                } else {
+                    emitter.onNext(false);
+                }
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<Comic> getComicFromDB(final long comicId) {
+
+        return Flowable.create(new FlowableOnSubscribe<Comic>() {
+            @Override
+            public void subscribe(FlowableEmitter<Comic> emitter) throws Exception {
+                Comic mComic = mDaoHelper.findComic(comicId);
+                if (mComic != null) {
+                    emitter.onNext(mComic);
+                } else {
+                    emitter.onNext(null);
+                }
                 emitter.onComplete();
             }
         }, BackpressureStrategy.LATEST);

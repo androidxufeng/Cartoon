@@ -12,6 +12,8 @@ package com.tplink.cartoon.ui.presenter;
  */
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,7 +23,10 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.source.detail.DetailDataSource;
 import com.tplink.cartoon.ui.widget.IndexItemView;
+import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
+
+import java.util.Date;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -54,6 +59,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                     public void onNext(Comic comic) {
                         comic.setId(comicId);
                         mComic = comic;
+                        saveComicToDB(comic);
                         mView.fillData(comic);
                     }
 
@@ -95,7 +101,11 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
     }
 
     public void collectComic() {
-        DisposableSubscriber<Boolean> disposable = mDataSource.collectComic(mComic)
+        Date date = new Date();
+        long datetime = date.getTime();
+        mComic.setCreateTime(datetime);
+        mComic.setIsCollect(true);
+        DisposableSubscriber<Boolean> disposable = mDataSource.updateComicToDB(mComic)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Boolean>() {
@@ -110,7 +120,61 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
                     @Override
                     public void onError(Throwable t) {
-                        mView.showToast("收藏失败11111"+t.getMessage());
+                        mView.showToast("收藏失败11111" + t.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+    }
+
+    public void saveComicToDB(Comic comic) {
+        DisposableSubscriber<Boolean> disposable = mDataSource.saveComicToDB(comic)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            mView.showToast("保存到数据库成功");
+                        } else {
+                            mView.showToast("收藏失败");
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        mView.showToast("保存到数据库失败：" + t.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+    }
+
+    public void getCurrentChapters() {
+        DisposableSubscriber<Comic> disposable = mDataSource.getComicFromDB(mComic.getId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Comic>() {
+                    @Override
+                    public void onNext(Comic comic) {
+                        if (comic != null) {
+                            mComic.setCurrentChapter(comic.getCurrentChapter());
+                            mView.setCurrent(comic.getCurrentChapter());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        mView.showToast("获取当前章节数目失败");
+                        Log.d("ceshi", "onError: " + t.getMessage());
                     }
 
                     @Override
@@ -122,15 +186,37 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
     }
 
     public void orderIndex(LinearLayout mlayout) {
+        Drawable img_location = mContext.getResources().getDrawable(R.drawable.location);
+        img_location.setBounds(0, 0, img_location.getMinimumWidth(), img_location.getMinimumHeight());
         for (int position = 0; position < mComic.getChapters().size(); position++) {
             IndexItemView itemView = (IndexItemView) mlayout.getChildAt(position);
             TextView textView = itemView.getTextView();
             if (!isOrder()) {
                 textView.setText((position + 1) + " - " + mComic.getChapters().get(position));
+                if (mComic.getCurrentChapter() == (position + 1)) {
+                    textView.setTextColor(Color.parseColor("#ff9a6a"));
+                    textView.setCompoundDrawables(null, null, img_location, null);
+                    textView.setCompoundDrawablePadding(DisplayUtil.dip2px(mContext, 10));
+                } else {
+                    textView.setTextColor(Color.parseColor("#666666"));
+                    textView.setCompoundDrawables(null, null, null, null);
+                }
+            } else {
+                if (mComic.getChapters().size() - mComic.getCurrentChapter() == position) {
+                    textView.setTextColor(Color.parseColor("#ff9a6a"));
+                    textView.setCompoundDrawables(null, null, img_location, null);
+                    textView.setCompoundDrawablePadding(DisplayUtil.dip2px(mContext, 10));
+                } else {
+                    textView.setTextColor(Color.parseColor("#666666"));
+                    textView.setCompoundDrawables(null, null, null, null);
+                }
+                textView.setText((mComic.getChapters().size() - position) + " - " + mComic.getChapters().get(mComic.getChapters().size() - 1 - position));
+            }
+
+            if (!isOrder()) {
                 mView.orderData(R.drawable.zhengxu);
             } else {
                 mView.orderData(R.drawable.daoxu);
-                textView.setText((mComic.getChapters().size() - position) + " - " + mComic.getChapters().get(mComic.getChapters().size() - 1 - position));
             }
         }
     }

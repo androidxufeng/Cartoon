@@ -10,10 +10,7 @@ package com.tplink.cartoon.ui.fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tplink.cartoon.R;
@@ -25,7 +22,6 @@ import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.IBookShelfView;
 import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.utils.IntentUtil;
-import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import java.util.List;
 
@@ -42,7 +38,7 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(!hidden){
+        if (!hidden) {
             mPresenter.loadData();
         }
     }
@@ -87,7 +83,6 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         mAdapter = new BookShelfAdapter(mActivity, R.layout.item_bookshelf);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-        mPresenter.loadData();
     }
 
     @Override
@@ -99,5 +94,11 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
     public void onItemClick(RecyclerView parent, View view, int position) {
         Comic comic = mAdapter.getItems(position);
         IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.loadData();
     }
 }

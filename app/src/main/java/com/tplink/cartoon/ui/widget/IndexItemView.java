@@ -12,16 +12,19 @@ package com.tplink.cartoon.ui.widget;
  */
 
 import android.content.Context;
-import android.mtp.MtpEvent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.utils.DisplayUtil;
 
 public class IndexItemView extends LinearLayout {
     TextView mTitle;
+    private Drawable img_location;
     private onItemClickLinstener listener;
 
     public onItemClickLinstener getListener() {
@@ -32,12 +35,21 @@ public class IndexItemView extends LinearLayout {
         this.listener = listener;
     }
 
-    public IndexItemView(Context context, String title, final int position) {
+    public IndexItemView(Context context, String title, final int position, int current) {
         super(context);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_detail, null);
         addView(view);
+        img_location = getResources().getDrawable(R.drawable.location);
+        img_location.setBounds(0, 0, img_location.getMinimumWidth(), img_location.getMinimumHeight());
         mTitle = (TextView) view.findViewById(R.id.tv_title);
         mTitle.setText((position + 1) + "-" + title);
+        if (current == position + 1) {
+            mTitle.setTextColor(Color.parseColor("#ff9a6a"));
+            mTitle.setCompoundDrawables(null, null, img_location, null);
+            mTitle.setCompoundDrawablePadding(DisplayUtil.dip2px(getContext(), 10));
+        } else {
+            mTitle.setTextColor(Color.parseColor("#666666"));
+        }
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,6 +58,17 @@ public class IndexItemView extends LinearLayout {
                 }
             }
         });
+    }
+
+    public void setCurrentColor(boolean isCurrent) {
+        if (isCurrent) {
+            mTitle.setTextColor(Color.parseColor("#ff9a6a"));
+            mTitle.setCompoundDrawables(null, null, img_location, null);
+            mTitle.setCompoundDrawablePadding(DisplayUtil.dip2px(getContext(), 10));
+        } else {
+            mTitle.setTextColor(Color.parseColor("#666666"));
+            mTitle.setCompoundDrawables(null, null, null, null);
+        }
     }
 
     public TextView getTextView() {

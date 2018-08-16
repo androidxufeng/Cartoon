@@ -21,5 +21,5 @@ import retrofit2.http.Path;
 public interface ComicService {
 
     @GET("getChapterList/{id}/{chapter}")
-    Flowable<DBChapters> getChapters(@Path("id") String id, @Path("chapter") int chapter);
+    Flowable<DBChapters> getChapters(@Path("id") long id, @Path("chapter") int chapter);
 }

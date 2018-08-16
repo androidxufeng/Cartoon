@@ -114,6 +114,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         } else {
             mViewpager.setCurrentItem(data.getPreSize(), false);
         }
+        mPresenter.updateComicCurrentChapter();
     }
 
     @Override
@@ -143,6 +144,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
                 mSeekBar.setProgress(data.getNowSize());
             }
         }
+        mPresenter.updateComicCurrentChapter();
     }
 
     @Override
@@ -159,6 +161,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
                 mSeekBar.setProgress(1);
             }
         }
+        mPresenter.updateComicCurrentChapter();
     }
 
 
@@ -208,11 +211,11 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @Override
     protected void initPresenter(Intent intent) {
-        String comicId = intent.getStringExtra(Constants.COMIC_ID);
+        long comicId = intent.getLongExtra(Constants.COMIC_ID, 0);
         int comicChapter = intent.getIntExtra(Constants.COMIC_CHAPTERS, 0);
         int type = intent.getIntExtra(Constants.COMIC_READ_TYPE, Constants.LEFT_TO_RIGHT);
         ArrayList comicChapterTitle = intent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
-        mPresenter = new ChapterPresenter(new ChapterDataSource(), this);
+        mPresenter = new ChapterPresenter(new ChapterDataSource(this), this);
         mPresenter.init(comicId, comicChapterTitle, comicChapter, type);
     }
 

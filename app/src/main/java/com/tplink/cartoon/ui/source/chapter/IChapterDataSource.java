@@ -17,10 +17,11 @@ import io.reactivex.Flowable;
 
 public interface IChapterDataSource extends IDataSource {
 
-    Flowable<DBChapters> getChapterData(String id, int chapter);
+    Flowable<DBChapters> getChapterData(long id, int chapter);
 
-    Flowable<DBChapters> loadNextData(String id, int chapter, int direction);
+    Flowable<DBChapters> loadNextData(long id, int chapter, int direction);
 
-    Flowable<DBChapters> loadPreData(String id, int chapter, int direction);
+    Flowable<DBChapters> loadPreData(long id, int chapter, int direction);
 
+    Flowable<Boolean> updateComicCurrentChapter(long comicId, int currentChapter);
 }
