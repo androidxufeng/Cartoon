@@ -30,4 +30,12 @@ public class Constants {
     public static String TENCENTDETAIL = "http://ac.qq.com/Comic/comicInfo/id/";
     //抓取详细的漫画阅读界面
     public static String TENCENTCOMICCHAPTERS = "http://120.79.66.128:5001";
+
+    /**
+     * 表示当前章节的状态
+     * 0 未选取 1 已选择 2 已下载
+     */
+    public final static int CHAPTER_FREE = 0;
+    public final static int CHAPTER_SELECTED= 1;
+    public final static int CHAPTER_DOWNLOAD = 2;
 }

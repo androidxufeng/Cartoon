@@ -27,6 +27,8 @@ import com.tplink.cartoon.ui.source.Index.IndexDataSource;
 import com.tplink.cartoon.ui.view.IIndexView;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -40,6 +42,8 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
     TextView mTitle;
     @BindView(R.id.tv_downloaded)
     TextView mDownload;
+    @BindView(R.id.tv_chapters_num)
+    TextView mChapterNum;
 
     private DetailAdapter mAdapter;
 
@@ -77,9 +81,11 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
         mAdapter = new DetailAdapter(this, R.layout.item_chapter);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter.updateWithClear(mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE));
+        ArrayList<String> titles = mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
+        mAdapter.updateWithClear(titles);
         mAdapter.setOnItemClickListener(this);
-        mTitle.setText(getIntent().getStringExtra(Constants.COMIC_TITLE));
+        mTitle.setText(mIntent.getStringExtra(Constants.COMIC_TITLE));
+        mChapterNum.setText(titles.size());
         mDownload.setVisibility(View.VISIBLE);
     }
 

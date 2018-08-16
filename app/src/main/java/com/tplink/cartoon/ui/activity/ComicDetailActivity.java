@@ -126,6 +126,33 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         mPresenter.collectComic();
     }
 
+    @OnClick({R.id.iv_oreder2, R.id.iv_order})
+    public void orderList(ImageView order) {
+        mPresenter.setOrder(!mPresenter.isOrder());
+        if (!mPresenter.isOrder()) {
+            mOrder2.setImageResource(R.drawable.zhengxu);
+            mOrder.setImageResource(R.drawable.zhengxu);
+        } else {
+            mOrder2.setImageResource(R.drawable.daoxu);
+            mOrder.setImageResource(R.drawable.daoxu);
+        }
+        mPresenter.orderIndex(mIndex);
+    }
+
+    @OnClick(R.id.btn_read)
+    public void startRead(View view) {
+        if (mCurrent == 0) {
+            IntentUtil.toComicChapter(this, 0, mPresenter.getComic());
+        } else {
+            IntentUtil.toComicChapter(this, mCurrent - 1, mPresenter.getComic());
+        }
+    }
+
+    @OnClick(R.id.iv_download)
+    public void toSelectDownloadActivity(View view){
+        IntentUtil.toSelectDownload(this,mPresenter.getComic());
+    }
+
     private Comic mComic;
     private float mScale;
     private float mDy;
@@ -268,29 +295,6 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
                 position,
                 mPresenter.getComic());
     }
-
-    @OnClick({R.id.iv_oreder2, R.id.iv_order})
-    public void orderList(ImageView order) {
-        mPresenter.setOrder(!mPresenter.isOrder());
-        if (!mPresenter.isOrder()) {
-            mOrder2.setImageResource(R.drawable.zhengxu);
-            mOrder.setImageResource(R.drawable.zhengxu);
-        } else {
-            mOrder2.setImageResource(R.drawable.daoxu);
-            mOrder.setImageResource(R.drawable.daoxu);
-        }
-        mPresenter.orderIndex(mIndex);
-    }
-
-    @OnClick(R.id.btn_read)
-    public void startRead(View view) {
-        if (mCurrent == 0) {
-            IntentUtil.toComicChapter(this, 0, mPresenter.getComic());
-        } else {
-            IntentUtil.toComicChapter(this, mCurrent - 1, mPresenter.getComic());
-        }
-    }
-
 
     public class MyScaleTopListener implements DetailScrollView.ScaleTopListener {
         @Override
