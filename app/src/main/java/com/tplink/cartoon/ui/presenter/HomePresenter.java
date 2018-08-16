@@ -78,6 +78,10 @@ public class HomePresenter extends BasePresenter<IMainDataSource, IHomeView> {
         mDisposable.add(disposable);
     }
 
+    public void refreshData(){
+        loadData();
+    }
+
     public void loadMoreData(int page) {
 
         DisposableSubscriber<List<Comic>> disposable = mDataSource.loadMoreData(page)

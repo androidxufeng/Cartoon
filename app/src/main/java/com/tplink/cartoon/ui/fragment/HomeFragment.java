@@ -108,6 +108,16 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
                 mPresenter.loadMoreData(i);
                 i++;
             }
+
+            @Override
+            public void onActionDown() {
+                mBanner.stopAutoPlay();
+            }
+
+            @Override
+            public void onActionUp() {
+                mBanner.startAutoPlay();
+            }
         });
 
         mBanner.setOnBannerListener(new OnBannerListener() {
@@ -139,6 +149,15 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     public void fillBanner(List<Comic> data) {
         mBanner.setImages(data);
         mBanner.start();
+    }
+
+    @Override
+    public void onRefreshFinish(List<Comic> data) {
+        mScrollView.setRefreshing(false);
+        if (mErrorView.isShown()) {
+            mErrorView.setVisibility(View.GONE);
+            mRecycleView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

@@ -40,7 +40,8 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         public final static Property Topics = new Property(10, String.class, "topics", false, "TOPICS");
         public final static Property Updates = new Property(11, String.class, "updates", false, "UPDATES");
         public final static Property Status = new Property(12, String.class, "status", false, "STATUS");
-        public final static Property ReadType = new Property(13, int.class, "readType", false, "READ_TYPE");
+        public final static Property CurrentChapter = new Property(13, int.class, "currentChapter", false, "CURRENT_CHAPTER");
+        public final static Property ReadType = new Property(14, int.class, "readType", false, "READ_TYPE");
     }
 
     private final StringConverter chaptersConverter = new StringConverter();
@@ -71,7 +72,8 @@ public class ComicDao extends AbstractDao<Comic, Long> {
                 "\"TOPICS\" TEXT," + // 10: topics
                 "\"UPDATES\" TEXT," + // 11: updates
                 "\"STATUS\" TEXT," + // 12: status
-                "\"READ_TYPE\" INTEGER NOT NULL );"); // 13: readType
+                "\"CURRENT_CHAPTER\" INTEGER NOT NULL ," + // 13: currentChapter
+                "\"READ_TYPE\" INTEGER NOT NULL );"); // 14: readType
     }
 
     /** Drops the underlying database table. */
@@ -144,7 +146,8 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         if (status != null) {
             stmt.bindString(13, status);
         }
-        stmt.bindLong(14, entity.getReadType());
+        stmt.bindLong(14, entity.getCurrentChapter());
+        stmt.bindLong(15, entity.getReadType());
     }
 
     @Override
@@ -211,7 +214,8 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         if (status != null) {
             stmt.bindString(13, status);
         }
-        stmt.bindLong(14, entity.getReadType());
+        stmt.bindLong(14, entity.getCurrentChapter());
+        stmt.bindLong(15, entity.getReadType());
     }
 
     @Override
@@ -235,7 +239,8 @@ public class ComicDao extends AbstractDao<Comic, Long> {
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // topics
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // updates
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // status
-            cursor.getInt(offset + 13) // readType
+            cursor.getInt(offset + 13), // currentChapter
+            cursor.getInt(offset + 14) // readType
         );
         return entity;
     }
@@ -255,7 +260,8 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         entity.setTopics(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
         entity.setUpdates(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setStatus(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setReadType(cursor.getInt(offset + 13));
+        entity.setCurrentChapter(cursor.getInt(offset + 13));
+        entity.setReadType(cursor.getInt(offset + 14));
      }
     
     @Override

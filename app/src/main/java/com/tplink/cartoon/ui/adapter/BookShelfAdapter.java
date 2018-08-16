@@ -12,10 +12,16 @@ import android.content.Context;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 
+import java.util.List;
+
 public class BookShelfAdapter extends BaseRecyclerAdapter<Comic> {
 
     public BookShelfAdapter(Context context, int itemLayoutId) {
         super(context, itemLayoutId);
+    }
+
+    public BookShelfAdapter(Context context, List<Comic> list, int itemLayoutId) {
+        super(context, list, itemLayoutId);
     }
 
     @Override

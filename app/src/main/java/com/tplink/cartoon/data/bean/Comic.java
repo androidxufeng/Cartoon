@@ -42,12 +42,12 @@ public class Comic extends BaseBean {
     /**
      * 章节标题
      */
-    @Convert(columnType = String.class,converter = StringConverter.class)
+    @Convert(columnType = String.class, converter = StringConverter.class)
     protected List<String> chapters;
     /**
      * 标签
      */
-    @Convert(columnType = String.class,converter = StringConverter.class)
+    @Convert(columnType = String.class, converter = StringConverter.class)
     protected List<String> tags;
     /**
      * 收藏数
@@ -79,6 +79,8 @@ public class Comic extends BaseBean {
      * 状态
      */
     protected String status;
+
+    private int currentChapter;
 
     public int getReadType() {
         return readType;
@@ -195,6 +197,15 @@ public class Comic extends BaseBean {
         this.id = id;
     }
 
+
+    public int getCurrentChapter() {
+        return currentChapter;
+    }
+
+    public void setCurrentChapter(int currentChapter) {
+        this.currentChapter = currentChapter;
+    }
+
     @Override
     public String toString() {
         return "Comic{" +
@@ -217,11 +228,11 @@ public class Comic extends BaseBean {
         this.chapters = chapters;
     }
 
-    @Generated(hash = 1568780585)
+    @Generated(hash = 308500042)
     public Comic(long id, String title, String cover, String author,
-                 List<String> chapters, List<String> tags, String collections,
-                 String describe, String point, String popularity, String topics,
-                 String updates, String status, int readType) {
+            List<String> chapters, List<String> tags, String collections,
+            String describe, String point, String popularity, String topics,
+            String updates, String status, int currentChapter, int readType) {
         this.id = id;
         this.title = title;
         this.cover = cover;
@@ -235,14 +246,11 @@ public class Comic extends BaseBean {
         this.topics = topics;
         this.updates = updates;
         this.status = status;
+        this.currentChapter = currentChapter;
         this.readType = readType;
     }
-
-
 
     @Generated(hash = 1347984162)
     public Comic() {
     }
-
-
 }
