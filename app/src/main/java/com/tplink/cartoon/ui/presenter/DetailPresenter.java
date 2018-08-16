@@ -43,6 +43,16 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
     private Comic mComic;
 
+    private boolean isCollected;
+
+    public boolean isCollected() {
+        return isCollected;
+    }
+
+    public void setCollected(boolean collected) {
+        isCollected = collected;
+    }
+
     public DetailPresenter(DetailDataSource dataSource, ComicDetailActivity view) {
         super(dataSource, view);
         mCompositeDisposable = new CompositeDisposable();
@@ -101,6 +111,9 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
     }
 
     public void collectComic() {
+        if (isCollected) {
+            return;
+        }
         Date date = new Date();
         long datetime = date.getTime();
         mComic.setCreateTime(datetime);
@@ -113,8 +126,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
                             mView.setCollect();
-                        } else {
-                            mView.showToast("收藏失败");
+                            isCollected = true;
                         }
                     }
 
@@ -138,16 +150,13 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                 .subscribeWith(new DisposableSubscriber<Boolean>() {
                     @Override
                     public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            mView.showToast("保存到数据库成功");
-                        } else {
-                            mView.showToast("收藏失败");
-                        }
+                        Log.d("ceshi", "onNext: 保存到数据库 result = " + aBoolean);
                     }
 
                     @Override
                     public void onError(Throwable t) {
                         mView.showToast("保存到数据库失败：" + t.toString());
+                        Log.d("ceshi", "onError: 保存到数据库失败：" + t.getMessage());
                     }
 
                     @Override

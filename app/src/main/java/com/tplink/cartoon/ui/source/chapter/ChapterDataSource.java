@@ -41,14 +41,14 @@ public class ChapterDataSource implements IChapterDataSource {
     }
 
     @Override
-    public Flowable<DBChapters> loadNextData(long id, int chapter, int direction) {
+    public Flowable<DBChapters> loadNextData(long id, int chapter) {
         return RetrofitClient.getInstance()
                 .getComicService()
                 .getChapters(id, chapter + 2);
     }
 
     @Override
-    public Flowable<DBChapters> loadPreData(long id, int chapter, int direction) {
+    public Flowable<DBChapters> loadPreData(long id, int chapter) {
         return RetrofitClient.getInstance()
                 .getComicService()
                 .getChapters(id, chapter - 2);

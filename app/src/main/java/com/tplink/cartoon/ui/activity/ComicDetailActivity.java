@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +28,7 @@ import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.presenter.DetailPresenter;
 import com.tplink.cartoon.ui.source.detail.DetailDataSource;
 import com.tplink.cartoon.ui.view.IDetailView;
+import com.tplink.cartoon.ui.widget.DetailFloatLinearLayout;
 import com.tplink.cartoon.ui.widget.DetailScrollView;
 import com.tplink.cartoon.ui.widget.IndexItemView;
 import com.tplink.cartoon.utils.DisplayUtil;
@@ -99,6 +101,11 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     LinearLayout mIndex;
     @BindView(R.id.iv_collect)
     ImageView mCollect;
+    @BindView(R.id.tv_collect)
+    TextView mTvCollect;
+    @BindView(R.id.ll_floatbottom)
+    DetailFloatLinearLayout mFloatButtom;
+
     private int mCurrent;
 
     @OnClick(R.id.iv_error)
@@ -149,6 +156,18 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         mLoading.setImageResource(R.drawable.loading_list);
         AnimationDrawable animationDrawable = (AnimationDrawable) mLoading.getDrawable();
         animationDrawable.start();
+
+        mFloatButtom.setOnFloatBottomClickListener(new DetailFloatLinearLayout.FloatBottomOnclickListener() {
+            @Override
+            public void onClickLocation(View view) {
+                mScrollView.scrollToPosition(mCurrent);
+            }
+
+            @Override
+            public void onClickScroll(View view) {
+                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
     }
 
     @Override
@@ -215,6 +234,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     @Override
     public void setCollect() {
         mCollect.setImageResource(R.drawable.collect_select);
+        mTvCollect.setText("已收藏");
     }
 
     @Override

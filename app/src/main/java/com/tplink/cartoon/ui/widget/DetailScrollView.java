@@ -1,5 +1,8 @@
 package com.tplink.cartoon.ui.widget;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -285,6 +288,45 @@ public class DetailScrollView extends ScrollView {
 
     public void setRefreshListener(RefreshListener listener) {
         this.listener = listener;
+    }
+
+    public void scrollToPosition(int position) {
+        if (position == 0) {
+            position = 1;
+        }
+        scrollToPoint(0, DisplayUtil.dip2px(getContext(), 170 + (position - 1) * 60) + mDetailView.getHeight());
+    }
+
+    public void scrollToPoint(int x, int y) {
+        ObjectAnimator xTranslate = ObjectAnimator.ofInt(this, "scrollX", x);
+        ObjectAnimator yTranslate = ObjectAnimator.ofInt(this, "scrollY", y);
+        Interpolator in = new DecelerateInterpolator();
+        AnimatorSet animators = new AnimatorSet();
+        animators.setDuration(200);
+        animators.setInterpolator(in);
+        animators.playTogether(xTranslate, yTranslate);
+        animators.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator arg0) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator arg0) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onAnimationEnd(Animator arg0) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onAnimationCancel(Animator arg0) {
+                // TODO Auto-generated method stub
+            }
+        });
+        animators.start();
     }
 
 }
