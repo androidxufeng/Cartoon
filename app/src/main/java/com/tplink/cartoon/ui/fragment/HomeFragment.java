@@ -11,7 +11,6 @@ package com.tplink.cartoon.ui.fragment;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -19,13 +18,12 @@ import android.widget.Toast;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
-import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
+import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.MainAdapter;
 import com.tplink.cartoon.ui.presenter.HomePresenter;
-import com.tplink.cartoon.ui.source.MainDataSource;
+import com.tplink.cartoon.ui.source.HomeDataSource;
 import com.tplink.cartoon.ui.view.IHomeView;
-import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
-import com.tplink.cartoon.ui.widget.NoScrollStaggeredGridLayoutManager;
+import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView;
 import com.tplink.cartoon.utils.GlideImageLoader;
 import com.tplink.cartoon.utils.IntentUtil;
@@ -39,7 +37,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class HomeFragment extends BaseFragment<HomePresenter> implements
-        IHomeView<Comic>, BaseRecyclerAdapter.OnItemClickListener {
+        IHomeView<Comic>, MainAdapter.OnItemClickListener {
 
     @BindView(R.id.recycle_view)
     RecyclerView mRecycleView;
@@ -63,11 +61,34 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         mPresenter.loadData();
     }
 
+    @OnClick({R.id.ll_category1, R.id.ll_category2, R.id.ll_category3, R.id.ll_category4, R.id.ll_category5})
+    public void toCategory(View view) {
+        switch (view.getId()) {
+            case R.id.ll_category1:
+                showToast("开发中，敬请期待");
+                break;
+            case R.id.ll_category2:
+                showToast("开发中，敬请期待");
+                break;
+            case R.id.ll_category3:
+                showToast("开发中，敬请期待");
+                break;
+            case R.id.ll_category4:
+                showToast("开发中，敬请期待");
+                break;
+            case R.id.ll_category5:
+                showToast("开发中，敬请期待");
+                break;
+            default:
+                break;
+        }
+    }
+
     private MainAdapter mAdapter;
 
     @Override
     protected void initPresenter() {
-        MainDataSource mainDataSource = new MainDataSource();
+        HomeDataSource mainDataSource = new HomeDataSource();
         mPresenter = new HomePresenter(mainDataSource, this);
     }
 
@@ -85,14 +106,14 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setIndicatorGravity(BannerConfig.RIGHT);
 
-        NoScrollStaggeredGridLayoutManager layoutManager = new NoScrollStaggeredGridLayoutManager(
-                2, StaggeredGridLayoutManager.VERTICAL);
+        NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 6);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
-        mAdapter = new MainAdapter(mActivity, R.layout.item_image);
+        mAdapter = new MainAdapter(mActivity, R.layout.item_hometitle,
+                R.layout.item_homepage, R.layout.item_homepage_full);
         mRecycleView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-        mRecycleView.addItemDecoration(new DividerGridItemDecoration(mActivity));
+//        mRecycleView.addItemDecoration(new DividerGridItemDecoration(mActivity));
         mScrollView.setRefreshListener(new ZElasticRefreshScrollView.RefreshListener() {
             @Override
             public void onRefresh() {
@@ -195,6 +216,21 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     public void onItemClick(RecyclerView parent, View view, int position) {
         Comic comic = mAdapter.getItems(position);
         IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+    }
+
+    @Override
+    public void onTitleClick(RecyclerView parent, View view, int type) {
+        switch (type) {
+            case Constants.TYPE_RANK_LIST:
+                showToast("更多排行开发中");
+                break;
+            case Constants.TYPE_RECOMMEND:
+                showToast("更多热门推荐开发中");
+                break;
+            default:
+                showToast("开发中");
+                break;
+        }
     }
 
     @Override

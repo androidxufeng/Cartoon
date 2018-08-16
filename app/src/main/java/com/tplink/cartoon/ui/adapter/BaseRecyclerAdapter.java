@@ -15,13 +15,13 @@ import java.util.List;
  */
 public abstract class BaseRecyclerAdapter<T> extends RecyclerView.Adapter<BaseRecyclerHolder> {
 
-    private Context context;
+    protected Context context;
     protected List<T> list;
-    private LayoutInflater inflater;
-    private int itemLayoutId;
+    protected LayoutInflater inflater;
+    protected int itemLayoutId;
     private OnItemClickListener listener;
-    private OnItemLongClickListener longClickListener;
-    private RecyclerView recyclerView;
+    protected OnItemLongClickListener longClickListener;
+    protected RecyclerView recyclerView;
 
     //在RecyclerView提供数据的时候调用
     @Override

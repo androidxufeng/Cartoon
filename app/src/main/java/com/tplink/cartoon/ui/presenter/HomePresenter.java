@@ -8,7 +8,7 @@ package com.tplink.cartoon.ui.presenter;
 
 
 import com.tplink.cartoon.data.bean.Comic;
-import com.tplink.cartoon.ui.source.IMainDataSource;
+import com.tplink.cartoon.ui.source.IHomeDataSource;
 import com.tplink.cartoon.ui.view.IHomeView;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
@@ -20,7 +20,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
-public class HomePresenter extends BasePresenter<IMainDataSource, IHomeView> {
+public class HomePresenter extends BasePresenter<IHomeDataSource, IHomeView> {
 
     private final CompositeDisposable mDisposable;
 
@@ -34,7 +34,7 @@ public class HomePresenter extends BasePresenter<IMainDataSource, IHomeView> {
         return mDatas;
     }
 
-    public HomePresenter(IMainDataSource dataSource, IHomeView view) {
+    public HomePresenter(IHomeDataSource dataSource, IHomeView view) {
         super(dataSource, view);
         mDisposable = new CompositeDisposable();
         mDatas = new ArrayList<>();

@@ -17,9 +17,11 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 
-public interface IMainDataSource extends IDataSource {
+public interface IHomeDataSource extends IDataSource {
 
     Flowable<List<Comic>> loadData();
+
+    Flowable<List<Comic>> refreshData();
 
     Flowable<List<Comic>> loadMoreData(int page);
 }

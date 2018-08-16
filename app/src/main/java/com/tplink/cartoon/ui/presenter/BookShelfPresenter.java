@@ -14,7 +14,6 @@ package com.tplink.cartoon.ui.presenter;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.fragment.BookShelfFragment;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
-import com.tplink.cartoon.ui.source.MainDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
 import java.util.List;

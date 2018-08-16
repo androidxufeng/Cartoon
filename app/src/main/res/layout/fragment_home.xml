@@ -65,6 +65,7 @@
                         android:padding="10dp">
 
                         <LinearLayout
+                            android:id="@+id/ll_category1"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_weight="1"
@@ -86,6 +87,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/ll_category2"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_weight="1"
@@ -107,6 +109,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/ll_category3"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_weight="1"
@@ -128,6 +131,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/ll_category4"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_weight="1"
@@ -149,6 +153,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:id="@+id/ll_category5"
                             android:layout_width="0dp"
                             android:layout_height="60dp"
                             android:layout_weight="1"
@@ -171,11 +176,6 @@
 
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp"
-                        android:background="@color/colorBgDark" />
-
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -183,7 +183,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ly_meun"
-                    android:padding="10dp"/>
+                    android:padding="5dp" />
 
                 <ImageView
                     android:layout_width="match_parent"
