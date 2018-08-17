@@ -18,13 +18,11 @@ import java.util.HashMap;
 public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, ISelectDownloadView> {
 
 
-    //已经选中的章节
-    private ArrayList<Integer> SelectedChapters;
-    //已经下载的章节
-    private ArrayList<Integer> DownloadedChapters;
-
     private ArrayList<String> mChapters;
     private HashMap<Integer, Integer> map;
+
+    private boolean isSelectAll;
+    private int selectCount;
 
     public SelectDownloadPresenter(IDownloadDataSource dataSource, ISelectDownloadView view) {
         super(dataSource, view);
@@ -36,25 +34,8 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
         initData();
     }
 
-    public ArrayList<Integer> getSelectedChapters() {
-        return SelectedChapters;
-    }
-
-    public void setSelectedChapters(ArrayList<Integer> selectedChapters) {
-        SelectedChapters = selectedChapters;
-    }
-
-    public ArrayList<Integer> getDownloadedChapters() {
-        return DownloadedChapters;
-    }
-
-    public void setDownloadedChapters(ArrayList<Integer> downloadedChapters) {
-        DownloadedChapters = downloadedChapters;
-    }
-
     private void initData() {
-        SelectedChapters = new ArrayList<>();
-        DownloadedChapters = new ArrayList<>();
+
         map = new HashMap<>(4);
         if (mChapters != null && mChapters.size() != 0) {
             for (int i = 0; i < mChapters.size(); i++) {
@@ -63,9 +44,50 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
         }
     }
 
-    public void addToSelected(int position) {
-        SelectedChapters.add(position);
-        map.put(position, Constants.CHAPTER_SELECTED);
-        mView.addToDownloadList(map);
+    public void updateToSelected(int position) {
+        if (map.get(position).equals(Constants.CHAPTER_FREE)) {
+            map.put(position, Constants.CHAPTER_SELECTED);
+            selectCount++;
+            if (selectCount == mChapters.size()){
+                mView.addAll();
+                isSelectAll = true;
+            }
+        } else if (map.get(position).equals(Constants.CHAPTER_SELECTED)) {
+            map.put(position, Constants.CHAPTER_FREE);
+            selectCount--;
+            isSelectAll = false;
+            mView.removeAll();
+        }
+        mView.updateDownloadList(map);
+    }
+
+    public void selectOrRemoveAll() {
+        if (!isSelectAll) {
+            if (mChapters != null && mChapters.size() != 0) {
+                for (int i = 0; i < mChapters.size(); i++) {
+                    if (map.get(i) == Constants.CHAPTER_FREE) {
+                        map.put(i, Constants.CHAPTER_SELECTED);
+                        selectCount++;
+                    }
+                }
+                mView.addAll();
+            }
+        } else {
+            if (mChapters != null && mChapters.size() != 0) {
+                for (int i = 0; i < mChapters.size(); i++) {
+                    if (map.get(i) == Constants.CHAPTER_SELECTED) {
+                        map.put(i, Constants.CHAPTER_FREE);
+                    }
+                }
+                selectCount = 0;
+                mView.removeAll();
+            }
+        }
+        isSelectAll = !isSelectAll;
+        mView.updateDownloadList(map);
+    }
+
+    public int getSelectCount() {
+        return selectCount;
     }
 }

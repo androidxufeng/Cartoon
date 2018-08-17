@@ -13,7 +13,7 @@ public interface ISelectDownloadView<T> extends ILoadDataView<T> {
 
     void startDownload();
 
-    void addToDownloadList(HashMap map);
+    void updateDownloadList(HashMap map);
 
     void addAll();
 

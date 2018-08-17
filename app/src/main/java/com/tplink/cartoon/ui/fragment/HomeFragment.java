@@ -8,7 +8,6 @@
  */
 package com.tplink.cartoon.ui.fragment;
 
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -51,8 +50,6 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     RelativeLayout mErrorView;
     @BindView(R.id.iv_error)
     ImageView mReload;
-    @BindView(R.id.iv_loading_top)
-    ImageView mLoadingTop;
     @BindView(R.id.B_banner)
     Banner mBanner;
     @BindView(R.id.rl_actionbar)
@@ -100,16 +97,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         mPresenter = new HomePresenter(mainDataSource, this);
     }
 
-    //初始化动画
-    private void initAnimation() {
-        mLoadingTop.setImageResource(R.drawable.loading_top);
-        AnimationDrawable animationDrawable = (AnimationDrawable) mLoadingTop.getDrawable();
-        animationDrawable.start();
-    }
-
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-        initAnimation();
         //设置banner加载设置
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setIndicatorGravity(BannerConfig.RIGHT);

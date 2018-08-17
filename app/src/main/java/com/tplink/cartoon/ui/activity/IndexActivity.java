@@ -12,7 +12,6 @@ package com.tplink.cartoon.ui.activity;
  */
 
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +24,7 @@ import com.tplink.cartoon.ui.adapter.DetailAdapter;
 import com.tplink.cartoon.ui.presenter.IndexPresenter;
 import com.tplink.cartoon.ui.source.Index.IndexDataSource;
 import com.tplink.cartoon.ui.view.IIndexView;
+import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
 import java.util.ArrayList;
@@ -80,12 +80,15 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
         mIntent = getIntent();
         mAdapter = new DetailAdapter(this, R.layout.item_chapter);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(this, 1);
+        layoutManager.setScrollEnabled(false);
+        mRecyclerView.setLayoutManager(layoutManager);
+
         ArrayList<String> titles = mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
         mAdapter.updateWithClear(titles);
         mAdapter.setOnItemClickListener(this);
         mTitle.setText(mIntent.getStringExtra(Constants.COMIC_TITLE));
-        mChapterNum.setText(titles.size());
+        mChapterNum.setText("共" + titles.size() + "话");
         mDownload.setVisibility(View.VISIBLE);
     }
 

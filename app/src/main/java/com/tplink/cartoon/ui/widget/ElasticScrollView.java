@@ -2,13 +2,17 @@ package com.tplink.cartoon.ui.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.AnimationDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.ScrollView;
+
+import com.tplink.cartoon.R;
 
 /***
  * 下拉回弹的ScrollView
@@ -39,18 +43,28 @@ public class ElasticScrollView extends ScrollView {
 
     // 拖动的距离 size = 4 的意思 只允许拖动屏幕的1/4
     private static final int size = 3;
-    private View inner;
+    private ViewGroup inner;
     private float y;
     private Rect normal = new Rect();
+    ImageView mLoadingTop;
 
     //获取到ScrollView内部的子View,并赋值给inner
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         if (getChildCount() > 0) {
-            inner = getChildAt(0);
+            inner = (ViewGroup) getChildAt(0);
+            mLoadingTop = inner.findViewById(R.id.iv_loading_top);
+            initAnimation();
         }
         setOverScrollMode(OVER_SCROLL_NEVER);//取消5.0效果
+    }
+
+    //初始化动画
+    private void initAnimation() {
+        mLoadingTop.setImageResource(R.drawable.loading_top);
+        AnimationDrawable animationDrawable = (AnimationDrawable) mLoadingTop.getDrawable();
+        animationDrawable.start();
     }
 
     //重写滑动方法
@@ -137,9 +151,6 @@ public class ElasticScrollView extends ScrollView {
     public boolean isNeedMove() {
         int offset = inner.getMeasuredHeight() - getHeight();
         int scrollY = getScrollY();
-        if (scrollY == 0 || scrollY == offset) {
-            return true;
-        }
-        return false;
+        return scrollY == 0 || scrollY == offset;
     }
 }
