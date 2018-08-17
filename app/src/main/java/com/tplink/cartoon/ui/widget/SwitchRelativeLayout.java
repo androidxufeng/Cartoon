@@ -56,12 +56,14 @@ public class SwitchRelativeLayout extends RelativeLayout {
         mSucc = (ImageView) mSuccBg.getChildAt(0);
     }
 
-    public void setVisibility(int visibility, int mDirect) {
+    public void setVisibility(int visibility, int direct) {
         int id = 0;
-        if (mDirect == Constants.LEFT_TO_RIGHT) {
+        if (direct == Constants.LEFT_TO_RIGHT) {
             id = R.drawable.succ_left_to_right;
-        } else {
+        } else if (direct == Constants.RIGHT_TO_LEFT) {
             id = R.drawable.succ_right_to_left;
+        } else {
+            id = R.drawable.succ_up_to_down;
         }
         switch (visibility) {
             case View.GONE:

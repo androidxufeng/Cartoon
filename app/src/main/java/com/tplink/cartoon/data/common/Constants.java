@@ -21,6 +21,7 @@ public class Constants {
     public static final String COMIC = "comic";
     public static final int RIGHT_TO_LEFT = 0;
     public static final int LEFT_TO_RIGHT = 1;
+    public static final int UP_TO_DOWN = 2;
 
     public static final String DB_NAME = "comic.db";
 
@@ -44,7 +45,7 @@ public class Constants {
      * 0 未选取 1 已选择 2 已下载
      */
     public final static int CHAPTER_FREE = 0;
-    public final static int CHAPTER_SELECTED= 1;
+    public final static int CHAPTER_SELECTED = 1;
     public final static int CHAPTER_DOWNLOAD = 2;
 
     public final static int TYPE_RECOMMEND = 0;

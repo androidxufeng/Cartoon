@@ -174,15 +174,15 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     public void loadMoreData(int position, int direct) {
         String chapterTitle = null;
         mDirect = direct;
-        int nowPostion = 0;
+        int nowPosition = 0;
 
         switch (direct) {
-            case Constants.LEFT_TO_RIGHT:
+            case Constants.UP_TO_DOWN:
                 if (position < mPreloadChapters.getPreSize()) {
                     mLoadingPosition = position - mPreloadChapters.getPreSize() + 1;
                     chapterTitle = mComicChapterTitle.get(mComicChapters - 1);//前一章
                     mComicSize = mPreloadChapters.getPreSize();
-                    nowPostion = position;
+                    nowPosition = position;
                     if (!isLoadingdata) {
                         isLoadingdata = true;
                         getPreChapterData(mComicId, mComicChapters);
@@ -191,7 +191,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                     mLoadingPosition = position - mPreloadChapters.getPreSize() - mPreloadChapters.getNowSize();
                     mComicSize = mPreloadChapters.getNextSize();
                     chapterTitle = mComicChapterTitle.get(mComicChapters + 1);
-                    nowPostion = position - mPreloadChapters.getPreSize() - mPreloadChapters.getNowSize();
+                    nowPosition = position - mPreloadChapters.getPreSize() - mPreloadChapters.getNowSize();
                     if (!isLoadingdata) {
                         isLoadingdata = true;
                         getNextChapterData(mComicId, mComicChapters);
@@ -200,7 +200,33 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                     isLoadingdata = false;
                     mComicSize = mPreloadChapters.getNowSize();
                     chapterTitle = mComicChapterTitle.get(mComicChapters);
-                    nowPostion = position - mPreloadChapters.getPreSize();
+                    nowPosition = position - mPreloadChapters.getPreSize();
+                }
+                break;
+            case Constants.LEFT_TO_RIGHT:
+                if (position < mPreloadChapters.getPreSize()) {
+                    mLoadingPosition = position - mPreloadChapters.getPreSize() + 1;
+                    chapterTitle = mComicChapterTitle.get(mComicChapters - 1);//前一章
+                    mComicSize = mPreloadChapters.getPreSize();
+                    nowPosition = position;
+                    if (!isLoadingdata) {
+                        isLoadingdata = true;
+                        getPreChapterData(mComicId, mComicChapters);
+                    }
+                } else if (position >= mPreloadChapters.getPreSize() + mPreloadChapters.getNowSize()) {//后一章
+                    mLoadingPosition = position - mPreloadChapters.getPreSize() - mPreloadChapters.getNowSize();
+                    mComicSize = mPreloadChapters.getNextSize();
+                    chapterTitle = mComicChapterTitle.get(mComicChapters + 1);
+                    nowPosition = position - mPreloadChapters.getPreSize() - mPreloadChapters.getNowSize();
+                    if (!isLoadingdata) {
+                        isLoadingdata = true;
+                        getNextChapterData(mComicId, mComicChapters);
+                    }
+                } else {//当前章节
+                    isLoadingdata = false;
+                    mComicSize = mPreloadChapters.getNowSize();
+                    chapterTitle = mComicChapterTitle.get(mComicChapters);
+                    nowPosition = position - mPreloadChapters.getPreSize();
                 }
                 break;
             case Constants.RIGHT_TO_LEFT:
@@ -208,7 +234,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                     mLoadingPosition = position - mPreloadChapters.getNextSize() + 1;
                     chapterTitle = mComicChapterTitle.get(mComicChapters + 1);//后一章
                     mComicSize = mPreloadChapters.getNextSize();
-                    nowPostion = position;
+                    nowPosition = position;
                     if (!isLoadingdata) {
                         isLoadingdata = true;
                         getNextChapterData(mComicId, mComicChapters);
@@ -217,7 +243,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                     mLoadingPosition = position - mPreloadChapters.getNextSize() - mPreloadChapters.getNowSize();
                     mComicSize = mPreloadChapters.getPreSize();
                     chapterTitle = mComicChapterTitle.get(mComicChapters - 1);
-                    nowPostion = position - mPreloadChapters.getNextSize() - mPreloadChapters.getNowSize();
+                    nowPosition = position - mPreloadChapters.getNextSize() - mPreloadChapters.getNowSize();
                     if (!isLoadingdata) {
                         isLoadingdata = true;
                         getPreChapterData(mComicId, mComicChapters);
@@ -226,14 +252,14 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                     isLoadingdata = false;
                     mComicSize = mPreloadChapters.getNowSize();
                     chapterTitle = mComicChapterTitle.get(mComicChapters);
-                    nowPostion = position - mPreloadChapters.getNextSize();
+                    nowPosition = position - mPreloadChapters.getNextSize();
                 }
                 break;
             default:
                 break;
         }
 
-        setTitle(chapterTitle, mComicSize, nowPostion, mDirect);
+        setTitle(chapterTitle, mComicSize, nowPosition, mDirect);
     }
 
     public void getNextChapterData(long id, int chapter) {
@@ -256,14 +282,14 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                         mComicChapters++;
                         int position;
                         if (mDirect == Constants.RIGHT_TO_LEFT) {
-                            position = mPreloadChapters.getNextlist().size() + mPreloadChapters.getNowlist().size()
+                            position = mPreloadChapters.getNextlist().size() + mPreloadChapters.getNowSize()
                                     - 1 + mLoadingPosition;//关闭切换动画
                             mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" + (1 - mLoadingPosition) +
-                                    "/" + mPreloadChapters.getNowlist().size());
+                                    "/" + mPreloadChapters.getNowSize());
                         } else {
-                            position = mPreloadChapters.getPrelist().size() + mLoadingPosition;
+                            position = mPreloadChapters.getPreSize() + mLoadingPosition;
                             mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" + (1 + mLoadingPosition) +
-                                    "/" + mPreloadChapters.getNowlist().size());
+                                    "/" + mPreloadChapters.getNowSize());
                         }
                         mView.nextChapter(mPreloadChapters, position);
 
@@ -307,11 +333,11 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                         if (mDirect == Constants.RIGHT_TO_LEFT) {
                             position = mPreloadChapters.getNextlist().size() + mLoadingPosition;//关闭切换动画
                             mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" +
-                                    (mPreloadChapters.getNowlist().size() - mLoadingPosition) + "/" + mPreloadChapters.getNowlist().size());
+                                    (mPreloadChapters.getNowSize() - mLoadingPosition) + "/" + mPreloadChapters.getNowSize());
                         } else {
-                            position = mPreloadChapters.getPrelist().size() + mPreloadChapters.getNowlist().size() + mLoadingPosition - 1;
+                            position = mPreloadChapters.getPreSize() + mPreloadChapters.getNowSize() + mLoadingPosition - 1;
                             mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-" +
-                                    (mPreloadChapters.getNowlist().size() + mLoadingPosition) + "/" + mPreloadChapters.getNowlist().size());
+                                    (mPreloadChapters.getNowSize() + mLoadingPosition) + "/" + mPreloadChapters.getNowSize());
                         }
                         mView.preChapter(mPreloadChapters, position);
 
@@ -350,7 +376,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
 
     public void setTitle(String comicChapterTitle, int comicSize, int position, int direct) {
         String title = null;
-        if (direct == Constants.LEFT_TO_RIGHT) {
+        if (direct == Constants.LEFT_TO_RIGHT || direct == Constants.UP_TO_DOWN) {
             title = comicChapterTitle + (position + 1) + "/" + comicSize;
         } else {
             title = comicChapterTitle + (comicSize - position) + "/" + comicSize;

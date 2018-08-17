@@ -7,8 +7,12 @@ import android.util.SparseArray;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.tplink.cartoon.utils.GlideImageLoader;
 
 /**
@@ -118,6 +122,25 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
     public BaseRecyclerHolder setImageByUrl(int viewId, String url) {
         ImageView iv = getView(viewId);
         GlideImageLoader.loadImage(context, url, iv);
+        return this;
+    }
+
+    public BaseRecyclerHolder setPhotoViewImageByUrl(int viewId, final String url) {
+        final ImageView iv = getView(viewId);
+        iv.setScaleType(ImageView.ScaleType.FIT_XY);
+        Glide.with(context)
+                .load(url)
+                .asBitmap()//强制Glide返回一个Bitmap对象
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
+                        int width = bitmap.getWidth();
+                        int height = bitmap.getHeight();
+                        float scale = ((float) height) / width;
+                        iv.setLayoutParams(new RelativeLayout.LayoutParams(1080, (int) (scale * 1080)));
+                        GlideImageLoader.loadImage(context, url, iv);
+                    }
+                });
         return this;
     }
 }
