@@ -51,5 +51,7 @@ public class Constants {
     public final static int TYPE_RANK_LIST = 1;
     public final static int TYPE_HOT_SERIAL = 2;
     public final static int TYPE_HOT_JAPAN = 3;
+    public final static int TYPE_BOY_RANK = 4;
+    public final static int TYPE_GIRL_RANK = 5;
 
 }

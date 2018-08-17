@@ -11,6 +11,8 @@ package com.tplink.cartoon.ui.source;
  * Ver 1.0, 18-7-30, xufeng, Create file
  */
 
+import android.util.Log;
+
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.FullHomeItem;
 import com.tplink.cartoon.data.bean.HomeTitle;
@@ -40,40 +42,25 @@ public class HomeDataSource implements IHomeDataSource {
                 List<Comic> mdats = new ArrayList<>();
 
                 //强推作品
-                HomeTitle homeTitle = new HomeTitle();
-                homeTitle.setItemTitle("强推作品");
-                homeTitle.setTitleType(Constants.TYPE_RECOMMEND);
-                mdats.add(homeTitle);
+
                 Document recommend = Jsoup.connect(Constants.TENCENTHOMEPAGE).get();
-                mdats.addAll(transToRecommendComic(recommend));
 
                 //热门连载
-                homeTitle = new HomeTitle();
-                homeTitle.setItemTitle("热门连载");
-                homeTitle.setTitleType(Constants.TYPE_HOT_SERIAL);
-                mdats.add(homeTitle);
-                mdats.addAll(transToNewComic(recommend));
 
                 //日漫馆
-                homeTitle = new HomeTitle();
-                homeTitle.setItemTitle("日漫馆");
-                homeTitle.setTitleType(Constants.TYPE_HOT_JAPAN);
-                mdats.add(homeTitle);
                 Document japan = Jsoup.connect(Constants.TENCENTJAPANHOT).get();
-                mdats.addAll(transToJapanComic(japan));
 
-                //排行榜
-                homeTitle = new HomeTitle();
-                homeTitle.setItemTitle("排行榜");
-                homeTitle.setTitleType(Constants.TYPE_RANK_LIST);
-                mdats.add(homeTitle);
                 Document doc = Jsoup.connect(Constants.TENCENTTOPURL + "1").get();
-                Document doc2 = Jsoup.connect(Constants.TENCENTTOPURL + "2").get();
-                mdats.addAll(transToComic(doc));
-                mdats.addAll(transToComic(doc2));
+
+                addComic(recommend, mdats, Constants.TYPE_RECOMMEND);
+                addComic(recommend, mdats, Constants.TYPE_BOY_RANK);
+                addComic(recommend, mdats, Constants.TYPE_GIRL_RANK);
+                addComic(recommend, mdats, Constants.TYPE_HOT_SERIAL);
+                addComic(japan, mdats, Constants.TYPE_HOT_JAPAN);
+                addComic(doc, mdats, Constants.TYPE_RANK_LIST);
 
                 //普通的类型
-                homeTitle = new HomeTitle();
+                HomeTitle homeTitle = new HomeTitle();
                 homeTitle.setItemTitle("");
                 mdats.add(homeTitle);
 
@@ -123,6 +110,66 @@ public class HomeDataSource implements IHomeDataSource {
         }, BackpressureStrategy.LATEST);
     }
 
+    /**
+     * 添加漫画到List里
+     *
+     * @param doc
+     * @param mdats
+     * @param type
+     */
+    private void addComic(Document doc, List<Comic> mdats, int type) {
+        HomeTitle homeTitle;
+        try {
+            switch (type) {
+                case Constants.TYPE_RECOMMEND:
+                    homeTitle = new HomeTitle();
+                    homeTitle.setItemTitle("强推作品");
+                    homeTitle.setTitleType(Constants.TYPE_RECOMMEND);
+                    mdats.add(homeTitle);
+                    mdats.addAll(transToRecommendComic(doc));
+                    break;
+                case Constants.TYPE_BOY_RANK:
+                    homeTitle = new HomeTitle();
+                    homeTitle.setItemTitle("少年漫画");
+                    homeTitle.setTitleType(Constants.TYPE_BOY_RANK);
+                    mdats.add(homeTitle);
+                    mdats.addAll(transToBoysComic(doc));
+                    break;
+                case Constants.TYPE_GIRL_RANK:
+                    homeTitle = new HomeTitle();
+                    homeTitle.setItemTitle("少女漫画");
+                    homeTitle.setTitleType(Constants.TYPE_GIRL_RANK);
+                    mdats.add(homeTitle);
+                    mdats.addAll(transToGirlsComic(doc));
+                    break;
+                case Constants.TYPE_HOT_SERIAL:
+                    homeTitle = new HomeTitle();
+                    homeTitle.setItemTitle("热门连载");
+                    homeTitle.setTitleType(Constants.TYPE_HOT_SERIAL);
+                    mdats.add(homeTitle);
+                    mdats.addAll(transToNewComic(doc));
+                    break;
+                case Constants.TYPE_HOT_JAPAN:
+                    homeTitle = new HomeTitle();
+                    homeTitle.setItemTitle("日漫馆");
+                    homeTitle.setTitleType(Constants.TYPE_HOT_JAPAN);
+                    mdats.add(homeTitle);
+                    mdats.addAll(transToJapanComic(doc));
+                    break;
+                case Constants.TYPE_RANK_LIST:
+                    homeTitle = new HomeTitle();
+                    homeTitle.setItemTitle("排行榜");
+                    homeTitle.setTitleType(Constants.TYPE_RANK_LIST);
+                    mdats.add(homeTitle);
+                    mdats.addAll(transToComic(doc));
+                    break;
+            }
+        } catch (Exception e) {
+            Log.d("zhhr", "type = " + type + "is Error");
+            throw e;
+        }
+    }
+
     private List<Comic> transToComic(Document doc) {
         List<Comic> mdats = new ArrayList<Comic>();
         List<Element> detail = doc.getElementsByAttributeValue("class", "ret-works-cover");
@@ -139,36 +186,39 @@ public class HomeDataSource implements IHomeDataSource {
 
     /**
      * banner的获取
+     *
      * @param doc
      * @return
      */
-    public static List<Comic> transToBanner(Document doc){
+    public static List<Comic> transToBanner(Document doc) {
         List<Comic> mdats = new ArrayList<>();
-        Element detail = doc.getElementsByAttributeValue("class","banner-list").get(0);
+        Element detail = doc.getElementsByAttributeValue("class", "banner-list").get(0);
         List<Element> infos = detail.getElementsByTag("a");
-        for(int i=0;i<infos.size();i++){
+        for (int i = 0; i < infos.size(); i++) {
             Comic comic = new Comic();
             comic.setTitle(infos.get(i).select("a").attr("title"));
             comic.setCover(infos.get(i).select("img").attr("src"));
-            try{
+            try {
                 comic.setId(Long.parseLong(getID(infos.get(i).select("a").attr("href"))));
                 mdats.add(comic);
-            }catch (Exception e){
+            } catch (Exception e) {
             }
         }
         return mdats;
     }
+
     /**
      * 日漫首页
+     *
      * @param doc
      * @return
      */
-    public static List<Comic> transToBannerJapan(Document doc){
+    public static List<Comic> transToBannerJapan(Document doc) {
         List<Comic> mdats = new ArrayList<>();
-        List<Element> detail = doc.getElementsByAttributeValue("class","comic-text");
-        Random random =new Random();
+        List<Element> detail = doc.getElementsByAttributeValue("class", "comic-text");
+        Random random = new Random();
         int result = random.nextInt(3);
-        for(int i=(result*4);i<(result+1)*4;i++){
+        for (int i = (result * 4); i < (result + 1) * 4; i++) {
             Comic comic = new Comic();
             comic.setTitle(detail.get(i).select("a").attr("title"));
             comic.setCover(detail.get(i).select("img").attr("src"));
