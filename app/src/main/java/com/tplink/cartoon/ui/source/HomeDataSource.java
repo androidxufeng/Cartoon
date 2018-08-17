@@ -15,6 +15,7 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.FullHomeItem;
 import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.data.bean.LargeHomeItem;
+import com.tplink.cartoon.data.bean.SmallHomeItem;
 import com.tplink.cartoon.data.common.Constants;
 
 import org.jsoup.Jsoup;
@@ -136,6 +137,47 @@ public class HomeDataSource implements IHomeDataSource {
         return mdats;
     }
 
+    /**
+     * banner的获取
+     * @param doc
+     * @return
+     */
+    public static List<Comic> transToBanner(Document doc){
+        List<Comic> mdats = new ArrayList<>();
+        Element detail = doc.getElementsByAttributeValue("class","banner-list").get(0);
+        List<Element> infos = detail.getElementsByTag("a");
+        for(int i=0;i<infos.size();i++){
+            Comic comic = new Comic();
+            comic.setTitle(infos.get(i).select("a").attr("title"));
+            comic.setCover(infos.get(i).select("img").attr("src"));
+            try{
+                comic.setId(Long.parseLong(getID(infos.get(i).select("a").attr("href"))));
+                mdats.add(comic);
+            }catch (Exception e){
+            }
+        }
+        return mdats;
+    }
+    /**
+     * 日漫首页
+     * @param doc
+     * @return
+     */
+    public static List<Comic> transToBannerJapan(Document doc){
+        List<Comic> mdats = new ArrayList<>();
+        List<Element> detail = doc.getElementsByAttributeValue("class","comic-text");
+        Random random =new Random();
+        int result = random.nextInt(3);
+        for(int i=(result*4);i<(result+1)*4;i++){
+            Comic comic = new Comic();
+            comic.setTitle(detail.get(i).select("a").attr("title"));
+            comic.setCover(detail.get(i).select("img").attr("src"));
+            comic.setId(Long.parseLong(getID(detail.get(i).select("a").attr("href"))));
+            mdats.add(comic);
+        }
+        return mdats;
+    }
+
     //处理强推作品
     private static List<LargeHomeItem> transToRecommendComic(Document doc) {
         List<LargeHomeItem> mdats = new ArrayList<>();
@@ -186,6 +228,50 @@ public class HomeDataSource implements IHomeDataSource {
             Element ElementDescribe = hots.get(i).getElementsByAttributeValue("class", "mod-cover-list-intro").get(0);
             comic.setDescribe(ElementDescribe.select("p").text());
             comic.setId(Long.parseLong(getID(hots.get(i).select("a").attr("href"))));
+            mdats.add(comic);
+        }
+        return mdats;
+    }
+
+    /**
+     * 男生榜
+     *
+     * @param doc
+     * @return
+     */
+    public static List<SmallHomeItem> transToBoysComic(Document doc) {
+        List<SmallHomeItem> mdats = new ArrayList<>();
+        Element detail = doc.getElementsByAttributeValue("class", "in-teen-list mod-cover-list clearfix").get(0);
+        List<Element> boys = detail.getElementsByTag("li");
+        for (int i = 0; i < boys.size(); i++) {
+            SmallHomeItem comic = new SmallHomeItem();
+            comic.setTitle(boys.get(i).select("img").attr("alt"));
+            comic.setCover(boys.get(i).select("img").attr("data-original"));
+            Element ElementDescribe = boys.get(i).getElementsByAttributeValue("class", "mod-cover-list-intro").get(0);
+            comic.setDescribe(ElementDescribe.select("p").text());
+            comic.setId(Long.parseLong(getID(boys.get(i).select("a").attr("href"))));
+            mdats.add(comic);
+        }
+        return mdats;
+    }
+
+    /**
+     * 女生榜
+     *
+     * @param doc
+     * @return
+     */
+    public static List<SmallHomeItem> transToGirlsComic(Document doc) {
+        List<SmallHomeItem> mdats = new ArrayList<>();
+        Element detail = doc.getElementsByAttributeValue("class", "in-girl-list mod-cover-list clearfix").get(0);
+        List<Element> boys = detail.getElementsByTag("li");
+        for (int i = 0; i < boys.size(); i++) {
+            SmallHomeItem comic = new SmallHomeItem();
+            comic.setTitle(boys.get(i).select("img").attr("alt"));
+            comic.setCover(boys.get(i).select("img").attr("data-original"));
+            Element ElementDescribe = boys.get(i).getElementsByAttributeValue("class", "mod-cover-list-intro").get(0);
+            comic.setDescribe(ElementDescribe.select("p").text());
+            comic.setId(Long.parseLong(getID(boys.get(i).select("a").attr("href"))));
             mdats.add(comic);
         }
         return mdats;

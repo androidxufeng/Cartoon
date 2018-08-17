@@ -7,10 +7,11 @@
  */
 package com.tplink.cartoon.ui.fragment;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.tplink.cartoon.R;
@@ -21,6 +22,7 @@ import com.tplink.cartoon.ui.presenter.BookShelfPresenter;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.IBookShelfView;
 import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
+import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
 import java.util.List;
@@ -32,6 +34,9 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
 
     @BindView(R.id.rv_bookshelf)
     RecyclerView mRecyclerView;
+    @BindView(R.id.iv_loading_top)
+    ImageView mIvLoadingTop;
+
 
     private BookShelfAdapter mAdapter;
 
@@ -41,6 +46,13 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         if (!hidden) {
             mPresenter.loadData();
         }
+    }
+
+    //初始化动画
+    private void initAnimation() {
+        mIvLoadingTop.setImageResource(R.drawable.loading_top);
+        AnimationDrawable animationDrawable = (AnimationDrawable) mIvLoadingTop.getDrawable();
+        animationDrawable.start();
     }
 
     @Override
@@ -77,8 +89,11 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-        GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 3);
+        initAnimation();
+        NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 3);
+        layoutManager.setScrollEnabled(false);
         mRecyclerView.setLayoutManager(layoutManager);
+
         mRecyclerView.addItemDecoration(new DividerGridItemDecoration(mActivity));
         mAdapter = new BookShelfAdapter(mActivity, R.layout.item_bookshelf);
         mRecyclerView.setAdapter(mAdapter);

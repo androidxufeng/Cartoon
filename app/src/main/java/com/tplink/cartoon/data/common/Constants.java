@@ -35,6 +35,10 @@ public class Constants {
 
     public static String TENCENTJAPANHOT = "http://ac.qq.com/Comic/all/state/pink/nation/4/search/hot/page/1";
 
+    public static String TENCENTBANNERJANPAN = "http://ac.qq.com/Jump";
+
+    public static String TENCENTBANNER = "http://m.ac.qq.com";
+
     /**
      * 表示当前章节的状态
      * 0 未选取 1 已选择 2 已下载

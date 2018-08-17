@@ -41,7 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center"
-                android:maxLines="2"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="描述"
                 android:textColor="@color/colorTextColorLight"
                 android:textSize="12sp" />

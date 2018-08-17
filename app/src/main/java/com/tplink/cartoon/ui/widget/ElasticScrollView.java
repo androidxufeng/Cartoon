@@ -23,12 +23,10 @@ public class ElasticScrollView extends ScrollView {
     }
 
 
-
     public ElasticScrollView(Context context) {
         super(context);
         // TODO Auto-generated constructor stub
     }
-
 
 
     private ElasticScrollView scrollViewListener = null;
@@ -85,7 +83,7 @@ public class ElasticScrollView extends ScrollView {
                  * size=4 表示 拖动的距离为屏幕的高度的1/4
                  */
                 int deltaY;
-                deltaY = (int) Math.sqrt(Math.abs(nowY - preY)*2) ;
+                deltaY = (int) Math.sqrt(Math.abs(nowY - preY) * 2);
                 // 滚动
                 // scrollBy(0, deltaY);
 
@@ -103,7 +101,7 @@ public class ElasticScrollView extends ScrollView {
                         //Log.d("zhhr1122","mMoveView.getTop()="+mMoveView.getTop()+",mMoveView.getBottom="+mMoveView.getBottom()+"height="+height);
                         inner.layout(inner.getLeft(), inner.getTop() + deltaY, inner.getRight(),
                                 inner.getBottom() + deltaY);
-                    } else if(nowY < preY){
+                    } else if (nowY < preY) {
                         //Log.d("zhhr1122","mMoveView.getTop()="+mMoveView.getTop()+",mMoveView.getBottom="+mMoveView.getBottom()+"height="+height);
                         inner.layout(inner.getLeft(), inner.getTop() - deltaY, inner.getRight(),
                                 inner.getBottom() - deltaY);
@@ -120,7 +118,7 @@ public class ElasticScrollView extends ScrollView {
 
     public void animation() {
         // 开启移动动画
-        TranslateAnimation ta = new TranslateAnimation(0, 0, inner.getTop(),normal.top);
+        TranslateAnimation ta = new TranslateAnimation(0, 0, inner.getTop(), 0);
         ta.setDuration(300);
         Interpolator in = new DecelerateInterpolator();
         ta.setInterpolator(in);
