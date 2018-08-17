@@ -54,7 +54,7 @@ public class HomePresenter extends BasePresenter<IHomeDataSource, IHomeView> {
                     public void onNext(List<Comic> comics) {
                         if (comics.size() > 12) {
                             mView.fillData(comics);
-                            for (int i = 0; i < 4; i++) {
+                            for (int i = 1; i < 5; i++) {
                                 mBanners.add(comics.get(i));
                             }
                             mView.fillBanner(mBanners);

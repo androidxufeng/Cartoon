@@ -12,6 +12,9 @@ import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -25,6 +28,7 @@ import com.tplink.cartoon.ui.source.HomeDataSource;
 import com.tplink.cartoon.ui.view.IHomeView;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView;
+import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.GlideImageLoader;
 import com.tplink.cartoon.utils.IntentUtil;
 import com.youth.banner.Banner;
@@ -51,6 +55,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     ImageView mLoadingTop;
     @BindView(R.id.B_banner)
     Banner mBanner;
+    @BindView(R.id.rl_actionbar)
+    RelativeLayout mActionBar;
+    @BindView(R.id.v_actionbar_bg)
+    View mActionBarBg;
 
     private int i = 3;
 
@@ -138,6 +146,39 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
             @Override
             public void onActionUp() {
                 mBanner.startAutoPlay();
+            }
+
+            @Override
+            public void onScroll(int y) {
+                if (y == ZElasticRefreshScrollView.SCROLL_TO_DOWN) {
+                    if (mActionBar.getVisibility() == View.VISIBLE) {
+                        mActionBar.setVisibility(View.GONE);
+                        AnimationSet animationSet = new AnimationSet(true);
+                        TranslateAnimation trans = new TranslateAnimation(0, 0, 0, -DisplayUtil.dip2px(mActivity.getApplicationContext(), 60));
+                        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
+                        animationSet.addAnimation(trans);
+                        animationSet.addAnimation(alphaAnimation);
+                        animationSet.setDuration(200);
+                        mActionBar.startAnimation(animationSet);
+                    }
+                } else {
+                    if (mActionBar.getVisibility() == View.GONE) {
+                        mActionBar.setVisibility(View.VISIBLE);
+                        AnimationSet animationSet = new AnimationSet(true);
+                        TranslateAnimation trans = new TranslateAnimation(0, 0, -DisplayUtil.dip2px(mActivity.getApplicationContext(), 60), 0);
+                        AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+                        animationSet.addAnimation(trans);
+                        animationSet.addAnimation(alphaAnimation);
+                        animationSet.setDuration(200);
+                        mActionBar.startAnimation(animationSet);
+                    }
+                }
+
+            }
+
+            @Override
+            public void onAlphaActionBar(float a) {
+                mActionBarBg.setAlpha(a);
             }
         });
 

@@ -39,6 +39,10 @@ public class ZElasticRefreshScrollView extends ScrollView {
     private RelativeLayout mLoadingTop;
     private TextView mLoadingText;
 
+    public static final int SCROLL_TO_UP = 1;
+    public static final int SCROLL_TO_DOWN = 2;
+    int oldY = 0;
+
     public ZElasticRefreshScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
@@ -66,10 +70,19 @@ public class ZElasticRefreshScrollView extends ScrollView {
         if (y >= height) {
             this.scrollTo(0, height);
         }
-        //Log.d("zhhr","y="+y);
-        /*if (scrollViewListener != null) {
-            scrollViewListener.onScrollChanged(this, x, y, oldx, oldy);
-        }*/
+        if (y < mTopView.getHeight() - DisplayUtil.dip2px(getContext(), 60)) {
+            listener.onAlphaActionBar(0f);
+        } else if (y < mTopView.getHeight()) {
+            listener.onAlphaActionBar((float) (y - (mTopView.getHeight() - DisplayUtil.dip2px(getContext(), 60))) / DisplayUtil.dip2px(getContext(), 60));
+        } else {
+            listener.onAlphaActionBar(1f);
+        }
+        if (y - oldY > 0) {
+            listener.onScroll(SCROLL_TO_DOWN);
+        } else if (y - oldY < 0 && y < height) {
+            listener.onScroll(SCROLL_TO_UP);
+        }
+        oldY = y;
     }
 
     //获取到ScrollView内部的子View,并赋值给inner
@@ -277,6 +290,10 @@ public class ZElasticRefreshScrollView extends ScrollView {
         void onActionDown();
 
         void onActionUp();
+
+        void onScroll(int y);
+
+        void onAlphaActionBar(float a);
     }
 
     public void setRefreshListener(RefreshListener listener) {
