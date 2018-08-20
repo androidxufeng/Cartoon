@@ -19,6 +19,7 @@ import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.activity.IndexActivity;
+import com.tplink.cartoon.ui.activity.SearchActivity;
 import com.tplink.cartoon.ui.activity.SelectDownloadActivity;
 
 import java.util.ArrayList;
@@ -63,10 +64,15 @@ public class IntentUtil {
         context.startActivity(intent);
     }
 
-    public static void toSelectDownload(Context context, Comic mComic){
+    public static void toSelectDownload(Context context, Comic mComic) {
         Intent intent = new Intent(context, SelectDownloadActivity.class);
-        intent.putExtra(Constants.COMIC_ID,mComic.getId());
+        intent.putExtra(Constants.COMIC_ID, mComic.getId());
         intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) mComic.getChapters());
+        context.startActivity(intent);
+    }
+
+    public static void toSearch(Context context) {
+        Intent intent = new Intent(context, SearchActivity.class);
         context.startActivity(intent);
     }
 }

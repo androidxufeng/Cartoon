@@ -89,6 +89,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         }
     }
 
+    @OnClick(R.id.iv_search)
+    void toSearch(View v) {
+        IntentUtil.toSearch(getActivity());
+    }
+
     private MainAdapter mAdapter;
 
     @Override

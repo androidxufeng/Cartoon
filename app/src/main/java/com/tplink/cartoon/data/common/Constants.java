@@ -40,6 +40,9 @@ public class Constants {
 
     public static String TENCENTBANNER = "http://m.ac.qq.com";
 
+    //腾讯漫画搜索接口
+    public static String TENCENT_SEARCH_URL  = "http://m.ac.qq.com/search/smart?word=";
+
     /**
      * 表示当前章节的状态
      * 0 未选取 1 已选择 2 已下载
