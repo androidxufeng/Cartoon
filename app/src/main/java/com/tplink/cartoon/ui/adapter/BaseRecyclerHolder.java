@@ -3,6 +3,7 @@ package com.tplink.cartoon.ui.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -143,6 +144,16 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
                         GlideImageLoader.loadImage(context, url, iv);
                     }
                 });
+        return this;
+    }
+
+    public BaseRecyclerHolder setHtmlText(int viewId, String text) {
+        TextView tv = getView(viewId);
+        if (text == null) {
+            tv.setVisibility(View.GONE);
+        } else {
+            tv.setText(Html.fromHtml(text));
+        }
         return this;
     }
 }

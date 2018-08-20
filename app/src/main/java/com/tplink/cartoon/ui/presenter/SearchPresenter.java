@@ -9,10 +9,13 @@ package com.tplink.cartoon.ui.presenter;
 
 import android.util.Log;
 
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.SearchResult;
 import com.tplink.cartoon.ui.activity.SearchActivity;
 import com.tplink.cartoon.ui.source.search.ISearchDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
+
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -43,7 +46,6 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
                         @Override
                         public void onNext(SearchResult searchResult) {
                             isDynamicLoading = false;
-                            Log.d("zhhr1122", searchResult.toString());
                             if (searchResult.status == 2) {
                                 mDynamicResult = searchResult;
                                 mView.fillDynamicResult(searchResult);
@@ -63,6 +65,33 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
                         }
                     });
             isDynamicLoading = true;
+            mCompositeDisposable.add(disposable);
+        }
+    }
+
+    public void getSearchResult() {
+        String title = mView.getSearchText();
+
+        if (title != null) {
+            DisposableSubscriber<List<Comic>> disposable = mDataSource.getSearchResult(title)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(new DisposableSubscriber<List<Comic>>() {
+                        @Override
+                        public void onNext(List<Comic> comics) {
+                            mView.fillResult(comics);
+                        }
+
+                        @Override
+                        public void onError(Throwable t) {
+                            Log.d("ceshi", "throwable=" + t.toString());
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
             mCompositeDisposable.add(disposable);
         }
     }

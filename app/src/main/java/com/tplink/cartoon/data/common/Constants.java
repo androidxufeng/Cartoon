@@ -43,6 +43,8 @@ public class Constants {
     //腾讯漫画搜索接口
     public static String TENCENT_SEARCH_URL  = "http://m.ac.qq.com/search/smart?word=";
 
+    public static String TENCENT_SEARCH_RESULT_URL = "http://m.ac.qq.com/search/result?word=";
+
     /**
      * 表示当前章节的状态
      * 0 未选取 1 已选择 2 已下载

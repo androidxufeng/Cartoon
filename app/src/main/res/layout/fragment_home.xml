@@ -197,29 +197,6 @@
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/bottom" />
 
-                <RelativeLayout
-                    android:id="@+id/rl_error_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:background="@color/colorBgDark"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/iv_error_bg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/error_bg" />
-
-                    <ImageView
-                        android:id="@+id/iv_error"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/iv_error_bg"
-                        android:layout_centerInParent="true"
-                        android:src="@drawable/btn_reload" />
-
-                </RelativeLayout>
             </RelativeLayout>
 
             <com.youth.banner.Banner
@@ -297,5 +274,28 @@
         </RelativeLayout>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_error_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBgDark"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_error_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/error_bg" />
+
+        <ImageView
+            android:id="@+id/iv_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_error_bg"
+            android:layout_centerInParent="true"
+            android:src="@drawable/btn_reload" />
+
+    </RelativeLayout>
 
 </RelativeLayout>
