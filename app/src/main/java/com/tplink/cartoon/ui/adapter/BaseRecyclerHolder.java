@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.GlideImageLoader;
 
 /**
@@ -137,7 +138,8 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
                         int width = bitmap.getWidth();
                         int height = bitmap.getHeight();
                         float scale = ((float) height) / width;
-                        iv.setLayoutParams(new RelativeLayout.LayoutParams(1080, (int) (scale * 1080)));
+                        int mobileWidth = DisplayUtil.getMobileWidth(context);
+                        iv.setLayoutParams(new RelativeLayout.LayoutParams(mobileWidth, (int) (scale * mobileWidth)));
                         GlideImageLoader.loadImage(context, url, iv);
                     }
                 });

@@ -12,7 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.HomeActivity">
+        <activity
+            android:name=".ui.activity.HomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,14 +23,25 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activity.ComicDetailActivity" />
+        <activity
+            android:name=".ui.activity.ComicDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ComicChapterActivity"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.activity.IndexActivity" />
+        <activity
+            android:name=".ui.activity.IndexActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".ui.activity.SelectDownloadActivity" />
+        <activity
+            android:name=".ui.activity.SelectDownloadActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ui.activity.SearchActivity"
