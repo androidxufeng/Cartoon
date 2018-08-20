@@ -8,6 +8,7 @@ package com.tplink.cartoon.ui.activity;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -25,9 +26,11 @@ import com.tplink.cartoon.data.bean.SearchResult;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.SearchDynamicAdapter;
 import com.tplink.cartoon.ui.adapter.SearchResultAdapter;
+import com.tplink.cartoon.ui.adapter.SearchTopAdapter;
 import com.tplink.cartoon.ui.presenter.SearchPresenter;
 import com.tplink.cartoon.ui.source.search.SearchDataSource;
 import com.tplink.cartoon.ui.view.ISearchView;
+import com.tplink.cartoon.ui.widget.NoScrollStaggeredGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
 import java.util.List;
@@ -45,9 +48,12 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     ImageView mClearText;
     @BindView(R.id.iv_result_recycle)
     RecyclerView mResultRecycle;
+    @BindView(R.id.iv_top_search_recycle)
+    RecyclerView mTopRecycle;
 
     SearchDynamicAdapter mDynaicAdapter;
     SearchResultAdapter mResultAdapter;
+    private SearchTopAdapter mTopAdapter;
 
 
     @OnClick(R.id.iv_clear)
@@ -84,6 +90,17 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
         mResultRecycle.setLayoutManager(manager2);
         mResultRecycle.setAdapter(mResultAdapter);
 
+        NoScrollStaggeredGridLayoutManager staggeredGridLayoutManager = new NoScrollStaggeredGridLayoutManager
+                (4, StaggeredGridLayoutManager.HORIZONTAL);
+        staggeredGridLayoutManager.setScrollEnabled(false);
+        mTopAdapter = new SearchTopAdapter(this, R.layout.item_top_search);
+        mTopRecycle.setLayoutManager(staggeredGridLayoutManager);
+        mTopRecycle.setAdapter(mTopAdapter);
+        mPresenter.getTopSearch();
+        setLisenter();
+    }
+
+    private void setLisenter() {
         //搜索
         mSearchText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -128,6 +145,14 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
                 Comic comic = mResultAdapter.getItems(position);
                 IntentUtil.toComicDetail(SearchActivity.this, comic.getId(), comic.getTitle());
                 SearchActivity.this.finish();
+            }
+        });
+
+        mTopAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerView parent, View view, int position) {
+                Comic comic = mTopAdapter.getItems(position);
+                IntentUtil.toComicDetail(SearchActivity.this, comic.getId(), comic.getTitle());
             }
         });
         //设置搜索监听事件
@@ -178,8 +203,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     }
 
     @Override
-    public void fillHotRank(List ranks) {
-
+    public void fillTopSearch(List<Comic> comics) {
+        if (comics != null) {
+            mTopAdapter.updateWithClear(comics);
+        }
     }
 
     @Override

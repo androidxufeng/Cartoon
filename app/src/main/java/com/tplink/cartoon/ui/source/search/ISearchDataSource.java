@@ -21,4 +21,8 @@ public interface ISearchDataSource extends IDataSource {
 
     Flowable<List<Comic>> getSearchResult(String title);
 
+    Flowable<List<Comic>> getTopResult();
+
+
+
 }

@@ -46,6 +46,19 @@ public class SearchDataSource implements ISearchDataSource {
         }, BackpressureStrategy.LATEST);
     }
 
+    @Override
+    public Flowable<List<Comic>> getTopResult() {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                Document doc = Jsoup.connect(Constants.TENCENT_SEARCH_RECOMMEND).get();
+                List<Comic> mdats = transToSearchTopComic(doc);
+                emitter.onNext(mdats);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
     // 处理搜索结果
     private List<Comic> transToSearchResultComic(Document doc) {
         List<Comic> mdats = new ArrayList<>();
@@ -65,6 +78,19 @@ public class SearchDataSource implements ISearchDataSource {
             }
             comic.setTags(tags);
             comic.setAuthor(info.get(2).text());
+            mdats.add(comic);
+        }
+        return mdats;
+    }
+
+    public List<Comic> transToSearchTopComic(Document doc) {
+        List<Comic> mdats = new ArrayList<>();
+        Element detail = doc.getElementsByAttributeValue("class", "search-hot-list").get(0);
+        List<Element> details = detail.select("a");
+        for (int i = 0; i < details.size(); i++) {
+            Comic comic = new Comic();
+            comic.setTitle(details.get(i).text());
+            comic.setId(Long.parseLong(getID(details.get(i).attr("href"))));
             mdats.add(comic);
         }
         return mdats;

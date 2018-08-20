@@ -95,4 +95,30 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
             mCompositeDisposable.add(disposable);
         }
     }
+
+    public void getTopSearch() {
+        DisposableSubscriber<List<Comic>> disposable = mDataSource.getTopResult()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<List<Comic>>() {
+                    @Override
+                    public void onNext(List<Comic> comics) {
+                        if (comics != null && comics.size() != 0) {
+                            mView.fillTopSearch(comics);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.d("ceshi", "throwable=" + t.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+
+    }
 }
