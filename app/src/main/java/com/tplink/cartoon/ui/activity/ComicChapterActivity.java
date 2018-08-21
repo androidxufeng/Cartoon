@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -75,6 +76,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     Button mDown;
     @BindView(R.id.rv_chapters)
     RecyclerView mRecycleView;
+    private LinearLayoutManager mLayoutManager;
 
     @OnClick(R.id.iv_error)
     public void reload(View view) {
@@ -178,10 +180,10 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     }
 
     @Override
-    public void nextChapter(PreloadChapters data, int loadingPosition) {
+    public void nextChapter(PreloadChapters data, int loadingPosition, int offset) {
         if (mPresenter.getDirect() == Constants.UP_TO_DOWN) {
             mVerticalAdapter.setDatas(data);
-            mRecycleView.scrollToPosition(loadingPosition);
+            mLayoutManager.scrollToPositionWithOffset(loadingPosition, offset);
             //为什么在这里要设置progress而其他的不用，因为没有viewpager的onPageSelected方法
             mSeekBar.setProgress(loadingPosition - data.getPreSize());
 
@@ -203,10 +205,11 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     }
 
     @Override
-    public void preChapter(PreloadChapters data, int loadingPosition) {
+    public void preChapter(PreloadChapters data, int loadingPosition, int offset) {
         if (mPresenter.getDirect() == Constants.UP_TO_DOWN) {
             mVerticalAdapter.setDatas(data);
-            mRecycleView.scrollToPosition(loadingPosition);
+            mLayoutManager.scrollToPositionWithOffset(loadingPosition, offset);
+
             //为什么在这里要设置progress而其他的不用，因为没有viewpager的onPageSelected方法
             mSeekBar.setProgress(loadingPosition - data.getPreSize());
         } else {
@@ -372,7 +375,8 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     private void initVerticalRead() {
         mVerticalAdapter = new ChapterRecyclerAdapter(this, R.layout.item_comic_reader);
         mRecycleView.setAdapter(mVerticalAdapter);
-        mRecycleView.setLayoutManager(new LinearLayoutManager(this));
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecycleView.setLayoutManager(mLayoutManager);
         mVerticalAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView parent, View view, int position) {
@@ -383,6 +387,10 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                View topView = recyclerView.getChildAt(0);          //获取可视的第一个view
+                int lastOffset = topView.getTop();
+                Log.d("ceshi", "offset=" + lastOffset);
+                mPresenter.setLoadingDy(lastOffset);
             }
 
             @Override
@@ -405,7 +413,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
                     if (firstItemPosition != mCurrentPosition) {
                         mCurrentPosition = firstItemPosition;
                         mSeekBar.setProgress(mCurrentPosition - mPresenter.getPreloadChapters().getPreSize() + 1);
-                        mPresenter.loadMoreData(mCurrentPosition, Constants.UP_TO_DOWN);
+                        mPresenter.loadMoreData(mCurrentPosition, Constants.UP_TO_DOWN, 0);
                         if (firstItemPosition == 0 || lastItemPosition == mPresenter.getPreloadChapters().getDataSize() - 1) {
                             showToast("没有了");
                         }
@@ -448,7 +456,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
                 } else {
                     mSeekBar.setProgress(position - mPresenter.getPreloadChapters().getNextSize() + 1);
                 }
-                mPresenter.loadMoreData(position, mAdapter.getDirection());
+                mPresenter.loadMoreData(position, mAdapter.getDirection(), 0);
             }
 
             @Override
