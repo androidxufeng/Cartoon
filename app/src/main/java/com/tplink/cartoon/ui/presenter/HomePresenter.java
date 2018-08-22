@@ -8,9 +8,10 @@ package com.tplink.cartoon.ui.presenter;
 
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.ui.fragment.HomeFragment;
 import com.tplink.cartoon.ui.source.IHomeDataSource;
-import com.tplink.cartoon.ui.view.IHomeView;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
+import com.trello.rxlifecycle2.android.FragmentEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
-public class HomePresenter extends BasePresenter<IHomeDataSource, IHomeView> {
+public class HomePresenter extends BasePresenter<IHomeDataSource, HomeFragment> {
 
     private final CompositeDisposable mDisposable;
 
@@ -34,19 +35,16 @@ public class HomePresenter extends BasePresenter<IHomeDataSource, IHomeView> {
         return mDatas;
     }
 
-    public HomePresenter(IHomeDataSource dataSource, IHomeView view) {
+    public HomePresenter(IHomeDataSource dataSource, HomeFragment view) {
         super(dataSource, view);
         mDisposable = new CompositeDisposable();
         mDatas = new ArrayList<>();
         mBanners = new ArrayList<>();
     }
 
-    public void subscribe() {
-
-    }
-
     public void loadData() {
         DisposableSubscriber<List<Comic>> disposable = mDataSource.loadData()
+                .compose(mView.<List<Comic>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {
@@ -78,13 +76,14 @@ public class HomePresenter extends BasePresenter<IHomeDataSource, IHomeView> {
         mDisposable.add(disposable);
     }
 
-    public void refreshData(){
+    public void refreshData() {
         loadData();
     }
 
     public void loadMoreData(int page) {
 
         DisposableSubscriber<List<Comic>> disposable = mDataSource.loadMoreData(page)
+                .compose(mView.<List<Comic>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {
@@ -106,7 +105,4 @@ public class HomePresenter extends BasePresenter<IHomeDataSource, IHomeView> {
         mDisposable.add(disposable);
     }
 
-    public void unSubscribe() {
-        mDisposable.dispose();
-    }
 }

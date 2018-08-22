@@ -13,9 +13,9 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.SearchBean;
 import com.tplink.cartoon.ui.HttpResultFunc;
 import com.tplink.cartoon.ui.activity.SearchActivity;
-import com.tplink.cartoon.ui.source.search.ISearchDataSource;
 import com.tplink.cartoon.ui.source.search.SearchDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +42,7 @@ public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActiv
         if (!isDynamicLoading) {
             DisposableSubscriber<List<SearchBean>> disposable = mDataSource.getDynamicResult(title)
                     .map(listHttpResultFunc)
+                    .compose(mView.<List<SearchBean>>bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableSubscriber<List<SearchBean>>() {
@@ -76,6 +77,7 @@ public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActiv
 
         if (title != null) {
             DisposableSubscriber<List<Comic>> disposable = mDataSource.getSearchResult(title)
+                    .compose(mView.<List<Comic>>bindUntilEvent(ActivityEvent.DESTROY))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeWith(new DisposableSubscriber<List<Comic>>() {
@@ -107,6 +109,7 @@ public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActiv
 
     public void getSearch() {
         DisposableSubscriber<List<Comic>> disposable = mDataSource.getTopResult()
+                .compose(mView.<List<Comic>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {
@@ -133,6 +136,7 @@ public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActiv
 
     public void updateSearchResultToDB(final String title) {
         DisposableSubscriber<Boolean> disposable = mDataSource.updateSearchResultToDB(title)
+                .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Boolean>() {
@@ -159,6 +163,7 @@ public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActiv
 
     public void getHistorySearch() {
         DisposableSubscriber<List<Comic>> disposable = mDataSource.getHistorySearch()
+                .compose(mView.<List<Comic>>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {
@@ -183,6 +188,7 @@ public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActiv
 
     public void clearHistory() {
         DisposableSubscriber<Boolean> disposable = mDataSource.clearSearchHistory()
+                .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Boolean>() {

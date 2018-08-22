@@ -14,18 +14,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.tplink.cartoon.R;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.util.List;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseFragmentActivity extends AppCompatActivity {
+public abstract class BaseFragmentActivity extends RxAppCompatActivity {
     protected FragmentManager fragmentManager;
     protected FragmentTransaction fragmentTransaction;
     protected List<Fragment> fragments;
@@ -44,7 +44,7 @@ public abstract class BaseFragmentActivity extends AppCompatActivity {
 
     protected abstract void initView();
 
-    protected void handleIntent(Intent intent){
+    protected void handleIntent(Intent intent) {
 
     }
 

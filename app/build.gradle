@@ -51,6 +51,8 @@ dependencies {
     //rxjava2
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroid_version"
+    compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+
     implementation 'org.jsoup:jsoup:1.9.2'
 
     //Glide

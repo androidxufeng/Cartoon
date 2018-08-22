@@ -25,6 +25,7 @@ import com.tplink.cartoon.ui.source.detail.DetailDataSource;
 import com.tplink.cartoon.ui.widget.IndexItemView;
 import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
+import com.trello.rxlifecycle2.android.ActivityEvent;
 
 import java.util.Date;
 
@@ -62,6 +63,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
     public void getDetail(final long comicId) {
         DisposableSubscriber<Comic> disposable = mDataSource.getDetail(comicId)
+                .compose(mView.<Comic>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Comic>() {
@@ -85,6 +87,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                 });
 
         DisposableSubscriber<Boolean> disposable2 = mDataSource.isCollect(comicId)
+                .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Boolean>() {
@@ -119,6 +122,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
         mComic.setCreateTime(datetime);
         mComic.setIsCollect(true);
         DisposableSubscriber<Boolean> disposable = mDataSource.updateComicToDB(mComic)
+                .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Boolean>() {
@@ -145,6 +149,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
     public void saveComicToDB(Comic comic) {
         DisposableSubscriber<Boolean> disposable = mDataSource.saveComicToDB(comic)
+                .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Boolean>() {
@@ -169,6 +174,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
     public void getCurrentChapters() {
         DisposableSubscriber<Comic> disposable = mDataSource.getComicFromDB(mComic.getId())
+                .compose(mView.<Comic>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<Comic>() {
