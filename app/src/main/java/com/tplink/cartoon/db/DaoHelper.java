@@ -10,7 +10,9 @@ package com.tplink.cartoon.db;
 import android.content.Context;
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.data.bean.DBSearchResult;
 import com.tplink.cartoon.greendao.ComicDao;
+import com.tplink.cartoon.greendao.DBSearchResultDao;
 import com.tplink.cartoon.greendao.DaoMaster;
 import com.tplink.cartoon.greendao.DaoSession;
 
@@ -77,6 +79,29 @@ public class DaoHelper<T> {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public boolean deleteAllSearch() {
+        try {
+            mDaoManager.getDaoSession().getDBSearchResultDao().deleteAll();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<T> findSearchByTitle(String title) {
+        return (List<T>) mDaoManager.getDaoSession().getDBSearchResultDao()
+                .queryBuilder()
+                .where(DBSearchResultDao.Properties.Title.eq(title));
+    }
+
+    public List<DBSearchResult> querySearch(){
+        List<DBSearchResult> list= mDaoManager.getDaoSession().getDBSearchResultDao().queryBuilder()
+                .orderDesc(DBSearchResultDao.Properties.Search_time)
+                .list();
+        return list;
     }
 
     //列出所有

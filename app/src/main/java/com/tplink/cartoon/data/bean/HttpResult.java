@@ -7,11 +7,9 @@
  */
 package com.tplink.cartoon.data.bean;
 
-import java.util.List;
-
-public class SearchResult extends BaseBean {
+public class HttpResult<T> {
     public int status;
-    public List<SearchBean> data;
+    public T data;
 
     public int getStatus() {
         return status;
@@ -21,17 +19,17 @@ public class SearchResult extends BaseBean {
         this.status = status;
     }
 
-    public List<SearchBean> getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(List<SearchBean> data) {
+    public void setData(T data) {
         this.data = data;
     }
 
     @Override
     public String toString() {
-        return "SearchResult{" +
+        return "HttpResult{" +
                 "status=" + status +
                 ", data=" + data +
                 '}';

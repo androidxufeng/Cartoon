@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,21 +18,23 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
-import com.tplink.cartoon.data.bean.SearchBean;
-import com.tplink.cartoon.data.bean.SearchResult;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
+import com.tplink.cartoon.ui.adapter.HistoryAdapter;
 import com.tplink.cartoon.ui.adapter.SearchDynamicAdapter;
 import com.tplink.cartoon.ui.adapter.SearchResultAdapter;
 import com.tplink.cartoon.ui.adapter.SearchTopAdapter;
 import com.tplink.cartoon.ui.presenter.SearchPresenter;
 import com.tplink.cartoon.ui.source.search.SearchDataSource;
 import com.tplink.cartoon.ui.view.ISearchView;
+import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.ui.widget.NoScrollStaggeredGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
+import com.tplink.cartoon.utils.TextUtil;
 
 import java.util.List;
 
@@ -50,17 +53,25 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     RecyclerView mResultRecycle;
     @BindView(R.id.iv_top_search_recycle)
     RecyclerView mTopRecycle;
+    @BindView(R.id.iv_history_recycle)
+    RecyclerView mHistoryRecycle;
+    @BindView(R.id.rl_normal)
+    RelativeLayout mNormal;
+    @BindView(R.id.tv_error)
+    TextView mError;
 
     SearchDynamicAdapter mDynaicAdapter;
     SearchResultAdapter mResultAdapter;
     private SearchTopAdapter mTopAdapter;
-
+    HistoryAdapter mHistoryAdapter;
 
     @OnClick(R.id.iv_clear)
     public void clear() {
         clearText();
         mResultRecycle.setVisibility(View.GONE);
         mDynamicRecycle.setVisibility(View.GONE);
+        mNormal.setVisibility(View.VISIBLE);
+        mError.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.tv_cancel)
@@ -68,9 +79,14 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
         finish();
     }
 
+    @OnClick(R.id.iv_clear_history)
+    public void clearHistory(View view) {
+        mPresenter.clearHistory();
+    }
+
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new SearchPresenter(new SearchDataSource(), this);
+        mPresenter = new SearchPresenter(new SearchDataSource(this), this);
     }
 
     @Override
@@ -96,7 +112,14 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
         mTopAdapter = new SearchTopAdapter(this, R.layout.item_top_search);
         mTopRecycle.setLayoutManager(staggeredGridLayoutManager);
         mTopRecycle.setAdapter(mTopAdapter);
-        mPresenter.getTopSearch();
+
+        mHistoryAdapter = new HistoryAdapter(this, R.layout.item_history_search);
+        NoScrollGridLayoutManager gridLayoutManager = new NoScrollGridLayoutManager(this, 1);
+        gridLayoutManager.setScrollEnabled(false);
+        mHistoryRecycle.setLayoutManager(gridLayoutManager);
+        mHistoryRecycle.setAdapter(mHistoryAdapter);
+
+        mPresenter.getSearch();
         setLisenter();
     }
 
@@ -133,8 +156,8 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
         mDynaicAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView parent, View view, int position) {
-                SearchBean searchBean = mDynaicAdapter.getItems(position);
-                IntentUtil.toComicDetail(SearchActivity.this, searchBean.getId(), searchBean.getTitle());
+                Comic comic = mDynaicAdapter.getItems(position);
+                IntentUtil.toComicDetail(SearchActivity.this, comic.getId(), comic.getTitle());
                 SearchActivity.this.finish();
             }
         });
@@ -155,6 +178,14 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
                 IntentUtil.toComicDetail(SearchActivity.this, comic.getId(), comic.getTitle());
             }
         });
+
+        mHistoryAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(RecyclerView parent, View view, int position) {
+                mPresenter.getSearchResult(mHistoryAdapter.getItems(position).getTitle());
+            }
+        });
+
         //设置搜索监听事件
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -181,20 +212,19 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     }
 
     @Override
-    public void fillDynamicResult(SearchResult searchResult) {
+    public void fillDynamicResult(List<Comic> list) {
         mDynamicRecycle.setVisibility(View.VISIBLE);
-        List<SearchBean> list = searchResult.getData();
-        if (list != null && list.size() != 0) {
-            mDynaicAdapter.updateWithClear(searchResult.getData());
-        }
+        mError.setVisibility(View.GONE);
+        mDynaicAdapter.updateWithClear(list);
     }
 
     @Override
     public void fillResult(List<Comic> comics) {
         mResultRecycle.setVisibility(View.VISIBLE);
-        if (comics != null && comics.size() != 0) {
-            mResultAdapter.updateWithClear(comics);
-        }
+        mDynamicRecycle.setVisibility(View.GONE);
+        mError.setVisibility(View.GONE);
+        mNormal.setVisibility(View.GONE);
+        mResultAdapter.updateWithClear(comics);
     }
 
     @Override
@@ -203,20 +233,31 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     }
 
     @Override
+    public void setSearchText(String title) {
+        mSearchText.setText(title);
+        mSearchText.setSelection(title.length());
+        mClearText.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void fillTopSearch(List<Comic> comics) {
-        if (comics != null) {
-            mTopAdapter.updateWithClear(comics);
-        }
+        mTopAdapter.updateWithClear(comics);
     }
 
     @Override
     public void showErrorView(String throwable) {
-
+        mError.setVisibility(View.VISIBLE);
+        mError.setText(Html.fromHtml(TextUtil.getSearchErrorText(throwable)));
     }
 
     @Override
-    public void fillData(List<Comic> data) {
-
+    public void fillData(List<Comic> comics) {
+        if (comics != null && comics.size() != 0) {
+            mHistoryAdapter.updateWithClear(comics);
+        } else {
+            mHistoryAdapter.onClear();
+            mHistoryAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

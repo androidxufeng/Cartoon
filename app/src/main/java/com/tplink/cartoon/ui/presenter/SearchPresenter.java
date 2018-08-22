@@ -10,11 +10,14 @@ package com.tplink.cartoon.ui.presenter;
 import android.util.Log;
 
 import com.tplink.cartoon.data.bean.Comic;
-import com.tplink.cartoon.data.bean.SearchResult;
+import com.tplink.cartoon.data.bean.SearchBean;
+import com.tplink.cartoon.ui.HttpResultFunc;
 import com.tplink.cartoon.ui.activity.SearchActivity;
 import com.tplink.cartoon.ui.source.search.ISearchDataSource;
+import com.tplink.cartoon.ui.source.search.SearchDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -22,33 +25,31 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
-public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActivity> {
+public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActivity> {
 
     private boolean isDynamicLoading;
-    private SearchResult mDynamicResult;
     private final CompositeDisposable mCompositeDisposable;
+    private List<Comic> mHistroys;
 
-    public SearchPresenter(ISearchDataSource dataSource, SearchActivity view) {
+    public SearchPresenter(SearchDataSource dataSource, SearchActivity view) {
         super(dataSource, view);
         mCompositeDisposable = new CompositeDisposable();
-    }
-
-    public SearchResult getmDynamicResult() {
-        return mDynamicResult;
+        mHistroys = new ArrayList<>();
     }
 
     public void getDynamicResult(String title) {
+        HttpResultFunc<List<SearchBean>> listHttpResultFunc = new HttpResultFunc<>();
         if (!isDynamicLoading) {
-            DisposableSubscriber<SearchResult> disposable = mDataSource.getDynamicResult(title)
+            DisposableSubscriber<List<SearchBean>> disposable = mDataSource.getDynamicResult(title)
+                    .map(listHttpResultFunc)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new DisposableSubscriber<SearchResult>() {
+                    .subscribeWith(new DisposableSubscriber<List<SearchBean>>() {
                         @Override
-                        public void onNext(SearchResult searchResult) {
+                        public void onNext(List<SearchBean> searchBeen) {
                             isDynamicLoading = false;
-                            if (searchResult.status == 2) {
-                                mDynamicResult = searchResult;
-                                mView.fillDynamicResult(searchResult);
+                            if (searchBeen != null && searchBeen.size() != 0) {
+                                mView.fillDynamicResult(mDataSource.transDynamicSearchToComic(searchBeen));
                             }
                         }
 
@@ -64,13 +65,14 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
                             isDynamicLoading = false;
                         }
                     });
+
             isDynamicLoading = true;
             mCompositeDisposable.add(disposable);
         }
     }
 
     public void getSearchResult() {
-        String title = mView.getSearchText();
+        final String title = mView.getSearchText();
 
         if (title != null) {
             DisposableSubscriber<List<Comic>> disposable = mDataSource.getSearchResult(title)
@@ -85,6 +87,7 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
                         @Override
                         public void onError(Throwable t) {
                             Log.d("ceshi", "throwable=" + t.toString());
+                            mView.showErrorView(title);
                         }
 
                         @Override
@@ -93,10 +96,16 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
                         }
                     });
             mCompositeDisposable.add(disposable);
+            updateSearchResultToDB(title);
         }
     }
 
-    public void getTopSearch() {
+    public void getSearchResult(String title) {
+        mView.setSearchText(title);
+        getSearchResult();
+    }
+
+    public void getSearch() {
         DisposableSubscriber<List<Comic>> disposable = mDataSource.getTopResult()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -110,7 +119,7 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
 
                     @Override
                     public void onError(Throwable t) {
-                        Log.d("ceshi", "throwable=" + t.toString());
+                        Log.d("ceshi", " getTop throwable=" + t.toString());
                     }
 
                     @Override
@@ -119,6 +128,81 @@ public class SearchPresenter extends BasePresenter<ISearchDataSource, SearchActi
                     }
                 });
         mCompositeDisposable.add(disposable);
+        getHistorySearch();
+    }
 
+    public void updateSearchResultToDB(final String title) {
+        DisposableSubscriber<Boolean> disposable = mDataSource.updateSearchResultToDB(title)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        Comic comic = new Comic();
+                        comic.setTitle(title);
+                        mHistroys.add(0, comic);
+                        mView.fillData(mHistroys);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        mView.showErrorView(title);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+    }
+
+    public void getHistorySearch() {
+        DisposableSubscriber<List<Comic>> disposable = mDataSource.getHistorySearch()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<List<Comic>>() {
+                    @Override
+                    public void onNext(List<Comic> comics) {
+                        Log.d("ceshi", "onNext: size = " + comics.size());
+                        mView.fillData(comics);
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        Log.d("ceshi", " getHistory onError: " + t);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mCompositeDisposable.add(disposable);
+    }
+
+    public void clearHistory() {
+        DisposableSubscriber<Boolean> disposable = mDataSource.clearSearchHistory()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Boolean>() {
+                    @Override
+                    public void onNext(Boolean aBoolean) {
+                        if (aBoolean) {
+                            mView.fillData(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mCompositeDisposable.add(disposable);
     }
 }

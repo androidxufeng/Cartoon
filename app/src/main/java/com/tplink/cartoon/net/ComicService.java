@@ -12,7 +12,10 @@ package com.tplink.cartoon.net;
  */
 
 import com.tplink.cartoon.data.bean.DBChapters;
-import com.tplink.cartoon.data.bean.SearchResult;
+import com.tplink.cartoon.data.bean.HttpResult;
+import com.tplink.cartoon.data.bean.SearchBean;
+
+import java.util.List;
 
 import io.reactivex.Flowable;
 import retrofit2.http.GET;
@@ -25,5 +28,5 @@ public interface ComicService {
     Flowable<DBChapters> getChapters(@Path("id") long id, @Path("chapter") int chapter);
 
     @GET
-    Flowable<SearchResult> getDynamicSearchResult(@Url String url);
+    Flowable<HttpResult<List<SearchBean>>> getDynamicSearchResult(@Url String url);
 }

@@ -7,15 +7,11 @@
  */
 package com.tplink.cartoon.ui.view;
 
-import com.tplink.cartoon.data.bean.SearchResult;
-
-import java.util.List;
-
 public interface ISearchView<T> extends ILoadDataView<T> {
     void clearText();
 
     //动态搜索
-    void fillDynamicResult(SearchResult t);
+    void fillDynamicResult(T t);
 
     //搜索结果
     void fillResult(T t);
@@ -23,4 +19,6 @@ public interface ISearchView<T> extends ILoadDataView<T> {
     void fillTopSearch(T t);
 
     String getSearchText();
+
+    void setSearchText(String title);
 }

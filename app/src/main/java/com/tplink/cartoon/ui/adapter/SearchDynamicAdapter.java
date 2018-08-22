@@ -10,10 +10,11 @@ package com.tplink.cartoon.ui.adapter;
 import android.content.Context;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.SearchBean;
 import com.tplink.cartoon.utils.TextUtil;
 
-public class SearchDynamicAdapter extends BaseRecyclerAdapter<SearchBean> {
+public class SearchDynamicAdapter extends BaseRecyclerAdapter<Comic> {
     private String key;
 
     public void setKey(String key) {
@@ -25,7 +26,7 @@ public class SearchDynamicAdapter extends BaseRecyclerAdapter<SearchBean> {
     }
 
     @Override
-    public void convert(BaseRecyclerHolder holder, SearchBean item, int position) {
+    public void convert(BaseRecyclerHolder holder, Comic item, int position) {
         holder.setHtmlText(R.id.tv_dynamic_search, TextUtil.getSearchText(key, item.getTitle()));
     }
 }

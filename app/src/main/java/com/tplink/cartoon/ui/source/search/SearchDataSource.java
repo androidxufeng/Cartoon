@@ -7,9 +7,14 @@
  */
 package com.tplink.cartoon.ui.source.search;
 
+import android.content.Context;
+
 import com.tplink.cartoon.data.bean.Comic;
-import com.tplink.cartoon.data.bean.SearchResult;
+import com.tplink.cartoon.data.bean.DBSearchResult;
+import com.tplink.cartoon.data.bean.HttpResult;
+import com.tplink.cartoon.data.bean.SearchBean;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.db.DaoHelper;
 import com.tplink.cartoon.net.RetrofitClient;
 
 import org.jsoup.Jsoup;
@@ -17,6 +22,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
@@ -26,8 +32,14 @@ import io.reactivex.FlowableOnSubscribe;
 
 public class SearchDataSource implements ISearchDataSource {
 
+    private DaoHelper<DBSearchResult> mDaoHelper;
+
+    public SearchDataSource(Context context) {
+        mDaoHelper = new DaoHelper<>(context);
+    }
+
     @Override
-    public Flowable<SearchResult> getDynamicResult(String title) {
+    public Flowable<HttpResult<List<SearchBean>>> getDynamicResult(String title) {
         return RetrofitClient.getInstance()
                 .getComicService()
                 .getDynamicSearchResult(Constants.TENCENT_SEARCH_URL + title);
@@ -55,6 +67,51 @@ public class SearchDataSource implements ISearchDataSource {
                 List<Comic> mdats = transToSearchTopComic(doc);
                 emitter.onNext(mdats);
                 emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<Boolean> updateSearchResultToDB(final String title) {
+        return Flowable.create(new FlowableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(FlowableEmitter<Boolean> emitter) throws Exception {
+                Date date = new Date();
+                long datetime = date.getTime();
+                DBSearchResult result = new DBSearchResult();
+                result.setTitle(title);
+                result.setSearch_time(datetime);
+                if (mDaoHelper.insert(result)) {
+                    emitter.onNext(true);
+                } else {
+                    emitter.onNext(false);
+                }
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<List<Comic>> getHistorySearch() {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                List<DBSearchResult> results = mDaoHelper.querySearch();
+                List<Comic> comics = transSearchToComic(results);
+                emitter.onNext(comics);
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<Boolean> clearSearchHistory() {
+        return Flowable.create(new FlowableOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(FlowableEmitter<Boolean> emitter) throws Exception {
+                if (mDaoHelper.deleteAllSearch()) {
+                    emitter.onNext(true);
+                } else {
+                    emitter.onNext(false);
+                }
             }
         }, BackpressureStrategy.LATEST);
     }
@@ -94,6 +151,27 @@ public class SearchDataSource implements ISearchDataSource {
             mdats.add(comic);
         }
         return mdats;
+    }
+
+    public static List<Comic> transSearchToComic(List<DBSearchResult> results) {
+        List<Comic> comics = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            Comic comic = new Comic();
+            comic.setTitle(results.get(i).getTitle());
+            comics.add(comic);
+        }
+        return comics;
+    }
+
+    public List<Comic> transDynamicSearchToComic(List<SearchBean> results) {
+        List<Comic> comics = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            Comic comic = new Comic();
+            comic.setTitle(results.get(i).getTitle());
+            comic.setId(results.get(i).getId());
+            comics.add(comic);
+        }
+        return comics;
     }
 
     private String getID(String splitID) {
