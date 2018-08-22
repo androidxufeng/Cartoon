@@ -11,8 +11,6 @@ package com.tplink.cartoon.data.bean;
  * Ver 1.0, 18-7-27, xufeng, Create file
  */
 
-import android.text.BoringLayout;
-
 import com.tplink.cartoon.utils.StringConverter;
 
 import org.greenrobot.greendao.annotation.Convert;
@@ -270,10 +268,10 @@ public class Comic extends BaseBean {
 
     @Generated(hash = 1733893838)
     public Comic(long id, String title, String cover, String author,
-            List<String> chapters, List<String> tags, String collections,
-            String describe, String point, String popularity, String topics,
-            String updates, String status, int currentChapter, long updateTime,
-            long createTime, boolean isCollect, int readType) {
+                 List<String> chapters, List<String> tags, String collections,
+                 String describe, String point, String popularity, String topics,
+                 String updates, String status, int currentChapter, long updateTime,
+                 long createTime, boolean isCollect, int readType) {
         this.id = id;
         this.title = title;
         this.cover = cover;

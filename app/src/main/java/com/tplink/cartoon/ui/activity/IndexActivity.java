@@ -12,6 +12,7 @@ package com.tplink.cartoon.ui.activity;
  */
 
 import android.content.Intent;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -80,8 +81,7 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
         mIntent = getIntent();
         mAdapter = new DetailAdapter(this, R.layout.item_chapter);
         mRecyclerView.setAdapter(mAdapter);
-        NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(this, 1);
-        layoutManager.setScrollEnabled(false);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
         mRecyclerView.setLayoutManager(layoutManager);
 
         ArrayList<String> titles = mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);

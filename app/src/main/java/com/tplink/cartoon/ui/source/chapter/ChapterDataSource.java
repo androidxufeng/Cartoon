@@ -41,7 +41,7 @@ public class ChapterDataSource implements IChapterDataSource {
         Flowable<DBChapters> flowable = RetrofitClient.getInstance()
                 .getComicService()
                 .getChapters(id, chapter);
-        return CacheProviders.getComicCache()
+        return CacheProviders.getComicCacheInstance()
                 .getChapters(flowable, new DynamicKey(id + chapter + "all"), new EvictDynamicKey(false));
     }
 

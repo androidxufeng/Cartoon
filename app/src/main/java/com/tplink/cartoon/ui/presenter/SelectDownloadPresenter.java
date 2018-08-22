@@ -8,17 +8,24 @@
  */
 package com.tplink.cartoon.ui.presenter;
 
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.source.download.IDownloadDataSource;
 import com.tplink.cartoon.ui.view.ISelectDownloadView;
+import com.tplink.cartoon.utils.IntentUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, ISelectDownloadView> {
 
 
-    private ArrayList<String> mChapters;
+    private List<String> mChapters;
+
+    public HashMap<Integer, Integer> getMap() {
+        return map;
+    }
+
     private HashMap<Integer, Integer> map;
 
     private boolean isSelectAll;
@@ -28,9 +35,9 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
         super(dataSource, view);
     }
 
-    public SelectDownloadPresenter(IDownloadDataSource dataSource, ISelectDownloadView view, ArrayList<String> chapters) {
+    public SelectDownloadPresenter(IDownloadDataSource dataSource, ISelectDownloadView view, Comic comic) {
         super(dataSource, view);
-        this.mChapters = chapters;
+        this.mChapters = comic.getChapters();
         initData();
     }
 
@@ -48,7 +55,7 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
         if (map.get(position).equals(Constants.CHAPTER_FREE)) {
             map.put(position, Constants.CHAPTER_SELECTED);
             selectCount++;
-            if (selectCount == mChapters.size()){
+            if (selectCount == mChapters.size()) {
                 mView.addAll();
                 isSelectAll = true;
             }

@@ -1,9 +1,13 @@
 package com.tplink.cartoon.ui.activity;
 
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.Button;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.utils.LogUtil;
+import com.tplink.cartoon.utils.PermissionUtils;
 
 import java.util.ArrayList;
 
@@ -41,6 +45,21 @@ public class HomeActivity extends BaseFragmentActivity {
 
     @Override
     protected void initView() {
+        initPermission();
+        initFragment();
+    }
+
+    private void initPermission() {
+        //检查读写权限
+        if (PermissionUtils.checkPermission(PermissionUtils.READ_EXTERNAL_STORAGE, this) &&
+                PermissionUtils.checkPermission(PermissionUtils.WRITE_EXTERNAL_STORAGE, this)) {
+            initFragment();
+        } else {
+            PermissionUtils.verifyStoragePermissions(this);
+        }
+    }
+
+    private void initFragment() {
         fragments = new ArrayList<>();
         fragmentManager = getSupportFragmentManager();
         fragments.add(fragmentManager.findFragmentById(R.id.fm_home));
@@ -50,4 +69,25 @@ public class HomeActivity extends BaseFragmentActivity {
         selectTab(0);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (grantResults.length != 0) {
+            disposeRequestResult(grantResults[0]);
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void disposeRequestResult(int grantResult) {
+        switch (grantResult) {
+            case PackageManager.PERMISSION_GRANTED:
+                initFragment();
+                break;
+            case PackageManager.PERMISSION_DENIED:
+                LogUtil.w("ceshi", "未授予权限");
+                finish();
+                break;
+            default:
+                break;
+        }
+    }
 }

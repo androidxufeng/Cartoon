@@ -1,15 +1,11 @@
-package com.tplink.cartoon.utils;
 /*
- * Copyright (C), 2018, TP-LINK TECHNOLOGIES CO., LTD.
- *
- * ${FILE_NAME}
- *
  * Description
  *
  * Author xufeng
  *
  * Ver 1.0, 18-7-27, xufeng, Create file
  */
+package com.tplink.cartoon.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,11 +14,13 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
+import com.tplink.cartoon.ui.activity.DownloadListActivity;
 import com.tplink.cartoon.ui.activity.IndexActivity;
 import com.tplink.cartoon.ui.activity.SearchActivity;
 import com.tplink.cartoon.ui.activity.SelectDownloadActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class IntentUtil {
@@ -64,15 +62,21 @@ public class IntentUtil {
         context.startActivity(intent);
     }
 
-    public static void toSelectDownload(Context context, Comic mComic) {
+    public static void toSelectDownload(Context context, Comic comic) {
         Intent intent = new Intent(context, SelectDownloadActivity.class);
-        intent.putExtra(Constants.COMIC_ID, mComic.getId());
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) mComic.getChapters());
+        intent.putExtra(Constants.COMIC, comic);
         context.startActivity(intent);
     }
 
     public static void toSearch(Context context) {
         Intent intent = new Intent(context, SearchActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void toDownloadListActivity(Context context, HashMap<Integer, Integer> map, Comic comic) {
+        Intent intent = new Intent(context, DownloadListActivity.class);
+        intent.putExtra(Constants.COMIC_SELECT_DOWNLOAD, map);
+        intent.putExtra(Constants.COMIC, comic);
         context.startActivity(intent);
     }
 }

@@ -12,9 +12,12 @@
 package com.tplink.cartoon.net;
 
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.utils.LogUtil;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -31,7 +34,25 @@ public class RetrofitClient {
     private static RetrofitClient sClient;
 
     private RetrofitClient() {
+       /* OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(DISCOLLECT_TIME, TimeUnit.SECONDS)
+                .build();*/
+
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        okhttp3.Response orginalResponse = chain.proceed(chain.request());
+                        return orginalResponse.newBuilder()
+                                .body(new ProgressResponseBody(orginalResponse.body(), new ProgressListener() {
+                                    @Override
+                                    public void onProgress(long progress, long total, boolean done) {
+                                        LogUtil.d( "onProgress: " + "total ---->" + total + "done ---->" + progress );
+                                    }
+                                }))
+                                .build();
+                    }
+                })
                 .connectTimeout(DISCOLLECT_TIME, TimeUnit.SECONDS)
                 .build();
 

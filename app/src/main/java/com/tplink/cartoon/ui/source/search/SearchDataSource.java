@@ -46,7 +46,7 @@ public class SearchDataSource implements ISearchDataSource {
         Flowable<HttpResult<List<SearchBean>>> flowable = RetrofitClient.getInstance()
                 .getComicService()
                 .getDynamicSearchResult(Constants.TENCENT_SEARCH_URL + title);
-        return CacheProviders.getComicCache()
+        return CacheProviders.getComicCacheInstance()
                 .getDynamicSearchResult(flowable, new DynamicKey(Constants.TENCENT_SEARCH_URL + title),
                         new EvictDynamicKey(false));
     }

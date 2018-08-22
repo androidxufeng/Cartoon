@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.SelectDownloadAdapter;
@@ -22,8 +23,8 @@ import com.tplink.cartoon.ui.source.download.DownloadDataSource;
 import com.tplink.cartoon.ui.view.ISelectDownloadView;
 import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
+import com.tplink.cartoon.utils.IntentUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -43,6 +44,7 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
     ImageView mSelectedIcon;
     @BindView(R.id.tv_selected)
     TextView mSelectedNum;
+    private Comic mComic;
 
     @OnClick({R.id.iv_order})
     public void orderList(ImageView order) {
@@ -54,18 +56,26 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
         }
     }
 
-    @OnClick(R.id.rl_select)
-    public void selectAll(View view) {
-        mPresenter.selectOrRemoveAll();
+    @OnClick({R.id.rl_select, R.id.rl_download})
+    public void click(View view) {
+        switch (view.getId()) {
+            case R.id.rl_select:
+                mPresenter.selectOrRemoveAll();
+                break;
+            case R.id.rl_download:
+                startDownload();
+                break;
+            default:
+                break;
+        }
     }
 
-    private ArrayList<String> chapters;
     private SelectDownloadAdapter mAdapter;
 
     @Override
     protected void initPresenter(Intent intent) {
-        chapters = intent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
-        mPresenter = new SelectDownloadPresenter(new DownloadDataSource(), this, chapters);
+        mComic = (Comic) intent.getSerializableExtra(Constants.COMIC);
+        mPresenter = new SelectDownloadPresenter(new DownloadDataSource(), this, mComic);
     }
 
     @Override
@@ -78,20 +88,20 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
         NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(this, 3);
         mRecycleView.setLayoutManager(layoutManager);
         mAdapter = new SelectDownloadAdapter(this, R.layout.item_select_download);
-        mAdapter.updateWithClear(chapters);
+        mAdapter.updateWithClear(mComic.getChapters());
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView parent, View view, int position) {
                 if (mAdapter.isOrder()) {
                     mPresenter.updateToSelected(position);
                 } else {
-                    mPresenter.updateToSelected(chapters.size() - position - 1);
+                    mPresenter.updateToSelected(mComic.getChapters().size() - position - 1);
                 }
             }
         });
         mRecycleView.setAdapter(mAdapter);
         mRecycleView.addItemDecoration(new DividerGridItemDecoration(this, R.drawable.decorationlist_dark));
-        mChapterNum.setText("共" + chapters.size() + "话");
+        mChapterNum.setText("共" + mComic.getChapters().size() + "话");
     }
 
     @Override
@@ -101,7 +111,7 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
 
     @Override
     public void startDownload() {
-
+        IntentUtil.toDownloadListActivity(this, mPresenter.getMap(), mComic);
     }
 
     @Override

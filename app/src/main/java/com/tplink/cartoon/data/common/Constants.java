@@ -18,6 +18,7 @@ public class Constants {
     public static final String COMIC_CHAPTER_TITLE = "comic_chapter_title";
     public static final String COMIC_TITLE = "comic_title";
     public static final String COMIC_READ_TYPE = "comic_read_type";
+    public final static String COMIC_SELECT_DOWNLOAD = "comic_select_download";
     public static final String COMIC = "comic";
     public static final int RIGHT_TO_LEFT = 0;
     public static final int LEFT_TO_RIGHT = 1;
@@ -49,6 +50,8 @@ public class Constants {
     public static String TENCENT_SEARCH_RESULT_URL = TENCENTSEARCHBASE + "result?word=";
 
     public static String TENCENT_SEARCH_RECOMMEND = TENCENTSEARCHBASE + "index";
+
+    public static String TEST_URL = "http://ac.tc.qq.com/store_file_download?buid=15017&uin=1422363405&dir_path=/&name=27_20_56_5916a61b8878248737589f2d5105fd46_3136.ori";
 
     /**
      * 表示当前章节的状态
