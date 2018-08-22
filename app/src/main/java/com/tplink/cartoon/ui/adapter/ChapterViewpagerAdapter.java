@@ -11,6 +11,7 @@ package com.tplink.cartoon.ui.adapter;
  * Ver 1.0, 18-8-2, xufeng, Create file
  */
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -24,6 +25,7 @@ import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import uk.co.senab.photoview.PhotoView;
@@ -34,10 +36,12 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
     private final ArrayList<String> mDatas;
     private OnceClickListener listener;
     private int mDirection = Constants.LEFT_TO_RIGHT;
+    private LinkedList<View> mViews = null;
 
     public ChapterViewpagerAdapter(Context context) {
         mDatas = new ArrayList<>();
         mContext = context;
+        mViews = new LinkedList<>();
     }
 
     public ChapterViewpagerAdapter(Context context, PreloadChapters preloadChapters, int direct) {
@@ -46,6 +50,11 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
         mDatas.addAll(preloadChapters.getNowlist());
         mDatas.addAll(preloadChapters.getNextlist());
         mDirection = direct;
+    }
+
+    public void clearList() {
+        mDatas.clear();
+        notifyDataSetChanged();
     }
 
     public int getDirection() {
@@ -91,19 +100,29 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        PhotoView imageView = new PhotoView(mContext);
+        View convertView = null;
+        ViewHolder holder = null;
+        if (mViews.size() == 0) {
+            holder = new ViewHolder();
+            convertView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.item_chapters, null);
+            holder.imageView = (PhotoView) convertView.findViewById(R.id.pv_comic);
+            convertView.setTag(holder);
+        } else {
+            convertView = mViews.removeFirst();
+            holder = (ViewHolder) convertView.getTag();
+        }
         if (mDirection == Constants.RIGHT_TO_LEFT) {
             Glide.with(mContext)
                     .load(mDatas.get(mDatas.size() - position - 1))
                     .placeholder(R.drawable.pic_default_vertical)
-                    .into(imageView);
+                    .into(holder.imageView);
         } else {
             Glide.with(mContext)
                     .load(mDatas.get(position))
                     .placeholder(R.drawable.pic_default_vertical)
-                    .into(imageView);
+                    .into(holder.imageView);
         }
-        imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+        holder.imageView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {
                 if (listener != null) {
@@ -111,14 +130,18 @@ public class ChapterViewpagerAdapter extends PagerAdapter {
                 }
             }
         });
-        container.addView(imageView);
+        container.addView(convertView);
 
-        return imageView;
+        return convertView;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {//必须实现，销毁
         container.removeView((View) object);
+    }
+
+    public class ViewHolder {
+        public PhotoView imageView = null;
     }
 
     public void setListener(OnceClickListener listener) {

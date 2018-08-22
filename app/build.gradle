@@ -51,7 +51,9 @@ dependencies {
     //rxjava2
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjava_version"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroid_version"
-    compile 'com.trello.rxlifecycle2:rxlifecycle-components:2.2.1'
+    implementation "com.trello.rxlifecycle2:rxlifecycle-components:2.2.1"
+    implementation "com.github.VictorAlbertos.RxCache:runtime:1.8.3-2.x"
+    implementation 'com.github.VictorAlbertos.Jolyglot:gson:0.0.3'
 
     implementation 'org.jsoup:jsoup:1.9.2'
 

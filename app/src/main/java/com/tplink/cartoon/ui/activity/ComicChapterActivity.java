@@ -238,6 +238,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
             if (direct == Constants.UP_TO_DOWN) {
                 mRecycleView.setVisibility(View.VISIBLE);
                 mViewpager.setVisibility(View.GONE);
+                mAdapter.clearList();
                 int nowPosition = mViewpager.getCurrentItem();
                 mVerticalAdapter.setDatas(mPresenter.getPreloadChapters());
                 if (mPresenter.getDirect() == Constants.LEFT_TO_RIGHT) {
@@ -253,6 +254,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
                 //横版模式
                 mRecycleView.setVisibility(View.GONE);
                 mViewpager.setVisibility(View.VISIBLE);
+                mVerticalAdapter.clearList();
                 int nowPosition;
                 if (mPresenter.getDirect() == Constants.UP_TO_DOWN) {
                     if (direct == Constants.RIGHT_TO_LEFT) {

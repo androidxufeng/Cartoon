@@ -16,6 +16,7 @@ import com.tplink.cartoon.data.bean.SearchBean;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.db.DaoHelper;
 import com.tplink.cartoon.net.RetrofitClient;
+import com.tplink.cartoon.net.cache.CacheProviders;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,6 +30,8 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
+import io.rx_cache2.DynamicKey;
+import io.rx_cache2.EvictDynamicKey;
 
 public class SearchDataSource implements ISearchDataSource {
 
@@ -40,9 +43,12 @@ public class SearchDataSource implements ISearchDataSource {
 
     @Override
     public Flowable<HttpResult<List<SearchBean>>> getDynamicResult(String title) {
-        return RetrofitClient.getInstance()
+        Flowable<HttpResult<List<SearchBean>>> flowable = RetrofitClient.getInstance()
                 .getComicService()
                 .getDynamicSearchResult(Constants.TENCENT_SEARCH_URL + title);
+        return CacheProviders.getComicCache()
+                .getDynamicSearchResult(flowable, new DynamicKey(Constants.TENCENT_SEARCH_URL + title),
+                        new EvictDynamicKey(false));
     }
 
     @Override

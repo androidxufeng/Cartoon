@@ -18,6 +18,11 @@ public class ChapterRecyclerAdapter extends BaseRecyclerAdapter<String> {
         super(context, itemLayoutId);
     }
 
+    public void clearList(){
+        this.list.clear();
+        notifyDataSetChanged();
+    }
+
     public void setDatas(PreloadChapters preloadChapters) {
         this.list.clear();
         this.list.addAll(preloadChapters.getPrelist());

@@ -16,10 +16,8 @@ import com.tplink.cartoon.ui.fragment.BookShelfFragment;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 import com.trello.rxlifecycle2.android.FragmentEvent;
-import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.List;
-import java.util.MissingResourceException;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;

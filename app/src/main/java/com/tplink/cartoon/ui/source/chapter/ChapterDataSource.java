@@ -17,6 +17,7 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.DBChapters;
 import com.tplink.cartoon.db.DaoHelper;
 import com.tplink.cartoon.net.RetrofitClient;
+import com.tplink.cartoon.net.cache.CacheProviders;
 
 import java.util.Date;
 
@@ -24,6 +25,8 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
+import io.rx_cache2.DynamicKey;
+import io.rx_cache2.EvictDynamicKey;
 
 public class ChapterDataSource implements IChapterDataSource {
 
@@ -35,9 +38,11 @@ public class ChapterDataSource implements IChapterDataSource {
 
     @Override
     public Flowable<DBChapters> getChapterData(long id, int chapter) {
-        return RetrofitClient.getInstance()
+        Flowable<DBChapters> flowable = RetrofitClient.getInstance()
                 .getComicService()
                 .getChapters(id, chapter);
+        return CacheProviders.getComicCache()
+                .getChapters(flowable, new DynamicKey(id + chapter + "all"), new EvictDynamicKey(false));
     }
 
     @Override
