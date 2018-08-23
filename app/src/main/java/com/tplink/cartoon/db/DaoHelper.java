@@ -10,11 +10,15 @@ package com.tplink.cartoon.db;
 import android.content.Context;
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.data.bean.DBDownloadItem;
 import com.tplink.cartoon.data.bean.DBSearchResult;
+import com.tplink.cartoon.data.bean.DownInfo;
 import com.tplink.cartoon.greendao.ComicDao;
+import com.tplink.cartoon.greendao.DBDownloadItemDao;
 import com.tplink.cartoon.greendao.DBSearchResultDao;
 import com.tplink.cartoon.greendao.DaoMaster;
 import com.tplink.cartoon.greendao.DaoSession;
+import com.tplink.cartoon.greendao.DownInfoDao;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -97,8 +101,8 @@ public class DaoHelper<T> {
                 .where(DBSearchResultDao.Properties.Title.eq(title));
     }
 
-    public List<DBSearchResult> querySearch(){
-        List<DBSearchResult> list= mDaoManager.getDaoSession().getDBSearchResultDao().queryBuilder()
+    public List<DBSearchResult> querySearch() {
+        List<DBSearchResult> list = mDaoManager.getDaoSession().getDBSearchResultDao().queryBuilder()
                 .orderDesc(DBSearchResultDao.Properties.Search_time)
                 .list();
         return list;
@@ -143,6 +147,21 @@ public class DaoHelper<T> {
         List<T> list = mDaoManager.getDaoSession().queryBuilder(clazz).list();
         return list;
     }
+
+    public List<DownInfo> queryDownInfo(long comicId) {
+        List<DownInfo> list = mDaoManager.getDaoSession().getDownInfoDao().queryBuilder()
+                .where(DownInfoDao.Properties.ComicId.eq(comicId))
+                .list();
+        return list;
+    }
+
+    public List<DBDownloadItem> queryDownloaditmes(long comic_id) {
+        List<DBDownloadItem> list = mDaoManager.getDaoSession().getDBDownloadItemDao().queryBuilder()
+                .where(DBDownloadItemDao.Properties.Comic_id.eq(comic_id))
+                .list();
+        return list;
+    }
+
 
     //查询全部，dao查询
     public List<T> queryDaoAll(Class clazz) {

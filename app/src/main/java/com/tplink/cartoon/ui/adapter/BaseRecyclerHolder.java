@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.GlideImageLoader;
 
@@ -156,4 +157,12 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
         }
         return this;
     }
+
+    public BaseRecyclerHolder setProgress(int viewId, long countLength, long readLength) {
+        NumberProgressBar progressBar = getView(viewId);
+        progressBar.setMax((int) countLength);
+        progressBar.setProgress((int) readLength);
+        return this;
+    }
+
 }

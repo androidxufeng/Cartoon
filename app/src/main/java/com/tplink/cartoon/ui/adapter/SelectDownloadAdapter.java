@@ -31,12 +31,23 @@ public class SelectDownloadAdapter extends BaseRecyclerAdapter<String> {
         }
         holder.setText(R.id.tv_position, (position + 1) + "-" + list.get(position));
         if (mHashMap != null) {
-            if (mHashMap.get(position) == Constants.CHAPTER_SELECTED) {
-                holder.setFrameLayoutImageResource(R.id.fl_position_wrapper, R.drawable.btn_selected_download);
-                holder.setTextViewColor(R.id.tv_position, Color.WHITE);
-            } else {
-                holder.setFrameLayoutImageResource(R.id.fl_position_wrapper, R.drawable.btn_select_download);
-                holder.setTextViewColor(R.id.tv_position, Color.parseColor("#666666"));
+            switch (mHashMap.get(position)) {
+                case Constants.CHAPTER_SELECTED:
+                    holder.setFrameLayoutImageResource(R.id.fl_position_wrapper, R.drawable.btn_selected_download);
+                    holder.setTextViewColor(R.id.tv_position, Color.WHITE);
+                    break;
+                case Constants.CHAPTER_DOWNLOAD:
+                    holder.setFrameLayoutImageResource(R.id.fl_position_wrapper, R.drawable.btn_downloaded_download);
+                    holder.setTextViewColor(R.id.tv_position, Color.parseColor("#666666"));
+                    break;
+                case Constants.CHAPTER_FREE:
+                    holder.setFrameLayoutImageResource(R.id.fl_position_wrapper, R.drawable.btn_select_download);
+                    holder.setTextViewColor(R.id.tv_position, Color.parseColor("#666666"));
+                    break;
+                default:
+                    holder.setFrameLayoutImageResource(R.id.fl_position_wrapper, R.drawable.btn_select_download);
+                    holder.setTextViewColor(R.id.tv_position, Color.parseColor("#666666"));
+                    break;
             }
         }
     }

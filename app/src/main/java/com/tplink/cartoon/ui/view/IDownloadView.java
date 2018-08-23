@@ -9,9 +9,7 @@ package com.tplink.cartoon.ui.view;
 
 public interface IDownloadView<T> extends ILoadDataView<T> {
 
-    void onStartDownload(int chapters);
-
-    void onPausedDownload(int chapters);
+    void onLoadMoreData(T t);
 
     void onStartAll();
 

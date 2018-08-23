@@ -26,6 +26,7 @@ import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
@@ -277,24 +278,31 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         setTitle(chapterTitle, mComicSize, nowPosition, mDirect);
     }
 
-    public void getNextChapterData(long id, int chapter, final int offset) {
-        DisposableSubscriber<DBChapters> disposable =
+    public void getNextChapterData(long id, final int chapter, final int offset) {
+        DisposableSubscriber<List<String>> disposable =
                 mDataSource.loadNextData(id, chapter)
                         .compose(mView.<DBChapters>bindUntilEvent(ActivityEvent.DESTROY))
+                        .map(new Function<DBChapters, List<String>>() {
+
+                            @Override
+                            public List<String> apply(DBChapters chapters) throws Exception {
+                                return chapters.getComiclist();
+                            }
+                        })
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSubscriber<DBChapters>() {
+                        .subscribeWith(new DisposableSubscriber<List<String>>() {
                             @Override
-                            public void onNext(DBChapters chapters) {
+                            public void onNext(List<String> strings) {
                                 if (!isLoadingdata) {
                                     return;
                                 }
                                 mPreloadChapters.setPrelist(mPreloadChapters.getNowlist());
                                 mPreloadChapters.setNowlist(mPreloadChapters.getNextlist());
-                                if (chapters.getComiclist().size() == 1) {
+                                if (strings.size() == 1) {
                                     mPreloadChapters.setNextlist(new ArrayList<String>());
                                 } else {
-                                    mPreloadChapters.setNextlist(chapters.getComiclist());
+                                    mPreloadChapters.setNextlist(strings);
                                 }
                                 mComicChapters++;
                                 int position;

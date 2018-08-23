@@ -7,14 +7,19 @@
  */
 package com.tplink.cartoon.data.bean;
 
+import com.tplink.cartoon.utils.StringConverter;
+
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
+import java.util.List;
+
 @Entity
 public class DBDownloadItem extends BaseBean {
 
-    @Id(autoincrement = true)
+    @Id
     protected Long id;
     protected Long comic_id;
     //漫画标题
@@ -31,6 +36,11 @@ public class DBDownloadItem extends BaseBean {
     protected Long create_time;
     //最后更新时间
     protected Long update_time;
+    /*state状态数据库保存*/
+    protected int stateInte;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
+    protected List<String> chapters_url;
 
     public Long getUpdate_time() {
         return this.update_time;
@@ -104,9 +114,10 @@ public class DBDownloadItem extends BaseBean {
         this.id = id;
     }
 
-    @Generated(hash = 1910496522)
-    public DBDownloadItem(Long id, Long comic_id, String title, String chapters_title,
-            int chapters, int num, int current_num, Long create_time, Long update_time) {
+    @Generated(hash = 1040220767)
+    public DBDownloadItem(Long id, Long comic_id, String title, String chapters_title, int chapters,
+                          int num, int current_num, Long create_time, Long update_time, int stateInte,
+                          List<String> chapters_url) {
         this.id = id;
         this.comic_id = comic_id;
         this.title = title;
@@ -116,9 +127,53 @@ public class DBDownloadItem extends BaseBean {
         this.current_num = current_num;
         this.create_time = create_time;
         this.update_time = update_time;
+        this.stateInte = stateInte;
+        this.chapters_url = chapters_url;
     }
 
     @Generated(hash = 255750031)
     public DBDownloadItem() {
+    }
+
+    @DownState.state
+    public int getState() {
+        switch (getStateInte()) {
+            case 0:
+                return DownState.START;
+            case 1:
+                return DownState.DOWN;
+            case 2:
+                return DownState.PAUSE;
+            case 3:
+                return DownState.STOP;
+            case 4:
+                return DownState.ERROR;
+            case 5:
+                return DownState.FINISH;
+            case 6:
+                return DownState.NONE;
+            default:
+                return DownState.FINISH;
+        }
+    }
+
+    public void setState(int state) {
+        setStateInte(state);
+    }
+
+    public List<String> getChapters_url() {
+        return this.chapters_url;
+    }
+
+    public void setChapters_url(List<String> chapters_url) {
+        this.chapters_url = chapters_url;
+    }
+
+    public int getStateInte() {
+        return this.stateInte;
+    }
+
+    public void setStateInte(int stateInte) {
+        this.stateInte = stateInte;
     }
 }

@@ -9,18 +9,28 @@
 package com.tplink.cartoon.ui.presenter;
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.data.bean.DBDownloadItem;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.ui.activity.SelectDownloadActivity;
+import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
 import com.tplink.cartoon.ui.source.download.IDownloadDataSource;
-import com.tplink.cartoon.ui.view.ISelectDownloadView;
-import com.tplink.cartoon.utils.IntentUtil;
+import com.tplink.cartoon.utils.LogUtil;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, ISelectDownloadView> {
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subscribers.DisposableSubscriber;
+
+public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, SelectDownloadActivity> {
 
 
     private List<String> mChapters;
+    private DownloadListDataSource mDownloadListDataSource;
+    private Comic mComic;
+    private CompositeDisposable mCompositeDisposable;
 
     public HashMap<Integer, Integer> getMap() {
         return map;
@@ -31,13 +41,16 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
     private boolean isSelectAll;
     private int selectCount;
 
-    public SelectDownloadPresenter(IDownloadDataSource dataSource, ISelectDownloadView view) {
+    public SelectDownloadPresenter(IDownloadDataSource dataSource, SelectDownloadActivity view) {
         super(dataSource, view);
     }
 
-    public SelectDownloadPresenter(IDownloadDataSource dataSource, ISelectDownloadView view, Comic comic) {
+    public SelectDownloadPresenter(IDownloadDataSource dataSource, SelectDownloadActivity view, Comic comic) {
         super(dataSource, view);
         this.mChapters = comic.getChapters();
+        mDownloadListDataSource = new DownloadListDataSource(view);
+        mCompositeDisposable = new CompositeDisposable();
+        mComic = comic;
         initData();
     }
 
@@ -51,15 +64,43 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
         }
     }
 
+    public void getDataFromDb() {
+        //从数据库拉取数据
+        DisposableSubscriber<List<DBDownloadItem>> disposableSubscriber =
+                mDownloadListDataSource.getDbDownloadItemFromDB(mComic.getId())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(new DisposableSubscriber<List<DBDownloadItem>>() {
+                            @Override
+                            public void onNext(List<DBDownloadItem> items) {
+                                for (int i = 0; i < items.size(); i++) {
+                                    map.put(items.get(i).getChapters(), Constants.CHAPTER_DOWNLOAD);
+                                    mView.updateDownloadList(map);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable t) {
+                                LogUtil.e(mComic.getTitle() + "从数据库中拉取本地下载列表数据失败" + t.toString());
+                            }
+
+                            @Override
+                            public void onComplete() {
+                            }
+                        });
+        mCompositeDisposable.add(disposableSubscriber);
+    }
+
     public void updateToSelected(int position) {
-        if (map.get(position).equals(Constants.CHAPTER_FREE)) {
+        Integer integer = map.get(position);
+        if (integer != null && integer.equals(Constants.CHAPTER_FREE)) {
             map.put(position, Constants.CHAPTER_SELECTED);
             selectCount++;
             if (selectCount == mChapters.size()) {
                 mView.addAll();
                 isSelectAll = true;
             }
-        } else if (map.get(position).equals(Constants.CHAPTER_SELECTED)) {
+        } else if (integer != null && integer.equals(Constants.CHAPTER_SELECTED)) {
             map.put(position, Constants.CHAPTER_FREE);
             selectCount--;
             isSelectAll = false;

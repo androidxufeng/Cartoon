@@ -147,4 +147,10 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
     public void getDataFinish() {
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.getDataFromDb();
+    }
 }
