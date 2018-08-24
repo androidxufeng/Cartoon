@@ -194,10 +194,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     @Override
     public void getDataFinish() {
         mScrollView.setRefreshing(false);
-        if (mErrorView.isShown()) {
-            mErrorView.setVisibility(View.GONE);
-            mRecycleView.setVisibility(View.VISIBLE);
-        }
+        mErrorView.setVisibility(View.GONE);
+        mRecycleView.setVisibility(View.VISIBLE);
         mAdapter.notifyDataSetChanged();
     }
 

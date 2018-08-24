@@ -21,11 +21,11 @@ import io.rx_cache2.LifeCache;
 
 public interface ComicCacheProviders {
 
-    @LifeCache(duration = 1, timeUnit = TimeUnit.MINUTES)
+    @LifeCache(duration = 1, timeUnit = TimeUnit.DAYS)
     Flowable<DBChapters> getChapters(
             Flowable<DBChapters> comics, DynamicKey key, EvictDynamicKey evictDynamicKey);
 
-    @LifeCache(duration = 1, timeUnit = TimeUnit.MINUTES)
+    @LifeCache(duration = 1, timeUnit = TimeUnit.DAYS)
     Flowable<HttpResult<List<SearchBean>>> getDynamicSearchResult(
             Flowable<HttpResult<List<SearchBean>>> Result, DynamicKey key, EvictDynamicKey evictDynamicKey);
 }

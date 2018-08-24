@@ -18,10 +18,10 @@ import com.tplink.cartoon.db.DaoHelper;
 import com.tplink.cartoon.ui.activity.DownloadChapterlistActivity;
 import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
 import com.tplink.cartoon.utils.FileUtil;
+import com.tplink.cartoon.utils.IntentUtil;
 import com.tplink.cartoon.utils.LogUtil;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -242,7 +242,21 @@ public class DownloadChapterlistPresenter extends BasePresenter
 
                         @Override
                         public void onError(Throwable t) {
-
+                            info.setState(DownState.ERROR);
+                            if (downloadMap.containsKey(info.getChapters())) {
+                                downloadMap.remove(info.getChapters());
+                            }
+                            mView.updateView(position);
+                            //寻找下一话并开始下载
+                            for (int i = 0; i < mLists.size(); i++) {
+                                if (mLists.get(i).getState() == DownState.NONE) {
+                                    downloadMap.put(i, mLists.get(i));
+                                    //开始下载下一话
+                                    startDown(mLists.get(i), i);
+                                    break;
+                                }
+                            }
+                            LogUtil.e(t.toString());
                         }
 
                         @Override
@@ -267,7 +281,7 @@ public class DownloadChapterlistPresenter extends BasePresenter
      * @param page
      */
     private void downloadChapter(final DBDownloadItem info, final int page, int postion) {
-        DownloadComicDisposableObserver observer = new DownloadComicDisposableObserver(page, postion);
+        DownloadComicDisposableObserver observer = new DownloadComicDisposableObserver(info, page, postion);
         Observable<ResponseBody> observable = mDataSource.download(info, page);
         observable
                 .subscribeOn(Schedulers.io())
@@ -278,9 +292,9 @@ public class DownloadChapterlistPresenter extends BasePresenter
                     public DBDownloadItem apply(ResponseBody responseBody) throws Exception {
                         //把图片保存到SD卡
                         FileUtil.saveImgToSdCard(responseBody.byteStream(), FileUtil.SDPATH + FileUtil.COMIC + info.getComic_id() + "/" + info.getChapters() + "/", page + ".png");
-                        ArrayList<String> paths = (ArrayList<String>) info.getChaptersPath();
-                        if (paths == null) {
-                            paths = new ArrayList<>();
+                        ArrayList<String> paths = new ArrayList<>();
+                        if(info.getChapters_path()!=null){
+                            paths =new ArrayList<>(info.getChapters_path());
                         }
                         paths.add(FileUtil.SDPATH + FileUtil.COMIC + info.getComic_id() + "/" + info.getChapters() + "/" + page + ".png");
                         //保存存储位置
@@ -356,7 +370,7 @@ public class DownloadChapterlistPresenter extends BasePresenter
     }
 
     public void toComicChapter(DBDownloadItem info) {
-        //IntentUtil.ToComicChapter();
+        IntentUtil.toComicChapter(mView, info.getChapters(), mComic);
     }
 
     public class DownloadComicDisposableObserver extends DisposableObserver<DBDownloadItem> {
@@ -364,9 +378,10 @@ public class DownloadChapterlistPresenter extends BasePresenter
         DBDownloadItem info;
         int position;
 
-        public DownloadComicDisposableObserver(int page, int position) {
+        public DownloadComicDisposableObserver(DBDownloadItem info, int page, int position) {
             this.page = page;
             this.position = position;
+            this.info = info;
         }
 
         @Override
@@ -374,7 +389,9 @@ public class DownloadChapterlistPresenter extends BasePresenter
             info = dbDownloadItem;
             LogUtil.d(page + "/" + info.getNum() + "下载完成");
             //从队列中移除
-            subMap.remove(info.getChaptersUrl().get(page));
+            if (subMap.containsKey(info.getChapters_url().get(page))) {
+                subMap.remove(info.getChapters_url().get(page));
+            }
             //写一个递归继续去下载这一话的下一张图片
             if (page < info.getNum() - 1) {
                 if (info.getState() == DownState.DOWN) {
@@ -385,7 +402,9 @@ public class DownloadChapterlistPresenter extends BasePresenter
                 downloadedNum++;
                 //修改状态
                 info.setState(DownState.FINISH);
-                downloadMap.remove(position);
+                if (downloadMap.containsKey(position)) {
+                    downloadMap.remove(position);
+                }
                 //遍历去寻找下一话
                 for (int i = 0; i < mLists.size(); i++) {
                     if (mLists.get(i).getState() == DownState.NONE) {
@@ -420,7 +439,20 @@ public class DownloadChapterlistPresenter extends BasePresenter
 
         @Override
         public void onError(@NonNull Throwable e) {
-
+            info.setState(DownState.ERROR);
+            if (downloadMap.containsKey(info.getChapters())) {
+                downloadMap.remove(info.getChapters());
+            }
+            mView.updateView(position);
+            for (int i = 0; i < mLists.size(); i++) {
+                if (mLists.get(i).getState() == DownState.NONE) {
+                    downloadMap.put(i, mLists.get(i));
+                    //开始下载下一话
+                    startDown(mLists.get(i), i);
+                    break;
+                }
+            }
+            LogUtil.e(e.toString());
         }
     }
 }

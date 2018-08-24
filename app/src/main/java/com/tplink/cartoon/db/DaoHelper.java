@@ -121,6 +121,11 @@ public class DaoHelper<T> {
         return mDaoManager.getDaoSession().load(clazz, id);
     }
 
+    public DBDownloadItem findDBDownloadItems(long id){
+        DBDownloadItem items =  mDaoManager.getDaoSession().getDBDownloadItemDao().load(id);
+        return items;
+    }
+
     public T findComic(long id) {
         return (T) mDaoManager.getDaoSession().getComicDao().load(id);
     }

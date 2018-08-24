@@ -164,7 +164,7 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
                         mPresenter.ready(info, position);
                         break;
                     case DownState.ERROR:
-//                        mPresenter.startDown(info, position);
+                        mPresenter.ready(info, position);
                         break;
                     case DownState.FINISH:
                         mPresenter.toComicChapter(info);
@@ -184,7 +184,7 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
         //如果是静止状态，则刷新局部，滑动则全局刷新
         if (recycleState == 0) {
             //刷新局部，不然会影响点击事件
-            mAdapter.notifyItemChanged(postion);
+            mAdapter.notifyItemChanged(postion, "payload");
         } else {
             mAdapter.notifyDataSetChanged();
         }
@@ -194,6 +194,7 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
     public void onDownloadFinished() {
         mDownloadText.setText("下载完成");
         mDownloadImage.setVisibility(View.GONE);
+        mPresenter.isAllDownload = DownloadChapterlistPresenter.FINISH;
     }
 
     public void onPauseOrStartAll() {

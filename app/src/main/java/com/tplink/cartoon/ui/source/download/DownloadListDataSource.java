@@ -90,7 +90,8 @@ public class DownloadListDataSource implements IDownloadListDataSource {
                             //把数据先存入数据库
                             mHelper.insert(item);
                         } catch (SQLiteConstraintException exception) {
-                            LogUtil.e("请不要插入重复值");
+                            LogUtil.e("插入下载列表失败，更新数据库");
+                            mHelper.update(item);
                         }
                     }
                 }

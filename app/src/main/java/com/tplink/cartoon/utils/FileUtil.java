@@ -19,7 +19,7 @@ import java.io.InputStream;
 
 public class FileUtil {
 
-    public static final String SDPATH = Environment.getExternalStorageDirectory().getPath() + "/z_comic/";// 获取文件夹
+    public static final String SDPATH = Environment.getExternalStorageDirectory().getPath() + "/Cartoon/";// 获取文件夹
     public static final String CACHE = "cache/";
     public static final String COMIC = "comic/";
 
