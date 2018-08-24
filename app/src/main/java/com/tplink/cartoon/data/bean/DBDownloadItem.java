@@ -40,6 +40,9 @@ public class DBDownloadItem extends BaseBean {
     protected int stateInte;
 
     @Convert(columnType = String.class, converter = StringConverter.class)
+    protected List<String> chapters_path;
+
+    @Convert(columnType = String.class, converter = StringConverter.class)
     protected List<String> chapters_url;
 
     public Long getUpdate_time() {
@@ -58,11 +61,11 @@ public class DBDownloadItem extends BaseBean {
         this.create_time = create_time;
     }
 
-    public int getCurrent_num() {
+    public int getCurrentNum() {
         return this.current_num;
     }
 
-    public void setCurrent_num(int current_num) {
+    public void setCurrentNum(int current_num) {
         this.current_num = current_num;
     }
 
@@ -114,10 +117,10 @@ public class DBDownloadItem extends BaseBean {
         this.id = id;
     }
 
-    @Generated(hash = 1040220767)
+    @Generated(hash = 966925522)
     public DBDownloadItem(Long id, Long comic_id, String title, String chapters_title, int chapters,
-                          int num, int current_num, Long create_time, Long update_time, int stateInte,
-                          List<String> chapters_url) {
+            int num, int current_num, Long create_time, Long update_time, int stateInte,
+            List<String> chapters_path, List<String> chapters_url) {
         this.id = id;
         this.comic_id = comic_id;
         this.title = title;
@@ -128,6 +131,7 @@ public class DBDownloadItem extends BaseBean {
         this.create_time = create_time;
         this.update_time = update_time;
         this.stateInte = stateInte;
+        this.chapters_path = chapters_path;
         this.chapters_url = chapters_url;
     }
 
@@ -161,7 +165,7 @@ public class DBDownloadItem extends BaseBean {
         setStateInte(state);
     }
 
-    public List<String> getChapters_url() {
+    public List<String> getChaptersUrl() {
         return this.chapters_url;
     }
 
@@ -175,5 +179,32 @@ public class DBDownloadItem extends BaseBean {
 
     public void setStateInte(int stateInte) {
         this.stateInte = stateInte;
+    }
+
+    public List<String> getChaptersPath() {
+        return this.chapters_path;
+    }
+    public void setChaptersPath(List<String> chapters_path) {
+        this.chapters_path = chapters_path;
+    }
+
+    public int getCurrent_num() {
+        return this.current_num;
+    }
+
+    public void setCurrent_num(int current_num) {
+        this.current_num = current_num;
+    }
+
+    public List<String> getChapters_path() {
+        return this.chapters_path;
+    }
+
+    public void setChapters_path(List<String> chapters_path) {
+        this.chapters_path = chapters_path;
+    }
+
+    public List<String> getChapters_url() {
+        return this.chapters_url;
     }
 }

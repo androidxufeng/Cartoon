@@ -27,30 +27,38 @@ public class DownloadChapterlistAdapter extends BaseRecyclerAdapter<DBDownloadIt
     @Override
     public void convert(final BaseRecyclerHolder holder, final DBDownloadItem item, final int position) {
         holder.setText(R.id.tv_title, item.getChapters_title());
-        holder.setProgress(R.id.pg_download, item.getNum(), item.getCurrent_num());
+        holder.setProgress(R.id.pg_download, item.getNum(), item.getCurrentNum());
         switch (item.getState()) {
             case DownState.NONE:
                 /*起始状态*/
-                holder.setText(R.id.tv_progress, "点击下载");
+                if (item.getNum() == 0) {
+                    holder.setText(R.id.tv_progress, "等待下载");
+                } else {
+                    holder.setText(R.id.tv_progress, "等待下载:" + item.getCurrentNum() + "/" + item.getNum());
+                }
                 break;
             case DownState.START:
                 /*起始状态*/
                 holder.setText(R.id.tv_progress, "解析下载地址");
                 break;
             case DownState.PAUSE:
-                holder.setText(R.id.tv_progress, "下载暂停");
+//                holder.setText(R.id.tv_progress, "等待下载" + item.getCurrentNum() + "/" + item.getNum());
                 break;
             case DownState.DOWN:
-                holder.setText(R.id.tv_progress, "正在下载:" + item.getCurrent_num() + "/" + item.getNum());
+                holder.setText(R.id.tv_progress, "正在下载:" + item.getCurrentNum() + "/" + item.getNum());
                 break;
             case DownState.STOP:
-                holder.setText(R.id.tv_progress, "下载停止");
+                if (item.getNum() == 0) {
+                    holder.setText(R.id.tv_progress, "下载停止");
+                } else {
+                    holder.setText(R.id.tv_progress, "下载停止:" + item.getCurrentNum() + "/" + item.getNum());
+                }
                 break;
             case DownState.ERROR:
-                holder.setText(R.id.tv_progress, "下载错误");
+                holder.setText(R.id.tv_progress, "下载错误" + item.getCurrentNum() + "/" + item.getNum());
                 break;
             case DownState.FINISH:
-                holder.setText(R.id.tv_progress, "下载完成");
+                holder.setText(R.id.tv_progress, "下载完成" + item.getCurrentNum() + "/" + item.getNum());
                 break;
         }
     }

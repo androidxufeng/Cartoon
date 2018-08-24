@@ -11,9 +11,11 @@ public interface IDownloadView<T> extends ILoadDataView<T> {
 
     void onLoadMoreData(T t);
 
-    void onStartAll();
+    void updateView(int postion);
 
-    void onPauseAll();
+    void onDownloadFinished();
+
+    void onPauseOrStartAll();
 
     void onSelectALL();
 

@@ -12,8 +12,7 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.DBDownloadItem;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.SelectDownloadActivity;
-import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
-import com.tplink.cartoon.ui.source.download.IDownloadDataSource;
+import com.tplink.cartoon.ui.source.download.IDownloadListDataSource;
 import com.tplink.cartoon.utils.LogUtil;
 
 import java.util.HashMap;
@@ -24,11 +23,10 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
-public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, SelectDownloadActivity> {
+public class SelectDownloadPresenter extends BasePresenter<IDownloadListDataSource, SelectDownloadActivity> {
 
 
     private List<String> mChapters;
-    private DownloadListDataSource mDownloadListDataSource;
     private Comic mComic;
     private CompositeDisposable mCompositeDisposable;
 
@@ -41,14 +39,9 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
     private boolean isSelectAll;
     private int selectCount;
 
-    public SelectDownloadPresenter(IDownloadDataSource dataSource, SelectDownloadActivity view) {
-        super(dataSource, view);
-    }
-
-    public SelectDownloadPresenter(IDownloadDataSource dataSource, SelectDownloadActivity view, Comic comic) {
+    public SelectDownloadPresenter(IDownloadListDataSource dataSource, SelectDownloadActivity view, Comic comic) {
         super(dataSource, view);
         this.mChapters = comic.getChapters();
-        mDownloadListDataSource = new DownloadListDataSource(view);
         mCompositeDisposable = new CompositeDisposable();
         mComic = comic;
         initData();
@@ -67,7 +60,7 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadDataSource, 
     public void getDataFromDb() {
         //从数据库拉取数据
         DisposableSubscriber<List<DBDownloadItem>> disposableSubscriber =
-                mDownloadListDataSource.getDbDownloadItemFromDB(mComic.getId())
+                mDataSource.getDbDownloadItemFromDB(mComic.getId())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(new DisposableSubscriber<List<DBDownloadItem>>() {

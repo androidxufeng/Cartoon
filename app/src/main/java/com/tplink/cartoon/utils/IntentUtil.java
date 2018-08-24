@@ -15,7 +15,6 @@ import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.activity.DownloadChapterlistActivity;
-import com.tplink.cartoon.ui.activity.DownloadListActivity;
 import com.tplink.cartoon.ui.activity.IndexActivity;
 import com.tplink.cartoon.ui.activity.SearchActivity;
 import com.tplink.cartoon.ui.activity.SelectDownloadActivity;

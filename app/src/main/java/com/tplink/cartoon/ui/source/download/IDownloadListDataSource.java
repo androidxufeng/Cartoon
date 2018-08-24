@@ -8,11 +8,13 @@
  */
 package com.tplink.cartoon.ui.source.download;
 
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.DBChapters;
 import com.tplink.cartoon.data.bean.DBDownloadItem;
 import com.tplink.cartoon.data.bean.DownInfo;
 import com.tplink.cartoon.ui.source.IDataSource;
 
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -23,9 +25,12 @@ public interface IDownloadListDataSource extends IDataSource {
 
     Flowable<DBChapters> getDownloadChaptersList(long id, int comicChapters);
 
-    Flowable<List<DownInfo>> getDownInfoFromDB(long comicId);
-
     Flowable<List<DBDownloadItem>> getDbDownloadItemFromDB(long comicId);
 
-    Observable<ResponseBody> download(String url);
+    Flowable<List<DBDownloadItem>> getDbDownloadItemFromDBWithInsert(Comic comic, HashMap<Integer,Integer> mMap);
+
+    Observable<ResponseBody> download(DBDownloadItem info, final int page);
+
+    Flowable<Boolean> updateDownloadItemsList(List<DBDownloadItem> lists);
+
 }

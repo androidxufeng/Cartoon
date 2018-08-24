@@ -19,7 +19,7 @@ import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.SelectDownloadAdapter;
 import com.tplink.cartoon.ui.presenter.SelectDownloadPresenter;
-import com.tplink.cartoon.ui.source.download.DownloadDataSource;
+import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
 import com.tplink.cartoon.ui.view.ISelectDownloadView;
 import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
@@ -75,7 +75,7 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
     @Override
     protected void initPresenter(Intent intent) {
         mComic = (Comic) intent.getSerializableExtra(Constants.COMIC);
-        mPresenter = new SelectDownloadPresenter(new DownloadDataSource(), this, mComic);
+        mPresenter = new SelectDownloadPresenter(new DownloadListDataSource(this), this, mComic);
     }
 
     @Override

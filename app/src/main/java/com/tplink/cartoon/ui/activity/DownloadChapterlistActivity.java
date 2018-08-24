@@ -8,9 +8,12 @@
 package com.tplink.cartoon.ui.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
@@ -23,6 +26,7 @@ import com.tplink.cartoon.ui.adapter.DownloadChapterlistAdapter;
 import com.tplink.cartoon.ui.presenter.DownloadChapterlistPresenter;
 import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
 import com.tplink.cartoon.ui.view.IDownloadView;
+import com.tplink.cartoon.utils.IntentUtil;
 
 import java.util.List;
 
@@ -36,26 +40,49 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
     TextView mTitle;
     @BindView(R.id.rv_downloadlist)
     RecyclerView mRecyclerview;
+    @BindView(R.id.rl_loading)
+    RelativeLayout mRLloading;
+    @BindView(R.id.tv_loading)
+    TextView mLoadingText;
+    @BindView(R.id.iv_error)
+    ImageView mReload;
+    @BindView(R.id.iv_loading)
+    ImageView mLoading;
+    @BindView(R.id.tv_download)
+    TextView mDownloadText;
+    @BindView(R.id.iv_download)
+    ImageView mDownloadImage;
+
     private DownloadChapterlistAdapter mAdapter;
+    private int recycleState = 0;
 
     @OnClick(R.id.iv_back_color)
     public void finish(View view) {
         this.finish();
     }
 
+    @OnClick(R.id.iv_error)
+    public void reload(View view) {
+        mPresenter.initData();
+        mRLloading.setVisibility(View.VISIBLE);
+        mReload.setVisibility(View.GONE);
+        mLoadingText.setText("正在重新加载，请稍后");
+    }
+
+    @OnClick(R.id.rl_all)
+    public void pauseOrStartAll(View view) {
+        onPauseOrStartAll();
+    }
+
+    @OnClick(R.id.rl_order)
+    public void toSelectDownload() {
+        IntentUtil.toSelectDownload(this, mPresenter.getComic());
+    }
+
+
     @Override
     public void onLoadMoreData(List<DBDownloadItem> dbDownloadItems) {
 
-    }
-
-    @Override
-    public void onStartAll() {
-        mPresenter.startAll();
-    }
-
-    @Override
-    public void onPauseAll() {
-        mPresenter.pauseAll();
     }
 
     @Override
@@ -70,12 +97,16 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
 
     @Override
     public void showErrorView(String throwable) {
-
+        mRLloading.setVisibility(View.VISIBLE);
+        mReload.setVisibility(View.VISIBLE);
+        mLoadingText.setText(throwable);
     }
 
     @Override
     public void fillData(List<DBDownloadItem> data) {
         mAdapter.updateWithClear(data);
+        mRLloading.setVisibility(View.GONE);
+        mPresenter.startAll();
     }
 
     @Override
@@ -96,36 +127,47 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
 
     @Override
     protected void initView() {
+        //动画初始化
+        AnimationDrawable animationDrawable = (AnimationDrawable) mLoading.getDrawable();
+        animationDrawable.start();
+        //
         mAdapter = new DownloadChapterlistAdapter(this, R.layout.item_downloadlist);
         LinearLayoutManager layoutmanager = new LinearLayoutManager(this);
         mRecyclerview.setLayoutManager(layoutmanager);
         mRecyclerview.setAdapter(mAdapter);
-        mPresenter.initData();
+        mRecyclerview.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                //实时监测滑动状态
+                recycleState = newState;
+            }
+        });
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView parent, View view, int position) {
                 DBDownloadItem info = mAdapter.getItems(position);
                 switch (info.getState()) {
                     case DownState.NONE:
-                        mPresenter.startDown(info);
+                        mPresenter.stop(info, position, false);
                         break;
                     case DownState.START:
                         //mPresenter.startDown(info);
                         break;
                     case DownState.PAUSE:
-                        mPresenter.startDown(info);
+//                        mPresenter.startDown(info, position);
                         break;
                     case DownState.DOWN:
-                        mPresenter.pause(info);
+                        mPresenter.stop(info, position, true);
                         break;
                     case DownState.STOP:
-                        mPresenter.startDown(info);
+                        mPresenter.ready(info, position);
                         break;
                     case DownState.ERROR:
-                        mPresenter.startDown(info);
+//                        mPresenter.startDown(info, position);
                         break;
                     case DownState.FINISH:
-                        showToast("已下载");
+                        mPresenter.toComicChapter(info);
                         break;
                 }
             }
@@ -134,7 +176,43 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
 
     @Override
     protected void initData() {
+        mPresenter.initData();
+    }
 
+    @Override
+    public void updateView(int postion) {
+        //如果是静止状态，则刷新局部，滑动则全局刷新
+        if (recycleState == 0) {
+            //刷新局部，不然会影响点击事件
+            mAdapter.notifyItemChanged(postion);
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onDownloadFinished() {
+        mDownloadText.setText("下载完成");
+        mDownloadImage.setVisibility(View.GONE);
+    }
+
+    public void onPauseOrStartAll() {
+        switch (mPresenter.isAllDownload) {
+            case DownloadChapterlistPresenter.DOWNLOADING:
+                mPresenter.stopAll();
+                mDownloadText.setText("全部开始");
+                mDownloadImage.setImageResource(R.drawable.pasue);
+                mPresenter.isAllDownload = DownloadChapterlistPresenter.STOP_DOWNLOAD;
+                break;
+            case DownloadChapterlistPresenter.STOP_DOWNLOAD:
+                mPresenter.reStartAll();
+                mDownloadText.setText("全部停止");
+                mDownloadImage.setImageResource(R.drawable.pasue_select);
+                mPresenter.isAllDownload = DownloadChapterlistPresenter.DOWNLOADING;
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
