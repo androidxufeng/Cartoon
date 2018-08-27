@@ -51,8 +51,6 @@ public class Constants {
 
     public static String TENCENT_SEARCH_RECOMMEND = TENCENTSEARCHBASE + "index";
 
-    public static String TEST_URL = "http://ac.tc.qq.com/store_file_download?buid=15017&uin=1422363405&dir_path=/&name=27_20_56_5916a61b8878248737589f2d5105fd46_3136.ori";
-
     /**
      * 表示当前章节的状态
      * 0 未选取 1 已选择 2 已下载
@@ -60,6 +58,7 @@ public class Constants {
     public final static int CHAPTER_FREE = 0;
     public final static int CHAPTER_SELECTED = 1;
     public final static int CHAPTER_DOWNLOAD = 2;
+    public final static int CHAPTER_DOWNLOADING = 3;
 
     public final static int TYPE_RECOMMEND = 0;
     public final static int TYPE_RANK_LIST = 1;

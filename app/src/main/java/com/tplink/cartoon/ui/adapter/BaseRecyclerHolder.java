@@ -12,11 +12,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.daimajia.numberprogressbar.NumberProgressBar;
+import com.tplink.cartoon.R;
 import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.GlideImageLoader;
+import com.tplink.cartoon.utils.LogUtil;
 
 /**
  * Created by 皓然 on 2017/7/19.
@@ -134,6 +139,22 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
         Glide.with(context)
                 .load(url)
                 .asBitmap()//强制Glide返回一个Bitmap对象
+                .listener(new RequestListener<String, Bitmap>() {
+                    @Override
+                    public boolean onException(Exception e, String s, Target<Bitmap> target, boolean b) {
+                        LogUtil.e(url + "加载失败" + e.toString());
+                        Glide.with(context)
+                                .load(R.drawable.pic_default)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .into(iv);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap bitmap, String s, Target<Bitmap> target, boolean b, boolean b1) {
+                        return false;
+                    }
+                })
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap bitmap, GlideAnimation<? super Bitmap> glideAnimation) {
@@ -162,6 +183,12 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
         NumberProgressBar progressBar = getView(viewId);
         progressBar.setMax((int) countLength);
         progressBar.setProgress((int) readLength);
+        return this;
+    }
+
+    public BaseRecyclerHolder setVisibility(int viewId,int visible) {
+        View view = getView(viewId);
+        view.setVisibility(visible);
         return this;
     }
 

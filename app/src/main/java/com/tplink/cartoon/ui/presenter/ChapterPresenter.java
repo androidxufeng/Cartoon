@@ -82,7 +82,6 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     public ChapterPresenter(ChapterDataSource dataSource, ComicChapterActivity view) {
         super(dataSource, view);
         mCompositeDisposable = new CompositeDisposable();
-        mPreloadChapters = new PreloadChapters();
         mDirect = Constants.LEFT_TO_RIGHT;
     }
 
@@ -106,6 +105,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     }
 
     public void getChapterData() {
+        mPreloadChapters = new PreloadChapters();
 
         for (int i = 0; i < 3; i++) {
             final int finalI = i;
@@ -146,6 +146,23 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
 
                                 @Override
                                 public void onError(Throwable t) {
+                                    ArrayList<String> temp = new ArrayList<>();
+                                    if (mPreloadChapters.getPrelist() == null) {
+                                        mPreloadChapters.setPrelist(temp);
+                                    }
+                                    if (mPreloadChapters.getNowlist() == null) {
+                                        mPreloadChapters.setNowlist(temp);
+                                    }
+                                    if (mPreloadChapters.getNextlist() == null) {
+                                        mPreloadChapters.setNextlist(temp);
+                                    }
+                                    if (mPreloadChapters.getSize() > 0) {
+                                        mView.fillData(mPreloadChapters);
+                                        mView.setTitle(mComicChapterTitle.get(mComicChapters) + "-1/" + mPreloadChapters.getNowlist().size());
+                                        mView.getDataFinish();
+                                    } else {
+                                        mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
+                                    }
                                     mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                                 }
 
