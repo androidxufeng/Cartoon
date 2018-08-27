@@ -18,7 +18,7 @@ public interface IBookShelfDataSource extends IDataSource {
 
     Flowable<List<Comic>> getCollectedComicList();
 
-    Flowable<List<Comic>> getHistoryComicList();
+    Flowable<List<Comic>> getHistoryComicList(int page);
 
     Flowable<List<Comic>> getDownloadComicList();
 

@@ -199,9 +199,10 @@ public class DaoHelper<T> {
         return list;
     }
 
-    public List<Comic> queryHistory() {
+    public List<Comic> queryHistory(int page) {
         List<Comic> list = mDaoManager.getDaoSession().getComicDao().queryBuilder()
-                .limit(10000)
+                .offset(page * 12)
+                .limit(12)
                 .orderDesc(ComicDao.Properties.ClickTime)
                 .list();
         return list;

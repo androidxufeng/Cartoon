@@ -13,9 +13,11 @@ package com.tplink.cartoon.ui.presenter;
 
 import android.util.Log;
 
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.DBChapters;
 import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.db.DaoHelper;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.source.chapter.ChapterDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
@@ -56,6 +58,9 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     private long mComicId;
     private int mComicSize;
 
+    private DaoHelper mHelper;
+    private Comic mComic;
+
     public int getLoadingDy() {
         return mLoadingDy;
     }
@@ -75,6 +80,14 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         return mComicId;
     }
 
+    public Comic getComic() {
+        return mComic;
+    }
+
+    public int getCurrentPage() {
+        return mComic.getCurrent_page() - 1;
+    }
+
     //以中间的章节为分界限，前面时负值
     private int mLoadingPosition;
     private boolean isLoadingdata;
@@ -83,13 +96,19 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         super(dataSource, view);
         mCompositeDisposable = new CompositeDisposable();
         mDirect = Constants.LEFT_TO_RIGHT;
+        mHelper = new DaoHelper(view);
     }
 
-    public void init(long comicId, List<String> comicChapterTitle, int Chapters, int type) {
-        mComicId = comicId;
-        this.mComicChapterTitle = comicChapterTitle;
-        this.mComicChapters = Chapters;
-        mDirect = type;
+    public void init(Comic comic, int chapters) {
+        this.mComic = comic;
+        Comic DBComic = (Comic) mHelper.findComic(comic.getId());
+        //判断如果是点进上次点击的那一话
+        if (DBComic.getCurrentChapter() != chapters) {
+            mComic.setCurrent_page(1);
+        }
+        this.mComicChapterTitle = comic.getChapters();
+        this.mComicChapters = chapters;
+        this.mDirect = comic.getReadType();
     }
 
     public PreloadChapters getPreloadChapters() {
@@ -140,6 +159,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                                             mView.showToast("该章节是腾讯付费章节，处于版权问题不以展示，请去腾讯观看");
                                         } else {
                                             mView.fillData(mPreloadChapters);
+                                            updateComic(mComic.getCurrent_page());
                                         }
                                     }
                                 }
@@ -173,35 +193,6 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                             });
             mCompositeDisposable.add(disposable);
         }
-    }
-
-
-    public void updateComicCurrentChapter() {
-        DisposableSubscriber<Boolean> disposableSubscriber =
-                mDataSource.updateComicCurrentChapter(mComicId, mComicChapters)
-                        .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new DisposableSubscriber<Boolean>() {
-                            @Override
-                            public void onNext(Boolean aBoolean) {
-                                if (aBoolean) {
-                                    mView.showToast("保存当前话成功" + (mComicChapters + 1));
-                                }
-                            }
-
-                            @Override
-                            public void onError(Throwable t) {
-
-                            }
-
-                            @Override
-                            public void onComplete() {
-
-
-                            }
-                        });
-        mCompositeDisposable.add(disposableSubscriber);
     }
 
     public void loadMoreData(int position, int direct, int offset) {
@@ -334,7 +325,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                                             "/" + mPreloadChapters.getNowSize());
                                 }
                                 mView.nextChapter(mPreloadChapters, position, offset);
-
+                                updateComic(1);
                             }
 
                             @Override
@@ -383,7 +374,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                                     (mPreloadChapters.getNowSize() + mLoadingPosition) + "/" + mPreloadChapters.getNowSize());
                         }
                         mView.preChapter(mPreloadChapters, position, offset);
-
+                        updateComic(1);
                     }
 
                     @Override
@@ -421,9 +412,19 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         String title = null;
         if (direct == Constants.LEFT_TO_RIGHT || direct == Constants.UP_TO_DOWN) {
             title = comicChapterTitle + (position + 1) + "/" + comicSize;
+            updateComic(position + 1);
         } else {
             title = comicChapterTitle + (comicSize - position) + "/" + comicSize;
+            updateComic(comicSize - position);
         }
         mView.setTitle(title);
+    }
+
+    public void updateComic(int current_page) {
+        mComic.setCurrent_page(current_page);
+        mComic.setCurrent_page_all(mPreloadChapters.getNowSize());
+        mComic.setClickTime(getCurrentTime());
+        mComic.setCurrentChapter(mComicChapters);
+        mHelper.update(mComic);
     }
 }

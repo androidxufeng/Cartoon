@@ -59,6 +59,7 @@ public class DetailDataSource implements IDetailDataSource {
                     comic.setCurrent_page(dbComic.getCurrent_page());
                     comic.setCurrent_page_all(dbComic.getCurrent_page_all());
                     comic.setIsCollected(dbComic.getIsCollected());
+                    comic.setReadType(dbComic.getReadType());
                 }
                 emitter.onNext(comic);
                 emitter.onComplete();
@@ -80,22 +81,6 @@ public class DetailDataSource implements IDetailDataSource {
                 } else {
                     emitter.onNext(false);
                 }
-                emitter.onComplete();
-            }
-        }, BackpressureStrategy.LATEST);
-    }
-
-    @Override
-    public Flowable<Boolean> isCollect(final long id) {
-        return Flowable.create(new FlowableOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(FlowableEmitter<Boolean> emitter) throws Exception {
-                if (mDaoHelper.findComic(id) == null) {
-                    emitter.onNext(false);
-                } else {
-                    emitter.onNext(true);
-                }
-
                 emitter.onComplete();
             }
         }, BackpressureStrategy.LATEST);

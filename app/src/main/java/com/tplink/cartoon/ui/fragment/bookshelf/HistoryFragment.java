@@ -14,14 +14,15 @@ import android.widget.Toast;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.HistoryAdapter;
 import com.tplink.cartoon.ui.fragment.BaseFragment;
-import com.tplink.cartoon.ui.presenter.CollectionPresenter;
 import com.tplink.cartoon.ui.presenter.HistoryPresenter;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.ICollectionView;
 import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
+import com.tplink.cartoon.ui.widget.ElasticScrollView;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
@@ -33,6 +34,8 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements
         ICollectionView<List<Comic>>, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_bookshelf)
     RecyclerView mRecycleView;
+    @BindView(R.id.ev_scrollview)
+    ElasticScrollView mScrollView;
     private HistoryAdapter mAdapter;
 
     @Override
@@ -47,13 +50,19 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
-        NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 3);
+        NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 1);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
         mRecycleView.addItemDecoration(new DividerGridItemDecoration(mActivity));
-        mAdapter = new HistoryAdapter(mActivity, R.layout.item_history);
+        mAdapter = new HistoryAdapter(mActivity, R.layout.item_history, R.layout.item_history_title,R.layout.item_loading);
         mRecycleView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
+        mScrollView.setListener(new ElasticScrollView.OnScrollListener() {
+            @Override
+            public void onScrollToBottom() {
+                mPresenter.loadMoreData();
+            }
+        });
     }
 
     //切换到该fragment做的操作
@@ -97,7 +106,10 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements
 
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
-        Comic comic = mAdapter.getItems(position);
-        IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+        if (mAdapter.getItems(position) instanceof HomeTitle) {
+        } else {
+            Comic comic = mAdapter.getItems(position);
+            IntentUtil.toComicChapter(mActivity, comic.getCurrentChapter(), comic);
+        }
     }
 }

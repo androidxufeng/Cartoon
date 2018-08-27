@@ -35,7 +35,7 @@ public class IndexItemView extends LinearLayout {
         this.listener = listener;
     }
 
-    public IndexItemView(Context context, String title, final int position, int current) {
+    public IndexItemView(Context context, String title, final int position) {
         super(context);
         View view = LayoutInflater.from(getContext()).inflate(R.layout.item_detail, null);
         addView(view);
@@ -43,13 +43,13 @@ public class IndexItemView extends LinearLayout {
         img_location.setBounds(0, 0, img_location.getMinimumWidth(), img_location.getMinimumHeight());
         mTitle = (TextView) view.findViewById(R.id.tv_title);
         mTitle.setText((position + 1) + "-" + title);
-        if (current == position + 1) {
+        /*if (current == position + 1) {
             mTitle.setTextColor(Color.parseColor("#ff9a6a"));
             mTitle.setCompoundDrawables(null, null, img_location, null);
             mTitle.setCompoundDrawablePadding(DisplayUtil.dip2px(getContext(), 10));
         } else {
             mTitle.setTextColor(Color.parseColor("#666666"));
-        }
+        }*/
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

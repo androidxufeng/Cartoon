@@ -123,7 +123,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @OnClick(R.id.iv_collect)
     void selectComic(View v) {
-        mPresenter.collectComic();
+        mPresenter.collectComic(!mPresenter.getComic().getIsCollected());
     }
 
     @OnClick({R.id.iv_oreder2, R.id.iv_order})
@@ -149,11 +149,10 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     }
 
     @OnClick(R.id.iv_download)
-    public void toSelectDownloadActivity(View view){
-        IntentUtil.toSelectDownload(this,mPresenter.getComic());
+    public void toSelectDownloadActivity(View view) {
+        IntentUtil.toSelectDownload(this, mPresenter.getComic());
     }
 
-    private Comic mComic;
     private float mScale;
     private float mDy;
     private Rect normal = new Rect();
@@ -217,7 +216,6 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     @Override
     public void fillData(Comic comic) {
         mRLloading.setVisibility(View.GONE);
-        mComic = comic;
         Glide.with(this)
                 .load(comic.getCover())
                 .placeholder(R.drawable.pic_default)
@@ -241,15 +239,16 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
         mPoint.setText(comic.getPoint());
         //showToast(comic.getCollections());
         normal.set(mText.getLeft(), mText.getTop(), DisplayUtil.getMobileWidth(this), mText.getBottom());
-        mCurrent = mComic.getCurrentChapter();
+        mCurrent = mPresenter.getComic().getCurrentChapter();
         if (mCurrent > 0) {
             mRead.setText("续看第" + mCurrent + "话");
         }
         for (int i = 0; i < comic.getChapters().size(); i++) {
-            IndexItemView indexItemView = new IndexItemView(this, comic.getChapters().get(i), i, mCurrent);
+            IndexItemView indexItemView = new IndexItemView(this, comic.getChapters().get(i), i);
             indexItemView.setListener(this);
             mIndex.addView(indexItemView);
         }
+        setCollect(comic.getIsCollected());
     }
 
     @Override
@@ -259,9 +258,14 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     }
 
     @Override
-    public void setCollect() {
-        mCollect.setImageResource(R.drawable.collect_select);
-        mTvCollect.setText("已收藏");
+    public void setCollect(boolean isCollect) {
+        if (isCollect) {
+            mCollect.setImageResource(R.drawable.collect_select);
+            mTvCollect.setText("已收藏");
+        } else {
+            mCollect.setImageResource(R.drawable.collect);
+            mTvCollect.setText("收藏");
+        }
     }
 
     @Override
@@ -288,7 +292,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
     @Override
     public void onItemClick(View view, int position) {
         if (mPresenter.isOrder()) {
-            position = mComic.getChapters().size() - position - 1;
+            position = mPresenter.getComic().getChapters().size() - position - 1;
             Log.d("ComicDetailActivity", "position=" + position);
         }
         IntentUtil.toComicChapter(ComicDetailActivity.this,

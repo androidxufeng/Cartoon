@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
@@ -28,8 +29,6 @@ import com.tplink.cartoon.ui.widget.SwitchRelativeLayout;
 import com.tplink.cartoon.ui.widget.ZBubbleSeekBar;
 import com.tplink.cartoon.utils.IntentUtil;
 import com.xw.repo.BubbleSeekBar;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -88,9 +87,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @OnClick(R.id.iv_index)
     public void toIndex(View view) {
-        IntentUtil.toIndex(ComicChapterActivity.this, mPresenter.getComicId(),
-                mPresenter.getComicChapterTitle(), getIntent().getStringExtra(Constants.COMIC_TITLE)
-                , mPresenter.getDirect());
+        IntentUtil.toIndex(ComicChapterActivity.this, mPresenter.getComic());
     }
 
     @OnClick(R.id.iv_setting)
@@ -123,6 +120,11 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         this.finish();
     }
 
+    @OnClick(R.id.iv_download)
+    public void toDownload(View view) {
+        IntentUtil.toSelectDownload(this, mPresenter.getComic());
+    }
+
     private ChapterViewpagerAdapter mAdapter;
 
     ChapterRecyclerAdapter mVerticalAdapter;
@@ -150,20 +152,21 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
             mVerticalAdapter.setDatas(data);
             mRecycleView.setVisibility(View.VISIBLE);
             mViewpager.setVisibility(View.GONE);
-            mRecycleView.scrollToPosition(data.getPreSize());
+            mRecycleView.scrollToPosition(data.getPreSize() + mPresenter.getCurrentPage());
             mCurrentPosition = data.getPreSize();
+            mSeekBar.setProgress(mPresenter.getCurrentPage() + 1);
         } else {
             mAdapter.setDatas(data);
             mRecycleView.setVisibility(View.GONE);
             mViewpager.setVisibility(View.VISIBLE);
             if (mAdapter.getDirection() == Constants.RIGHT_TO_LEFT) {
-                mViewpager.setCurrentItem(data.getNextSize() + data.getNowSize() - 1, false);//关闭切换动画
+                mViewpager.setCurrentItem(data.getNextSize() + data.getNowSize() - 1 - mPresenter.getCurrentPage(),
+                        false);//关闭切换动画
             } else {
-                mViewpager.setCurrentItem(data.getPreSize(), false);
+                mViewpager.setCurrentItem(data.getPreSize() + mPresenter.getCurrentPage(), false);
             }
         }
         mSeekBar.setmMax(data.getNowSize());
-        mPresenter.updateComicCurrentChapter();
     }
 
     @Override
@@ -201,7 +204,6 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
             }
         }
         mSeekBar.setmMax(data.getNowSize());
-        mPresenter.updateComicCurrentChapter();
     }
 
     @Override
@@ -226,7 +228,6 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
             }
         }
         mSeekBar.setmMax(data.getNowSize());
-        mPresenter.updateComicCurrentChapter();
     }
 
 
@@ -316,12 +317,8 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @Override
     protected void initPresenter(Intent intent) {
-        long comicId = intent.getLongExtra(Constants.COMIC_ID, 0);
-        int comicChapter = intent.getIntExtra(Constants.COMIC_CHAPTERS, 0);
-        int type = intent.getIntExtra(Constants.COMIC_READ_TYPE, Constants.LEFT_TO_RIGHT);
-        ArrayList comicChapterTitle = intent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
         mPresenter = new ChapterPresenter(new ChapterDataSource(this), this);
-        mPresenter.init(comicId, comicChapterTitle, comicChapter, type);
+        mPresenter.init((Comic) intent.getSerializableExtra(Constants.COMIC), intent.getIntExtra(Constants.COMIC_CHAPTERS, 0));
     }
 
     @Override

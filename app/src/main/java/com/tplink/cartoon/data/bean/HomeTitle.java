@@ -13,6 +13,12 @@ public class HomeTitle extends Comic {
     //标题种类
     public int TitleType;
 
+    public HomeTitle(String itemTitle){
+        this.itemTitle = itemTitle;
+    }
+    public HomeTitle(){
+    }
+
     public String getItemTitle() {
         return itemTitle;
     }

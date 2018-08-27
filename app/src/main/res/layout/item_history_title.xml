@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@color/colorBg">
+
+        <TextView
+            android:id="@+id/tv_history_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="bottom"
+            android:text="标题"
+            android:textColor="@color/colorTextColorLight2"
+            android:textSize="12dp" />
+    </RelativeLayout>
+</LinearLayout>

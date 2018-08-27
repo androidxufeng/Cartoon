@@ -46,19 +46,13 @@ public class IntentUtil {
     public static void toComicChapter(Context context, int chapters, Comic comic) {
         Intent intent = new Intent(context, ComicChapterActivity.class);
         intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
-        intent.putExtra(Constants.COMIC_ID, comic.getId());
-        intent.putExtra(Constants.COMIC_TITLE, comic.getTitle());
-        intent.putExtra(Constants.COMIC_READ_TYPE, comic.getReadType());
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, new ArrayList<>(comic.getChapters()));
+        intent.putExtra(Constants.COMIC, comic);
         context.startActivity(intent);
     }
 
-    public static void toIndex(Context context, long id, List<String> chapterTitles, String title, int type) {
+    public static void toIndex(Context context, Comic comic) {
         Intent intent = new Intent(context, IndexActivity.class);
-        intent.putExtra(Constants.COMIC_ID, id);
-        intent.putExtra(Constants.COMIC_TITLE, title);
-        intent.putExtra(Constants.COMIC_READ_TYPE, type);
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, new ArrayList<>(chapterTitles));
+        intent.putExtra(Constants.COMIC, comic);
         context.startActivity(intent);
     }
 

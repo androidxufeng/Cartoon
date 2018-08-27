@@ -27,8 +27,6 @@ import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
-import java.util.Date;
-
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -43,16 +41,6 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
     private boolean isOrder;
 
     private Comic mComic;
-
-    private boolean isCollected;
-
-    public boolean isCollected() {
-        return isCollected;
-    }
-
-    public void setCollected(boolean collected) {
-        isCollected = collected;
-    }
 
     public DetailPresenter(DetailDataSource dataSource, ComicDetailActivity view) {
         super(dataSource, view);
@@ -86,41 +74,13 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                     }
                 });
 
-        DisposableSubscriber<Boolean> disposable2 = mDataSource.isCollect(comicId)
-                .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSubscriber<Boolean>() {
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        if (aBoolean) {
-                            mView.setCollect();
-                        }
-                    }
-
-
-                    @Override
-                    public void onError(Throwable t) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
         mCompositeDisposable.add(disposable);
-        mCompositeDisposable.add(disposable2);
     }
 
-    public void collectComic() {
-        if (isCollected) {
-            return;
-        }
-        Date date = new Date();
-        long datetime = date.getTime();
-        mComic.setCollectTime(datetime);
-        mComic.setIsCollected(true);
+    public void collectComic(boolean isCollected) {
+
+        mComic.setCollectTime(getCurrentTime());
+        mComic.setIsCollected(isCollected);
         DisposableSubscriber<Boolean> disposable = mDataSource.updateComicToDB(mComic)
                 .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
@@ -129,8 +89,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                     @Override
                     public void onNext(Boolean aBoolean) {
                         if (aBoolean) {
-                            mView.setCollect();
-                            isCollected = true;
+                            mView.setCollect(mComic.getIsCollected());
                         }
                     }
 
@@ -181,8 +140,8 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
                     @Override
                     public void onNext(Comic comic) {
                         if (comic != null) {
-                            mComic.setCurrentChapter(comic.getCurrentChapter());
-                            mView.setCurrent(comic.getCurrentChapter());
+                            mComic = comic;
+                            mView.setCurrent(comic.getCurrentChapter() + 1);
                         }
                     }
 

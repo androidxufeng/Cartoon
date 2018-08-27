@@ -22,8 +22,6 @@ public interface IDetailDataSource extends IDataSource {
 
     Flowable<Boolean> saveComicToDB(Comic comic);
 
-    Flowable<Boolean> isCollect(long id);
-
     Flowable<Boolean> updateComicToDB(Comic comic);
 
     Flowable<Comic> getComicFromDB(long comicId);

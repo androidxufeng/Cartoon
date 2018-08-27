@@ -19,16 +19,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tplink.cartoon.R;
-import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.DetailAdapter;
 import com.tplink.cartoon.ui.presenter.IndexPresenter;
 import com.tplink.cartoon.ui.source.Index.IndexDataSource;
 import com.tplink.cartoon.ui.view.IIndexView;
-import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,9 +44,6 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
     private DetailAdapter mAdapter;
 
-    private Intent mIntent;
-
-
     @OnClick({R.id.iv_order})
     public void OrderList(ImageView order) {
         mAdapter.setOrder(!mAdapter.isOrder());
@@ -68,7 +61,7 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new IndexPresenter(new IndexDataSource(), this);
+        mPresenter = new IndexPresenter(new IndexDataSource(), this, intent);
     }
 
     @Override
@@ -78,17 +71,15 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
     @Override
     protected void initView() {
-        mIntent = getIntent();
         mAdapter = new DetailAdapter(this, R.layout.item_chapter);
         mRecyclerView.setAdapter(mAdapter);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
         mRecyclerView.setLayoutManager(layoutManager);
 
-        ArrayList<String> titles = mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE);
-        mAdapter.updateWithClear(titles);
+        mAdapter.updateWithClear(mPresenter.getComic().getChapters());
         mAdapter.setOnItemClickListener(this);
-        mTitle.setText(mIntent.getStringExtra(Constants.COMIC_TITLE));
-        mChapterNum.setText("共" + titles.size() + "话");
+        mTitle.setText(mPresenter.getComic().getTitle());
+        mChapterNum.setText("共" + mPresenter.getComic().getChapters().size() + "话");
         mDownload.setVisibility(View.VISIBLE);
     }
 
@@ -99,11 +90,8 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
         if (!mAdapter.isOrder()) {
-            position = mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE).size() - position - 1;
+            position = mPresenter.getComic().getChapters().size() - position - 1;
         }
-        IntentUtil.toComicChapter(IndexActivity.this, position,
-                mIntent.getLongExtra(Constants.COMIC_ID, 0), mIntent.getStringExtra(Constants.COMIC_TITLE),
-                mIntent.getStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE),
-                mIntent.getIntExtra(Constants.COMIC_READ_TYPE, Constants.LEFT_TO_RIGHT));
+        IntentUtil.toComicChapter(IndexActivity.this, position, mPresenter.getComic());
     }
 }

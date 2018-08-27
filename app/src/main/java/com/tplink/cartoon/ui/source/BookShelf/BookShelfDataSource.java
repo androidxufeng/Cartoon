@@ -10,8 +10,11 @@ package com.tplink.cartoon.ui.source.BookShelf;
 import android.content.Context;
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.db.DaoHelper;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
@@ -41,11 +44,11 @@ public class BookShelfDataSource implements IBookShelfDataSource {
     }
 
     @Override
-    public Flowable<List<Comic>> getHistoryComicList() {
+    public Flowable<List<Comic>> getHistoryComicList(final int page) {
         return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
             @Override
             public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
-                List<Comic> comics = mDaoHelper.queryHistory();
+                List<Comic> comics = mDaoHelper.queryHistory(page);
                 emitter.onNext(comics);
                 emitter.onComplete();
             }

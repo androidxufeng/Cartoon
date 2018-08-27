@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="148dp"
+        android:layout_height="138dp"
         android:background="@color/colorBg">
 
         <FrameLayout
