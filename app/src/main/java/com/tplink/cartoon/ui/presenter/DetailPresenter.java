@@ -119,8 +119,8 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
         }
         Date date = new Date();
         long datetime = date.getTime();
-        mComic.setCreateTime(datetime);
-        mComic.setIsCollect(true);
+        mComic.setCollectTime(datetime);
+        mComic.setIsCollected(true);
         DisposableSubscriber<Boolean> disposable = mDataSource.updateComicToDB(mComic)
                 .compose(mView.<Boolean>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())

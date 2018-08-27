@@ -18,189 +18,236 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Comic extends BaseBean {
-
     @Id
     protected long id;
-
-    /**
-     * 标题
-     */
+    //标题
     protected String title;
-    /**
-     * 封面图片
-     */
+    //封面图片
     protected String cover;
-    /**
-     * 作者
-     */
+    //作者
     protected String author;
-    /**
-     * 章节标题
-     */
+    //章节标题
     @Convert(columnType = String.class, converter = StringConverter.class)
     protected List<String> chapters;
-    /**
-     * 标签
-     */
+    //标签
     @Convert(columnType = String.class, converter = StringConverter.class)
     protected List<String> tags;
-    /**
-     * 收藏数
-     */
+    //收藏数
     protected String collections;
-    /**
-     * 详情
-     */
+    //详情
     protected String describe;
-    /**
-     * 评分
-     */
+    //评分
     protected String point;
-    /**
-     * 人气值
-     */
+    //人气值
     protected String popularity;
-    /**
-     * 话题量
-     */
+    //话题量
     protected String topics;
-
-    /**
-     * 更新时间
-     */
-
+    //更新时间
     protected String updates;
-    /**
-     * 状态
-     */
+    //状态
     protected String status;
-
+    //默认阅读方式
+    protected int readType;
+    //当前章节
     protected int currentChapter;
+    //收藏时间
+    protected long collectTime;
+    //点击时间
+    protected long clickTime;
+    //下载时间
+    protected long downloadTime;
+    //是否收藏
+    protected boolean isCollected;
 
-    protected long updateTime;
+    /*state状态数据库保存*/
+    protected int stateInte;
+    //当前页
+    protected int current_page;
+    //当前共有多少页面
+    protected int current_page_all;
+    //有多少话在下载
+    protected int download_num;
+    //下载完成多少话
+    protected int download_num_finish;
 
-    protected long createTime;
-
-    public boolean isCollect() {
-        return isCollect;
+    public int getDownload_num_finish() {
+        return this.download_num_finish;
     }
 
-    public void setCollect(boolean collect) {
-        isCollect = collect;
+    public void setDownload_num_finish(int download_num_finish) {
+        this.download_num_finish = download_num_finish;
     }
 
-    protected boolean isCollect;
+    public int getDownload_num() {
+        return this.download_num;
+    }
+
+    public void setDownload_num(int download_num) {
+        this.download_num = download_num;
+    }
+
+    public int getCurrent_page() {
+        return this.current_page;
+    }
+
+    public void setCurrent_page(int current_page) {
+        this.current_page = current_page;
+    }
+
+    public int getStateInte() {
+        return this.stateInte;
+    }
+
+    public void setStateInte(int stateInte) {
+        this.stateInte = stateInte;
+    }
+
+    public boolean getIsCollected() {
+        return this.isCollected;
+    }
+
+    public void setIsCollected(boolean isCollected) {
+        this.isCollected = isCollected;
+    }
+
+    public long getDownloadTime() {
+        return this.downloadTime;
+    }
+
+    public void setDownloadTime(long downloadTime) {
+        this.downloadTime = downloadTime;
+    }
+
+    public long getClickTime() {
+        return this.clickTime;
+    }
+
+    public void setClickTime(long clickTime) {
+        this.clickTime = clickTime;
+    }
+
+    public long getCollectTime() {
+        return this.collectTime;
+    }
+
+    public void setCollectTime(long collectTime) {
+        this.collectTime = collectTime;
+    }
+
+    public int getCurrentChapter() {
+        return this.currentChapter;
+    }
+
+    public void setCurrentChapter(int currentChapter) {
+        this.currentChapter = currentChapter;
+    }
 
     public int getReadType() {
-        return readType;
+        return this.readType;
     }
 
     public void setReadType(int readType) {
         this.readType = readType;
     }
 
-    protected int readType;
-
-    public String getTitle() {
-        return title;
+    public String getStatus() {
+        return this.status;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getCover() {
-        return cover;
-    }
-
-    public void setCover(String cover) {
-        this.cover = cover;
-    }
-
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    public List<String> getChapters() {
-        return chapters;
-    }
-
-    public void setChapters(ArrayList<String> chapters) {
-        this.chapters = chapters;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public String getCollections() {
-        return collections;
-    }
-
-    public void setCollections(String collections) {
-        this.collections = collections;
-    }
-
-    public String getDescribe() {
-        return "作品简介： " + describe;
-    }
-
-    public void setDescribe(String describe) {
-        this.describe = describe;
-    }
-
-    public String getPoint() {
-        return point;
-    }
-
-    public void setPoint(String point) {
-        this.point = point;
-    }
-
-    public String getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(String popularity) {
-        this.popularity = popularity;
-    }
-
-    public String getTopics() {
-        return topics;
-    }
-
-    public void setTopics(String topics) {
-        this.topics = topics;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getUpdates() {
-        return updates;
+        return this.updates;
     }
 
     public void setUpdates(String updates) {
         this.updates = updates;
     }
 
-    public String getStatus() {
-        return status;
+    public String getTopics() {
+        return this.topics;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setTopics(String topics) {
+        this.topics = topics;
+    }
+
+    public String getPopularity() {
+        return this.popularity;
+    }
+
+    public void setPopularity(String popularity) {
+        this.popularity = popularity;
+    }
+
+    public String getPoint() {
+        return this.point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
+    }
+
+    public String getDescribe() {
+        return this.describe;
+    }
+
+    public void setDescribe(String describe) {
+        this.describe = describe;
+    }
+
+    public String getCollections() {
+        return this.collections;
+    }
+
+    public void setCollections(String collections) {
+        this.collections = collections;
+    }
+
+    public List<String> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
+    public List<String> getChapters() {
+        return this.chapters;
+    }
+
+    public void setChapters(List<String> chapters) {
+        this.chapters = chapters;
+    }
+
+    public String getAuthor() {
+        return this.author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getCover() {
+        return this.cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public long getId() {
@@ -211,67 +258,14 @@ public class Comic extends BaseBean {
         this.id = id;
     }
 
-
-    public int getCurrentChapter() {
-        return currentChapter;
-    }
-
-    public void setCurrentChapter(int currentChapter) {
-        this.currentChapter = currentChapter;
-    }
-
-    public long getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(long updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public long getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Comic{" +
-                "title='" + title + '\'' +
-                ", cover='" + cover + '\'' +
-                ", author='" + author + '\'' +
-                ", chapters=" + chapters +
-                ", tags=" + tags +
-                ", collections='" + collections + '\'' +
-                ", describe='" + describe + '\'' +
-                ", point='" + point + '\'' +
-                ", popularity='" + popularity + '\'' +
-                ", topics='" + topics + '\'' +
-                ", updates='" + updates + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
-
-    public void setChapters(List<String> chapters) {
-        this.chapters = chapters;
-    }
-
-    public boolean getIsCollect() {
-        return this.isCollect;
-    }
-
-    public void setIsCollect(boolean isCollect) {
-        this.isCollect = isCollect;
-    }
-
-    @Generated(hash = 1733893838)
+    @Generated(hash = 1447888425)
     public Comic(long id, String title, String cover, String author,
                  List<String> chapters, List<String> tags, String collections,
                  String describe, String point, String popularity, String topics,
-                 String updates, String status, int currentChapter, long updateTime,
-                 long createTime, boolean isCollect, int readType) {
+                 String updates, String status, int readType, int currentChapter,
+                 long collectTime, long clickTime, long downloadTime,
+                 boolean isCollected, int stateInte, int current_page,
+                 int current_page_all, int download_num, int download_num_finish) {
         this.id = id;
         this.title = title;
         this.cover = cover;
@@ -285,14 +279,53 @@ public class Comic extends BaseBean {
         this.topics = topics;
         this.updates = updates;
         this.status = status;
-        this.currentChapter = currentChapter;
-        this.updateTime = updateTime;
-        this.createTime = createTime;
-        this.isCollect = isCollect;
         this.readType = readType;
+        this.currentChapter = currentChapter;
+        this.collectTime = collectTime;
+        this.clickTime = clickTime;
+        this.downloadTime = downloadTime;
+        this.isCollected = isCollected;
+        this.stateInte = stateInte;
+        this.current_page = current_page;
+        this.current_page_all = current_page_all;
+        this.download_num = download_num;
+        this.download_num_finish = download_num_finish;
     }
 
     @Generated(hash = 1347984162)
     public Comic() {
+    }
+
+
+    @DownState.state
+    public int getState() {
+        switch (getStateInte()) {
+            case 0:
+                return DownState.START;
+            case 1:
+                return DownState.DOWN;
+            case 2:
+                return DownState.PAUSE;
+            case 3:
+                return DownState.STOP;
+            case 4:
+                return DownState.ERROR;
+            case 5:
+                return DownState.FINISH;
+            default:
+                return DownState.FINISH;
+        }
+    }
+
+    public void setState(int state) {
+        setStateInte(state);
+    }
+
+    public int getCurrent_page_all() {
+        return this.current_page_all;
+    }
+
+    public void setCurrent_page_all(int current_page_all) {
+        this.current_page_all = current_page_all;
     }
 }

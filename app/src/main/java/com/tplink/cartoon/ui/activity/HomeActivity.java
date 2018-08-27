@@ -1,7 +1,9 @@
 package com.tplink.cartoon.ui.activity;
 
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,18 +25,22 @@ public class HomeActivity extends BaseFragmentActivity {
     Button mMine;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick(R.id.btn_home)
     public void toHomeFragment(View view) {
         selectTab(0);
         resetBottomBtn();
         mHome.setBackgroundResource(R.drawable.homepage_press);
+        initStatusBar(true);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick(R.id.btn_bookshelf)
     public void toBookShelfFragment(View view) {
         selectTab(1);
         resetBottomBtn();
         mBookShelf.setBackgroundResource(R.drawable.bookshelf_press);
+        initStatusBar(false);
     }
 
     public void resetBottomBtn() {

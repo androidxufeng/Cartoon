@@ -8,7 +8,7 @@
 package com.tplink.cartoon.ui.view;
 
 
-public interface IBookShelfView<T> extends ILoadDataView<T> {
+public interface IBookShelfView extends BaseView {
 
-    void showEmptyView();
+
 }

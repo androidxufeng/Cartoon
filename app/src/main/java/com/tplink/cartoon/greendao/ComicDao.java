@@ -40,11 +40,17 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         public final static Property Topics = new Property(10, String.class, "topics", false, "TOPICS");
         public final static Property Updates = new Property(11, String.class, "updates", false, "UPDATES");
         public final static Property Status = new Property(12, String.class, "status", false, "STATUS");
-        public final static Property CurrentChapter = new Property(13, int.class, "currentChapter", false, "CURRENT_CHAPTER");
-        public final static Property UpdateTime = new Property(14, long.class, "updateTime", false, "UPDATE_TIME");
-        public final static Property CreateTime = new Property(15, long.class, "createTime", false, "CREATE_TIME");
-        public final static Property IsCollect = new Property(16, boolean.class, "isCollect", false, "IS_COLLECT");
-        public final static Property ReadType = new Property(17, int.class, "readType", false, "READ_TYPE");
+        public final static Property ReadType = new Property(13, int.class, "readType", false, "READ_TYPE");
+        public final static Property CurrentChapter = new Property(14, int.class, "currentChapter", false, "CURRENT_CHAPTER");
+        public final static Property CollectTime = new Property(15, long.class, "collectTime", false, "COLLECT_TIME");
+        public final static Property ClickTime = new Property(16, long.class, "clickTime", false, "CLICK_TIME");
+        public final static Property DownloadTime = new Property(17, long.class, "downloadTime", false, "DOWNLOAD_TIME");
+        public final static Property IsCollected = new Property(18, boolean.class, "isCollected", false, "IS_COLLECTED");
+        public final static Property StateInte = new Property(19, int.class, "stateInte", false, "STATE_INTE");
+        public final static Property Current_page = new Property(20, int.class, "current_page", false, "CURRENT_PAGE");
+        public final static Property Current_page_all = new Property(21, int.class, "current_page_all", false, "CURRENT_PAGE_ALL");
+        public final static Property Download_num = new Property(22, int.class, "download_num", false, "DOWNLOAD_NUM");
+        public final static Property Download_num_finish = new Property(23, int.class, "download_num_finish", false, "DOWNLOAD_NUM_FINISH");
     }
 
     private final StringConverter chaptersConverter = new StringConverter();
@@ -75,11 +81,17 @@ public class ComicDao extends AbstractDao<Comic, Long> {
                 "\"TOPICS\" TEXT," + // 10: topics
                 "\"UPDATES\" TEXT," + // 11: updates
                 "\"STATUS\" TEXT," + // 12: status
-                "\"CURRENT_CHAPTER\" INTEGER NOT NULL ," + // 13: currentChapter
-                "\"UPDATE_TIME\" INTEGER NOT NULL ," + // 14: updateTime
-                "\"CREATE_TIME\" INTEGER NOT NULL ," + // 15: createTime
-                "\"IS_COLLECT\" INTEGER NOT NULL ," + // 16: isCollect
-                "\"READ_TYPE\" INTEGER NOT NULL );"); // 17: readType
+                "\"READ_TYPE\" INTEGER NOT NULL ," + // 13: readType
+                "\"CURRENT_CHAPTER\" INTEGER NOT NULL ," + // 14: currentChapter
+                "\"COLLECT_TIME\" INTEGER NOT NULL ," + // 15: collectTime
+                "\"CLICK_TIME\" INTEGER NOT NULL ," + // 16: clickTime
+                "\"DOWNLOAD_TIME\" INTEGER NOT NULL ," + // 17: downloadTime
+                "\"IS_COLLECTED\" INTEGER NOT NULL ," + // 18: isCollected
+                "\"STATE_INTE\" INTEGER NOT NULL ," + // 19: stateInte
+                "\"CURRENT_PAGE\" INTEGER NOT NULL ," + // 20: current_page
+                "\"CURRENT_PAGE_ALL\" INTEGER NOT NULL ," + // 21: current_page_all
+                "\"DOWNLOAD_NUM\" INTEGER NOT NULL ," + // 22: download_num
+                "\"DOWNLOAD_NUM_FINISH\" INTEGER NOT NULL );"); // 23: download_num_finish
     }
 
     /** Drops the underlying database table. */
@@ -152,11 +164,17 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         if (status != null) {
             stmt.bindString(13, status);
         }
-        stmt.bindLong(14, entity.getCurrentChapter());
-        stmt.bindLong(15, entity.getUpdateTime());
-        stmt.bindLong(16, entity.getCreateTime());
-        stmt.bindLong(17, entity.getIsCollect() ? 1L: 0L);
-        stmt.bindLong(18, entity.getReadType());
+        stmt.bindLong(14, entity.getReadType());
+        stmt.bindLong(15, entity.getCurrentChapter());
+        stmt.bindLong(16, entity.getCollectTime());
+        stmt.bindLong(17, entity.getClickTime());
+        stmt.bindLong(18, entity.getDownloadTime());
+        stmt.bindLong(19, entity.getIsCollected() ? 1L: 0L);
+        stmt.bindLong(20, entity.getStateInte());
+        stmt.bindLong(21, entity.getCurrent_page());
+        stmt.bindLong(22, entity.getCurrent_page_all());
+        stmt.bindLong(23, entity.getDownload_num());
+        stmt.bindLong(24, entity.getDownload_num_finish());
     }
 
     @Override
@@ -223,11 +241,17 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         if (status != null) {
             stmt.bindString(13, status);
         }
-        stmt.bindLong(14, entity.getCurrentChapter());
-        stmt.bindLong(15, entity.getUpdateTime());
-        stmt.bindLong(16, entity.getCreateTime());
-        stmt.bindLong(17, entity.getIsCollect() ? 1L: 0L);
-        stmt.bindLong(18, entity.getReadType());
+        stmt.bindLong(14, entity.getReadType());
+        stmt.bindLong(15, entity.getCurrentChapter());
+        stmt.bindLong(16, entity.getCollectTime());
+        stmt.bindLong(17, entity.getClickTime());
+        stmt.bindLong(18, entity.getDownloadTime());
+        stmt.bindLong(19, entity.getIsCollected() ? 1L: 0L);
+        stmt.bindLong(20, entity.getStateInte());
+        stmt.bindLong(21, entity.getCurrent_page());
+        stmt.bindLong(22, entity.getCurrent_page_all());
+        stmt.bindLong(23, entity.getDownload_num());
+        stmt.bindLong(24, entity.getDownload_num_finish());
     }
 
     @Override
@@ -251,11 +275,17 @@ public class ComicDao extends AbstractDao<Comic, Long> {
             cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10), // topics
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // updates
             cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // status
-            cursor.getInt(offset + 13), // currentChapter
-            cursor.getLong(offset + 14), // updateTime
-            cursor.getLong(offset + 15), // createTime
-            cursor.getShort(offset + 16) != 0, // isCollect
-            cursor.getInt(offset + 17) // readType
+            cursor.getInt(offset + 13), // readType
+            cursor.getInt(offset + 14), // currentChapter
+            cursor.getLong(offset + 15), // collectTime
+            cursor.getLong(offset + 16), // clickTime
+            cursor.getLong(offset + 17), // downloadTime
+            cursor.getShort(offset + 18) != 0, // isCollected
+            cursor.getInt(offset + 19), // stateInte
+            cursor.getInt(offset + 20), // current_page
+            cursor.getInt(offset + 21), // current_page_all
+            cursor.getInt(offset + 22), // download_num
+            cursor.getInt(offset + 23) // download_num_finish
         );
         return entity;
     }
@@ -275,11 +305,17 @@ public class ComicDao extends AbstractDao<Comic, Long> {
         entity.setTopics(cursor.isNull(offset + 10) ? null : cursor.getString(offset + 10));
         entity.setUpdates(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
         entity.setStatus(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
-        entity.setCurrentChapter(cursor.getInt(offset + 13));
-        entity.setUpdateTime(cursor.getLong(offset + 14));
-        entity.setCreateTime(cursor.getLong(offset + 15));
-        entity.setIsCollect(cursor.getShort(offset + 16) != 0);
-        entity.setReadType(cursor.getInt(offset + 17));
+        entity.setReadType(cursor.getInt(offset + 13));
+        entity.setCurrentChapter(cursor.getInt(offset + 14));
+        entity.setCollectTime(cursor.getLong(offset + 15));
+        entity.setClickTime(cursor.getLong(offset + 16));
+        entity.setDownloadTime(cursor.getLong(offset + 17));
+        entity.setIsCollected(cursor.getShort(offset + 18) != 0);
+        entity.setStateInte(cursor.getInt(offset + 19));
+        entity.setCurrent_page(cursor.getInt(offset + 20));
+        entity.setCurrent_page_all(cursor.getInt(offset + 21));
+        entity.setDownload_num(cursor.getInt(offset + 22));
+        entity.setDownload_num_finish(cursor.getInt(offset + 23));
      }
     
     @Override

@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
-import com.tplink.cartoon.ui.adapter.HistoryAdapter;
+import com.tplink.cartoon.ui.adapter.SearchHistoryAdapter;
 import com.tplink.cartoon.ui.adapter.SearchDynamicAdapter;
 import com.tplink.cartoon.ui.adapter.SearchResultAdapter;
 import com.tplink.cartoon.ui.adapter.SearchTopAdapter;
@@ -63,7 +63,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     SearchDynamicAdapter mDynaicAdapter;
     SearchResultAdapter mResultAdapter;
     private SearchTopAdapter mTopAdapter;
-    HistoryAdapter mHistoryAdapter;
+    SearchHistoryAdapter mSearchHistoryAdapter;
 
     @OnClick(R.id.iv_clear)
     public void clear() {
@@ -113,11 +113,11 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
         mTopRecycle.setLayoutManager(staggeredGridLayoutManager);
         mTopRecycle.setAdapter(mTopAdapter);
 
-        mHistoryAdapter = new HistoryAdapter(this, R.layout.item_history_search);
+        mSearchHistoryAdapter = new SearchHistoryAdapter(this, R.layout.item_history_search);
         NoScrollGridLayoutManager gridLayoutManager = new NoScrollGridLayoutManager(this, 1);
         gridLayoutManager.setScrollEnabled(false);
         mHistoryRecycle.setLayoutManager(gridLayoutManager);
-        mHistoryRecycle.setAdapter(mHistoryAdapter);
+        mHistoryRecycle.setAdapter(mSearchHistoryAdapter);
 
         mPresenter.getSearch();
         setLisenter();
@@ -179,10 +179,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
             }
         });
 
-        mHistoryAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
+        mSearchHistoryAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView parent, View view, int position) {
-                mPresenter.getSearchResult(mHistoryAdapter.getItems(position).getTitle());
+                mPresenter.getSearchResult(mSearchHistoryAdapter.getItems(position).getTitle());
             }
         });
 
@@ -253,10 +253,10 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     @Override
     public void fillData(List<Comic> comics) {
         if (comics != null && comics.size() != 0) {
-            mHistoryAdapter.updateWithClear(comics);
+            mSearchHistoryAdapter.updateWithClear(comics);
         } else {
-            mHistoryAdapter.onClear();
-            mHistoryAdapter.notifyDataSetChanged();
+            mSearchHistoryAdapter.onClear();
+            mSearchHistoryAdapter.notifyDataSetChanged();
         }
     }
 

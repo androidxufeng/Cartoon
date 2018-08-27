@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:background="@color/colorBg">
+
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="80dp"
+            android:layout_height="108dp"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY" />
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/iv_cover"
+            android:orientation="vertical"
+            android:paddingLeft="15dp">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="标题"
+                android:textColor="@color/colorTextColor"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/tv_chapters_current"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="上次看到"
+                android:textColor="@color/colorTextColorLight2"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/tv_history_page"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="页面"
+                android:textColor="@color/colorTextColorLight2"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/tv_chapters"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="更新到"
+                android:textColor="@color/colorTextColorLight2"
+                android:textSize="12dp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/continue_read" />
+
+        <View
+            android:id="@+id/v_bottom_line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorBottom" />
+
+    </RelativeLayout>
+</RelativeLayout>

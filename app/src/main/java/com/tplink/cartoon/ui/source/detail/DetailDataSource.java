@@ -14,6 +14,7 @@ package com.tplink.cartoon.ui.source.detail;
 import android.content.Context;
 
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.data.bean.DownState;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.db.DaoHelper;
 
@@ -49,6 +50,15 @@ public class DetailDataSource implements IDetailDataSource {
                 Comic dbComic = mDaoHelper.findComic(comicId);
                 if (dbComic != null) {
                     comic.setCurrentChapter(dbComic.getCurrentChapter());
+                    comic.setCurrentChapter(dbComic.getCurrentChapter());
+                    comic.setDownloadTime(dbComic.getDownloadTime());
+                    comic.setCollectTime(dbComic.getCollectTime());
+                    comic.setClickTime(dbComic.getClickTime());
+                    comic.setDownload_num(dbComic.getDownload_num());
+                    comic.setDownload_num_finish(dbComic.getDownload_num_finish());
+                    comic.setCurrent_page(dbComic.getCurrent_page());
+                    comic.setCurrent_page_all(dbComic.getCurrent_page_all());
+                    comic.setIsCollected(dbComic.getIsCollected());
                 }
                 emitter.onNext(comic);
                 emitter.onComplete();
@@ -117,9 +127,9 @@ public class DetailDataSource implements IDetailDataSource {
         return Flowable.create(new FlowableOnSubscribe<Comic>() {
             @Override
             public void subscribe(FlowableEmitter<Comic> emitter) throws Exception {
-                Comic mComic = mDaoHelper.findComic(comicId);
-                if (mComic != null) {
-                    emitter.onNext(mComic);
+                Comic comic = mDaoHelper.findComic(comicId);
+                if (comic != null) {
+                    emitter.onNext(comic);
                 } else {
                     emitter.onNext(null);
                 }
@@ -189,6 +199,7 @@ public class DetailDataSource implements IDetailDataSource {
             } else {
                 comic.setReadType(Constants.UP_TO_DOWN);
             }
+            comic.setState(DownState.START);
         } catch (Exception e) {
 
         } finally {

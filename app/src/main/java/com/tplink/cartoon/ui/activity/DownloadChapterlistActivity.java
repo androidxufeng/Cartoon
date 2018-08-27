@@ -176,7 +176,6 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
 
     @Override
     protected void initData() {
-        mPresenter.initData();
     }
 
     @Override
@@ -214,6 +213,24 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
             default:
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.initData();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        initPresenter(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.updateComic();
     }
 
     @Override

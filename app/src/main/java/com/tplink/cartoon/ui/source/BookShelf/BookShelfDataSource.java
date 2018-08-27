@@ -40,5 +40,29 @@ public class BookShelfDataSource implements IBookShelfDataSource {
         }, BackpressureStrategy.LATEST);
     }
 
+    @Override
+    public Flowable<List<Comic>> getHistoryComicList() {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                List<Comic> comics = mDaoHelper.queryHistory();
+                emitter.onNext(comics);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<List<Comic>> getDownloadComicList() {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                List<Comic> comics = mDaoHelper.queryDownloadComic();
+                emitter.onNext(comics);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
 
 }

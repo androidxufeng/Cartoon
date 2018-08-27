@@ -33,13 +33,13 @@ public class IntentUtil {
     }
 
     public static void toComicChapter(Context context, int chapters, long id, String title,
-                                      List<String> chapter_titles, int type) {
+                                      List<String> chapterTitles, int type) {
         Intent intent = new Intent(context, ComicChapterActivity.class);
         intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
         intent.putExtra(Constants.COMIC_ID, id);
         intent.putExtra(Constants.COMIC_TITLE, title);
         intent.putExtra(Constants.COMIC_READ_TYPE, type);
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) chapter_titles);
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, new ArrayList<>(chapterTitles));
         context.startActivity(intent);
     }
 
@@ -49,16 +49,16 @@ public class IntentUtil {
         intent.putExtra(Constants.COMIC_ID, comic.getId());
         intent.putExtra(Constants.COMIC_TITLE, comic.getTitle());
         intent.putExtra(Constants.COMIC_READ_TYPE, comic.getReadType());
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) comic.getChapters());
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, new ArrayList<>(comic.getChapters()));
         context.startActivity(intent);
     }
 
-    public static void toIndex(Context context, long id, List<String> ChapterTitles, String title, int type) {
+    public static void toIndex(Context context, long id, List<String> chapterTitles, String title, int type) {
         Intent intent = new Intent(context, IndexActivity.class);
         intent.putExtra(Constants.COMIC_ID, id);
         intent.putExtra(Constants.COMIC_TITLE, title);
         intent.putExtra(Constants.COMIC_READ_TYPE, type);
-        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, (ArrayList<String>) ChapterTitles);
+        intent.putStringArrayListExtra(Constants.COMIC_CHAPTER_TITLE, new ArrayList<>(chapterTitles));
         context.startActivity(intent);
     }
 

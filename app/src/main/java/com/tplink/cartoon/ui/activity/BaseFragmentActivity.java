@@ -9,8 +9,10 @@ package com.tplink.cartoon.ui.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -30,11 +32,18 @@ public abstract class BaseFragmentActivity extends RxAppCompatActivity {
     protected FragmentTransaction fragmentTransaction;
     protected List<Fragment> fragments;
 
+    protected boolean isTrans;
+
+    public boolean isTrans() {
+        return isTrans;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentViewId());
-        initStatusBar();
+        initStatusBar(true);
         if (null != getIntent()) {
             handleIntent(getIntent());
         }
@@ -48,11 +57,18 @@ public abstract class BaseFragmentActivity extends RxAppCompatActivity {
 
     }
 
-    private void initStatusBar() {
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void initStatusBar(boolean isTransparent) {
         Window window = getWindow();
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        if (isTransparent) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        } else {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+        isTrans = isTransparent;
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(Color.TRANSPARENT);
     }

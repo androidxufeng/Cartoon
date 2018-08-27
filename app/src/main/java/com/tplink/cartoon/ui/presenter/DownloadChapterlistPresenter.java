@@ -44,7 +44,7 @@ public class DownloadChapterlistPresenter extends BasePresenter
     private Comic mComic;
     private HashMap<Integer, Integer> mMap;
     private List<DBDownloadItem> mLists;
-    private final DaoHelper<DBDownloadItem> mDaoHelper;
+    private final DaoHelper mDaoHelper;
     //下载队列
     private LinkedHashMap<String, DownloadComicDisposableObserver> subMap;
     //下载章节数，同时允许存在四个
@@ -100,7 +100,16 @@ public class DownloadChapterlistPresenter extends BasePresenter
                                 //判断是否全部下载完了
                                 if (downloadedNum == mLists.size()) {
                                     mView.onDownloadFinished();
+                                    mComic.setState(DownState.FINISH);
+                                } else {
+                                    mComic.setState(DownState.DOWN);
                                 }
+                                //如果不是重新选择了下载章节数进去，不需要更新下载时间
+                                if (mMap.size() != 0) {
+                                    mComic.setDownloadTime(getCurrentTime());
+                                }
+                                mComic.setDownload_num_finish(downloadedNum);
+                                mComic.setDownload_num(items.size());
                             }
 
                             @Override
@@ -117,6 +126,9 @@ public class DownloadChapterlistPresenter extends BasePresenter
         mCompositeDisposable.add(disposableSubscriber);
     }
 
+    public void updateComic() {
+        mDaoHelper.update(mComic);
+    }
 
     /**
      * 开始所有下载
@@ -293,8 +305,8 @@ public class DownloadChapterlistPresenter extends BasePresenter
                         //把图片保存到SD卡
                         FileUtil.saveImgToSdCard(responseBody.byteStream(), FileUtil.SDPATH + FileUtil.COMIC + info.getComic_id() + "/" + info.getChapters() + "/", page + ".png");
                         ArrayList<String> paths = new ArrayList<>();
-                        if(info.getChapters_path()!=null){
-                            paths =new ArrayList<>(info.getChapters_path());
+                        if (info.getChapters_path() != null) {
+                            paths = new ArrayList<>(info.getChapters_path());
                         }
                         paths.add(FileUtil.SDPATH + FileUtil.COMIC + info.getComic_id() + "/" + info.getChapters() + "/" + page + ".png");
                         //保存存储位置
@@ -400,6 +412,8 @@ public class DownloadChapterlistPresenter extends BasePresenter
             } else {
                 //如果这一话下载完成
                 downloadedNum++;
+                //修改mComic的状态
+                mComic.setDownload_num_finish(downloadedNum);
                 //修改状态
                 info.setState(DownState.FINISH);
                 if (downloadMap.containsKey(position)) {
@@ -418,6 +432,8 @@ public class DownloadChapterlistPresenter extends BasePresenter
                     mView.showToast(mComic.getTitle() + "下载完成,共下载" + downloadedNum + "话");
                     mView.onDownloadFinished();
                     isAllDownload = FINISH;
+                    //修改mComic的状态
+                    mComic.setDownload_num_finish(downloadedNum);
                 }
             }
             //把已经下载完成的写入

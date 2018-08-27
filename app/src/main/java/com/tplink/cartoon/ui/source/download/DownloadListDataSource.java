@@ -36,7 +36,7 @@ import okhttp3.ResponseBody;
 public class DownloadListDataSource implements IDownloadListDataSource {
 
 
-    private final DaoHelper<DBDownloadItem> mHelper;
+    private final DaoHelper mHelper;
 
     public DownloadListDataSource(Context context) {
 

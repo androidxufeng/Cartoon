@@ -24,4 +24,10 @@ public class BasePresenter<M extends IDataSource, V extends BaseView> {
         mDataSource = dataSource;
         mView = view;
     }
+
+    public long getCurrentTime() {
+        java.util.Date date = new java.util.Date();
+        long datetime = date.getTime();
+        return datetime;
+    }
 }

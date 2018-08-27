@@ -69,7 +69,6 @@ public class ChapterDataSource implements IChapterDataSource {
                 long datetime = date.getTime();
                 if (comic != null) {
                     comic.setCurrentChapter(currentChapter + 1);
-                    comic.setUpdateTime(datetime);
                     if (mDaoHelper.update(comic)) {
                         emitter.onNext(true);
                     } else {

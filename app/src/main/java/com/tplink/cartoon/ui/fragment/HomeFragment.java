@@ -8,7 +8,9 @@
  */
 package com.tplink.cartoon.ui.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.ui.activity.HomeActivity;
 import com.tplink.cartoon.ui.adapter.MainAdapter;
 import com.tplink.cartoon.ui.presenter.HomePresenter;
 import com.tplink.cartoon.ui.source.HomeDataSource;
@@ -58,6 +61,8 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     View mActionBarBg;
 
     private int i = 3;
+
+    HomeActivity mHomeActivity;
 
 
     @OnClick(R.id.iv_error)
@@ -104,6 +109,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        mHomeActivity = (HomeActivity) getActivity();
         //设置banner加载设置
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setIndicatorGravity(BannerConfig.RIGHT);
@@ -171,8 +177,18 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
             }
 
             @Override
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             public void onAlphaActionBar(float a) {
                 mActionBarBg.setAlpha(a);
+                if (a == 1) {
+                    if (mHomeActivity.isTrans()) {
+                        mHomeActivity.initStatusBar(false);
+                    }
+                } else {
+                    if (!mHomeActivity.isTrans()) {
+                        mHomeActivity.initStatusBar(true);
+                    }
+                }
             }
         });
 
