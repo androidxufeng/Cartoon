@@ -382,7 +382,7 @@ public class DownloadChapterlistPresenter extends BasePresenter
     }
 
     public void toComicChapter(DBDownloadItem info) {
-        IntentUtil.toComicChapter(mView, info.getChapters(), mComic);
+        IntentUtil.toComicChapterForResult(mView, info.getChapters(), mComic);
     }
 
     public class DownloadComicDisposableObserver extends DisposableObserver<DBDownloadItem> {
@@ -469,6 +469,13 @@ public class DownloadChapterlistPresenter extends BasePresenter
                 }
             }
             LogUtil.e(e.toString());
+        }
+    }
+
+    public void getResultComic(int resultCode, Intent data) {
+        if (resultCode == Constants.OK) {
+            Comic comic = (Comic) data.getSerializableExtra(Constants.COMIC);
+            this.mComic = comic;
         }
     }
 }

@@ -149,7 +149,7 @@ public class DownloadFragment extends BaseBookShelfFragment<DownloadPresenter> i
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
         if (mAdapter.isEditing()) {
-            mPresenter.uptdateToSelected(position);
+            mPresenter.updateToSelected(position);
         } else {
             Comic comic = mAdapter.getItems(position);
             IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());

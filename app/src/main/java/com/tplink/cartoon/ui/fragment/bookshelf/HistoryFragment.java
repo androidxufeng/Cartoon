@@ -10,6 +10,7 @@ package com.tplink.cartoon.ui.fragment.bookshelf;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.tplink.cartoon.R;
@@ -25,6 +26,7 @@ import com.tplink.cartoon.ui.widget.ElasticScrollView;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,6 +38,9 @@ public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> imp
     RecyclerView mRecycleView;
     @BindView(R.id.ev_scrollview)
     ElasticScrollView mScrollView;
+    @BindView(R.id.rl_empty_view)
+    RelativeLayout mEmptyView;
+
     private HistoryAdapter mAdapter;
 
     @Override
@@ -116,11 +121,13 @@ public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> imp
     @Override
     public void fillData(List<Comic> data) {
         mAdapter.updateWithClear(data);
+        mEmptyView.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyView() {
-        mAdapter.updateWithClear(null);
+        mAdapter.updateWithClear(new ArrayList<Comic>());
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -130,7 +137,7 @@ public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> imp
             Comic comic = mAdapter.getItems(position);
             IntentUtil.toComicChapter(mActivity, comic.getCurrentChapter(), comic);
         } else {
-            mPresenter.uptdateToSelected(position);
+            mPresenter.updateToSelected(position);
         }
     }
 

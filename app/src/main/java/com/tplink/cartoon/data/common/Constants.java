@@ -67,4 +67,6 @@ public class Constants {
     public final static int TYPE_BOY_RANK = 4;
     public final static int TYPE_GIRL_RANK = 5;
 
+    public static final int OK = 1;
+
 }

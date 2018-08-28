@@ -238,4 +238,9 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
         super.onDestroy();
         mPresenter.pauseAll();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.getResultComic(resultCode,data);
+    }
 }

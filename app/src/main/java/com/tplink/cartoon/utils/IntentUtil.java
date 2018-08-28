@@ -7,6 +7,7 @@
  */
 package com.tplink.cartoon.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -48,6 +49,13 @@ public class IntentUtil {
         intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
         intent.putExtra(Constants.COMIC, comic);
         context.startActivity(intent);
+    }
+
+    public static void toComicChapterForResult(Activity context, int chapters, Comic comic) {
+        Intent intent = new Intent(context, ComicChapterActivity.class);
+        intent.putExtra(Constants.COMIC_CHAPTERS, chapters);
+        intent.putExtra(Constants.COMIC, comic);
+        context.startActivityForResult(intent, 1);
     }
 
     public static void toIndex(Context context, Comic comic) {

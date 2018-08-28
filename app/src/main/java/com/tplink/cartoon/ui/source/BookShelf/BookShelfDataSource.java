@@ -73,10 +73,30 @@ public class BookShelfDataSource implements IBookShelfDataSource {
                     Comic items = list.get(i);
                     items.setClickTime(0);
                     items.setCurrent_page(0);
+                    items.setCurrentChapter(0);
                     mDaoHelper.update(items);
                 }
                 List<Comic> comics = mDaoHelper.queryHistory(0);
                 emitter.onNext(comics);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<List<Comic>> deleteAllHistoryComicList() {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                List<Comic> list = mDaoHelper.queryHistory();
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setClickTime(0);
+                    list.get(i).setCurrent_page(0);
+                    list.get(i).setCurrentChapter(0);
+                }
+                mDaoHelper.insertList(list);
+                List<Comic> mComics = mDaoHelper.queryHistory(0);
+                emitter.onNext(mComics);
                 emitter.onComplete();
             }
         }, BackpressureStrategy.LATEST);

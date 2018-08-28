@@ -208,5 +208,14 @@ public class DaoHelper<T> {
                 .list();
         return list;
     }
+
+    public List<Comic> queryHistory() {
+        List<Comic> list = mDaoManager.getDaoSession().getComicDao().queryBuilder()
+                .limit(1000)
+                .where(ComicDao.Properties.ClickTime.gt(0))
+                .orderDesc(ComicDao.Properties.ClickTime)
+                .list();
+        return list;
+    }
 }
 

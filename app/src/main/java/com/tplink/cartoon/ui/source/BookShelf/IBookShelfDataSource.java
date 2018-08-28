@@ -26,5 +26,7 @@ public interface IBookShelfDataSource extends IDataSource {
 
     Flowable<List<Comic>> deleteHistoryComicList(List<Comic> list);
 
+    Flowable<List<Comic>> deleteAllHistoryComicList();
+
     Flowable<List<Comic>> deleteCollectComicList(List<Comic> list);
 }

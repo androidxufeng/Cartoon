@@ -15,8 +15,6 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.data.bean.LoadingItem;
 import com.tplink.cartoon.data.common.Constants;
-import com.tplink.cartoon.ui.fragment.bookshelf.CollectionFragment;
-import com.tplink.cartoon.ui.fragment.bookshelf.DownloadFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.HistoryFragment;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.ICollectionView;
@@ -27,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -57,7 +56,11 @@ public class HistoryPresenter extends SelectPresenter<BookShelfDataSource, IColl
                     public void onNext(List<Comic> comics) {
                         mComics.clear();
                         mComics.addAll(comics);
-                        mView.fillData(addTitle(comics));
+                        if (mComics.size() != 0) {
+                            mView.fillData(addTitle(comics));
+                        } else {
+                            mView.showEmptyView();
+                        }
 
                     }
 
@@ -82,8 +85,14 @@ public class HistoryPresenter extends SelectPresenter<BookShelfDataSource, IColl
                 deleteComics.add(mHistoryList.get(i));
             }
         }
-        DisposableSubscriber<List<Comic>> disposableSubscriber = mDataSource.deleteHistoryComicList(deleteComics)
-                .compose(((CollectionFragment) mView).<List<Comic>>bindUntilEvent(FragmentEvent.DESTROY))
+        Flowable<List<Comic>> deleteFlowable;
+        if (isSelectedAll) {
+            deleteFlowable = mDataSource.deleteAllHistoryComicList();
+        } else {
+            deleteFlowable = mDataSource.deleteCollectComicList(deleteComics);
+        }
+        DisposableSubscriber<List<Comic>> disposableSubscriber = deleteFlowable
+                .compose(((HistoryFragment) mView).<List<Comic>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {
@@ -127,7 +136,6 @@ public class HistoryPresenter extends SelectPresenter<BookShelfDataSource, IColl
                             mComics.addAll(comics);
                             mView.fillData(addTitle(comics));
                             isloadingdata = false;
-
                         }
 
                         @Override
@@ -222,11 +230,11 @@ public class HistoryPresenter extends SelectPresenter<BookShelfDataSource, IColl
         mView.updateList(mMap);
     }
 
-    public void uptdateToSelected(int position) {
+    public void updateToSelected(int position) {
         if (mMap.get(position) != null && mMap.get(position).equals(Constants.CHAPTER_FREE)) {
             mSelectedNum++;
             mMap.put(position, Constants.CHAPTER_SELECTED);
-            if (mSelectedNum == mHistoryList.size()) {
+            if (mSelectedNum == mComics.size()) {
                 mView.addAll();
                 isSelectedAll = true;
             }

@@ -116,11 +116,10 @@ public class DownloadListDataSource implements IDownloadListDataSource {
             public void subscribe(FlowableEmitter<Boolean> emitter) throws Exception {
                 boolean result = true;
                 for (int i = 0; i < lists.size(); i++) {
-                    DBDownloadItem items = lists.get(i);
-                    if (items.getState() != DownState.FINISH) {
-                        items.setState(DownState.NONE);
-                        result = mHelper.update(items);
+                    if (lists.get(i).getState() != DownState.FINISH) {
+                        lists.get(i).setState(DownState.NONE);
                     }
+                    result = mHelper.insertList(lists);
                 }
                 emitter.onNext(result);
             }

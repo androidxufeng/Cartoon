@@ -33,7 +33,7 @@ public abstract class SelectPresenter<M extends IDataSource, V extends ISelectDa
         this.mComics = new ArrayList<>();
     }
 
-    public void uptdateToSelected(int position) {
+    public void updateToSelected(int position) {
         if (mMap.get(position) != null && mMap.get(position).equals(Constants.CHAPTER_FREE)) {
             mSelectedNum++;
             mMap.put(position, Constants.CHAPTER_SELECTED);

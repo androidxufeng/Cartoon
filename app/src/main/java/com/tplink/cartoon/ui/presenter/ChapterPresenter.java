@@ -11,6 +11,7 @@ package com.tplink.cartoon.ui.presenter;
  * Ver 1.0, 18-8-2, xufeng, Create file
  */
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.tplink.cartoon.data.bean.Comic;
@@ -103,9 +104,9 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
 
     public void init(Comic comic, int chapters) {
         this.mComic = comic;
-        Comic DBComic = (Comic) mHelper.findComic(comic.getId());
+        Comic dbComic = (Comic) mHelper.findComic(comic.getId());
         //判断如果是点进上次点击的那一话
-        if (DBComic.getCurrentChapter() != chapters) {
+        if (dbComic != null && dbComic.getCurrentChapter() != chapters) {
             mComic.setCurrent_page(1);
         }
         this.mComicChapterTitle = comic.getChapters();
@@ -138,7 +139,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                             .subscribeWith(new DisposableSubscriber<DBChapters>() {
                                 @Override
                                 public void onNext(DBChapters chapters) {
-                                    Log.d(TAG, "onNext: " + chapters);
+                                    Log.d(TAG, "onNext: i = " + finalI + "chapter = " + chapters);
                                     //分别设置三个章节
                                     if (finalI == 0) {
                                         if (mComicChapters - 1 < 0) {
@@ -428,5 +429,8 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         mComic.setClickTime(getCurrentTime());
         mComic.setCurrentChapter(mComicChapters);
         mHelper.update(mComic);
+        Intent intent = new Intent();
+        intent.putExtra(Constants.COMIC,mComic);
+        mView.setResult(Constants.OK,intent);
     }
 }

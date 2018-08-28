@@ -17,7 +17,6 @@ import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.CollectionAdapter;
-import com.tplink.cartoon.ui.fragment.BaseFragment;
 import com.tplink.cartoon.ui.presenter.CollectionPresenter;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.ICollectionView;
@@ -111,7 +110,7 @@ public class CollectionFragment extends BaseBookShelfFragment<CollectionPresente
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
         if (mAdapter.isEditing()) {
-            mPresenter.uptdateToSelected(position);
+            mPresenter.updateToSelected(position);
         } else {
             Comic comic = mAdapter.getItems(position);
             IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
