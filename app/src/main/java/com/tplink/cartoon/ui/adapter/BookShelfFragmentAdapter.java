@@ -11,12 +11,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.tplink.cartoon.ui.fragment.bookshelf.BaseBookShelfFragment;
+
 import java.util.List;
 
 public class BookShelfFragmentAdapter extends FragmentPagerAdapter {
-    private List<Fragment> fraglist;
+    private List<BaseBookShelfFragment> fraglist;
 
-    public BookShelfFragmentAdapter(FragmentManager fm, List<Fragment> fraglist) {
+    public BookShelfFragmentAdapter(FragmentManager fm, List<BaseBookShelfFragment> fraglist) {
         super(fm);
         this.fraglist = fraglist;
     }

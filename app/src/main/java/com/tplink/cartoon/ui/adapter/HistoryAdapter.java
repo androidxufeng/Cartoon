@@ -15,8 +15,9 @@ import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.data.bean.LoadingItem;
+import com.tplink.cartoon.data.common.Constants;
 
-public class HistoryAdapter extends BaseRecyclerAdapter<Comic> {
+public class HistoryAdapter extends BookShelfAdapter<Comic> {
     public static final int ITEM_TITLE = 0;
     public static final int ITEM_FULL = 1;
     public static final int ITEM_LOADING = 2;
@@ -70,6 +71,15 @@ public class HistoryAdapter extends BaseRecyclerAdapter<Comic> {
                     holder.setText(R.id.tv_history_title, ((HomeTitle) item).getItemTitle());
                     break;
                 case ITEM_FULL:
+                    if (!isEditing) {
+                        holder.setImageResource(R.id.iv_select, R.drawable.continue_read);
+                    } else {
+                        if (mMap.size() != 0 && mMap.get(position) == Constants.CHAPTER_SELECTED) {
+                            holder.setImageResource(R.id.iv_select, R.drawable.item_selected);
+                        } else {
+                            holder.setImageResource(R.id.iv_select, R.drawable.item_select_history);
+                        }
+                    }
                     holder.setText(R.id.tv_title, item.getTitle());
                     holder.setImageByUrl(R.id.iv_cover, item.getCover());
                     int currentpage = item.getCurrent_page();
@@ -83,27 +93,22 @@ public class HistoryAdapter extends BaseRecyclerAdapter<Comic> {
                     }
                     holder.setText(R.id.tv_chapters, "更新到" + item.getChapters().size() + "话");
                     //最后一个item隐藏下划线
-                    int offset = 1;
-                    if (position >= 12) {
-                        offset = 2;
-                    } else {
-                        offset = 1;
-                    }
-                    if (position == list.size() - offset) {
+                    if (list.size() > 2 && position == list.size() - 2) {
                         holder.setVisibility(R.id.v_bottom_line, View.GONE);
                     } else {
                         holder.setVisibility(R.id.v_bottom_line, View.VISIBLE);
                     }
                     break;
-
                 case ITEM_LOADING:
                     LoadingItem loading = (LoadingItem) item;
                     if (loading.isLoading()) {
                         holder.startAnimation(R.id.iv_loading);
                         holder.setText(R.id.tv_loading, "正在加载");
+                        holder.setVisibility(R.id.v_padding, View.VISIBLE);
                     } else {
                         holder.setImageResource(R.id.iv_loading, R.drawable.loading_finish);
                         holder.setText(R.id.tv_loading, "已全部加载完毕");
+                        holder.setVisibility(R.id.v_padding, View.GONE);
                     }
                     break;
             }

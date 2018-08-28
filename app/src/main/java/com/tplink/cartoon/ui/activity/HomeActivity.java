@@ -4,10 +4,13 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.ui.fragment.BookShelfFragment;
+import com.tplink.cartoon.ui.widget.FloatEditLayout;
 import com.tplink.cartoon.utils.LogUtil;
 import com.tplink.cartoon.utils.PermissionUtils;
 
@@ -23,7 +26,8 @@ public class HomeActivity extends BaseFragmentActivity {
     Button mBookShelf;
     @BindView(R.id.btn_mine)
     Button mMine;
-
+    @BindView(R.id.rl_edit_bottom)
+    FloatEditLayout mEditBottom;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick(R.id.btn_home)
@@ -68,10 +72,21 @@ public class HomeActivity extends BaseFragmentActivity {
     private void initFragment() {
         fragments = new ArrayList<>();
         fragmentManager = getSupportFragmentManager();
+        final BookShelfFragment bookShelfFragment = (BookShelfFragment) fragmentManager.findFragmentById(R.id.fm_bookshelf);
         fragments.add(fragmentManager.findFragmentById(R.id.fm_home));
-        fragments.add(fragmentManager.findFragmentById(R.id.fm_bookshelf));
+        fragments.add(bookShelfFragment);
         fragments.add(fragmentManager.findFragmentById(R.id.fm_mine));
         mHome.setBackgroundResource(R.drawable.homepage_press);
+        mEditBottom.setListener(new FloatEditLayout.onClickListener() {
+            @Override
+            public void onClickSelect() {
+                bookShelfFragment.onClickSelect();
+            }
+            @Override
+            public void onDelete() {
+                bookShelfFragment.onClickDelete();
+            }
+        });
         selectTab(0);
     }
 
@@ -95,5 +110,13 @@ public class HomeActivity extends BaseFragmentActivity {
             default:
                 break;
         }
+    }
+
+    public void setEditBottomVisible(int Visible) {
+        mEditBottom.setVisibility(Visible);
+    }
+
+    public FloatEditLayout getEditBottom() {
+        return mEditBottom;
     }
 }

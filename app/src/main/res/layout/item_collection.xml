@@ -2,36 +2,55 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/iv_image"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:scaleType="fitXY" />
+            android:layout_height="150dp">
+
+            <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="fitXY" />
+
+            <ImageView
+                android:id="@+id/iv_image_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/item_select"
+                android:visibility="gone" />
+        </RelativeLayout>
+
         <TextView
-            android:layout_marginTop="5dp"
             android:id="@+id/tv_title"
-            android:text="标题"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:textSize="12sp"
-            android:textColor="@color/colorTextBlack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:lines="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="标题"
+            android:textColor="@color/colorTextBlack"
+            android:textSize="12sp" />
+
         <TextView
+            android:id="@+id/tv_index_reader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:id="@+id/tv_index_reader"
-            android:textSize="12sp"
-            android:layout_marginBottom="8dp"
             android:text="711话/711话"
             android:textColor="@color/colorTextLight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>

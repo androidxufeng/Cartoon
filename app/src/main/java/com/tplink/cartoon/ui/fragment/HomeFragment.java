@@ -208,6 +208,11 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     }
 
     @Override
+    public void onEditList(boolean isEditing) {
+
+    }
+
+    @Override
     public void getDataFinish() {
         mScrollView.setRefreshing(false);
         mErrorView.setVisibility(View.GONE);

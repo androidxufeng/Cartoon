@@ -115,9 +115,19 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
     }
 
     @Override
-    public void updateDownloadList(HashMap map) {
+    public void updateList(HashMap map) {
         mAdapter.setHashMap(map);
         mAdapter.notifyDataSetChanged();
+        mSelectedNum.setText("已选择" + mPresenter.getSelectCount() + "话");
+    }
+
+    @Override
+    public void updateListItem(HashMap map, int position) {
+        mAdapter.setHashMap(map);
+        if (!mAdapter.isOrder()) {
+            position = map.size() - position - 1;
+        }
+        mAdapter.notifyItemChanged(position, "isNotNull");
         mSelectedNum.setText("已选择" + mPresenter.getSelectCount() + "话");
     }
 

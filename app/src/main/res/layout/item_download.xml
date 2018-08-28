@@ -31,7 +31,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_pause" />
+
             </FrameLayout>
+
         </FrameLayout>
 
         <LinearLayout
@@ -83,10 +85,12 @@
                 android:id="@+id/tv_download_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="下载管理"
+                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:text="续看"
                 android:textColor="@color/colorTextColor"
                 android:textSize="12dp" />
+
         </LinearLayout>
 
         <View
@@ -97,4 +101,6 @@
             android:background="@color/colorBottom" />
 
     </RelativeLayout>
+
+
 </RelativeLayout>

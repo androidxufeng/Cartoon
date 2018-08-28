@@ -15,10 +15,7 @@ import android.widget.Toast;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
-import com.tplink.cartoon.ui.adapter.CollectionAdapter;
 import com.tplink.cartoon.ui.adapter.DownloadAdapter;
-import com.tplink.cartoon.ui.fragment.BaseFragment;
-import com.tplink.cartoon.ui.presenter.CollectionPresenter;
 import com.tplink.cartoon.ui.presenter.DownloadPresenter;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.ICollectionView;
@@ -26,11 +23,12 @@ import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class DownloadFragment extends BaseFragment<DownloadPresenter> implements
+public class DownloadFragment extends BaseBookShelfFragment<DownloadPresenter> implements
         ICollectionView<List<Comic>>, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_bookshelf)
     RecyclerView mRecycleView;
@@ -44,6 +42,24 @@ public class DownloadFragment extends BaseFragment<DownloadPresenter> implements
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_download;
+    }
+
+    @Override
+    public void onEditList(boolean isEditing) {
+        if (mAdapter != null && mAdapter.isEditing() != isEditing) {
+            mPresenter.clearSelect();
+            mAdapter.setEditing(isEditing);
+        }
+    }
+
+    @Override
+    public void onDelete() {
+
+    }
+
+    @Override
+    public void onSelect() {
+        mPresenter.selectOrMoveAll();
     }
 
     @Override
@@ -97,8 +113,34 @@ public class DownloadFragment extends BaseFragment<DownloadPresenter> implements
     }
 
     @Override
+    public void updateList(HashMap map) {
+        mAdapter.setMap(map);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateListItem(HashMap map, int position) {
+        mAdapter.setMap(map);
+        mAdapter.notifyItemChanged(position, "isNotNull");
+    }
+
+    @Override
+    public void addAll() {
+        mHomeActivity.getEditBottom().addAll();
+    }
+
+    @Override
+    public void removeAll() {
+        mHomeActivity.getEditBottom().removeAll();
+    }
+
+    @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
-        Comic comic = mAdapter.getItems(position);
-        IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+        if (mAdapter.isEditing()) {
+            mPresenter.uptdateToSelected(position);
+        } else {
+            Comic comic = mAdapter.getItems(position);
+            IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+        }
     }
 }

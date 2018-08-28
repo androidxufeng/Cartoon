@@ -17,7 +17,6 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.HistoryAdapter;
-import com.tplink.cartoon.ui.fragment.BaseFragment;
 import com.tplink.cartoon.ui.presenter.HistoryPresenter;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.ICollectionView;
@@ -26,11 +25,12 @@ import com.tplink.cartoon.ui.widget.ElasticScrollView;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class HistoryFragment extends BaseFragment<HistoryPresenter> implements
+public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> implements
         ICollectionView<List<Comic>>, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_bookshelf)
     RecyclerView mRecycleView;
@@ -49,12 +49,30 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements
     }
 
     @Override
+    public void onEditList(boolean isEdit) {
+        if (mAdapter.isEditing() != isEdit) {
+            mPresenter.clearSelect();
+            mAdapter.setEditing(isEdit);
+        }
+    }
+
+    @Override
+    public void onDelete() {
+
+    }
+
+    @Override
+    public void onSelect() {
+        mPresenter.selectOrMoveAll();
+    }
+
+    @Override
     protected void initView(View view, Bundle savedInstanceState) {
         NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 1);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
         mRecycleView.addItemDecoration(new DividerGridItemDecoration(mActivity));
-        mAdapter = new HistoryAdapter(mActivity, R.layout.item_history, R.layout.item_history_title,R.layout.item_loading);
+        mAdapter = new HistoryAdapter(mActivity, R.layout.item_history, R.layout.item_history_title, R.layout.item_loading);
         mRecycleView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
         mScrollView.setListener(new ElasticScrollView.OnScrollListener() {
@@ -107,9 +125,34 @@ public class HistoryFragment extends BaseFragment<HistoryPresenter> implements
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
         if (mAdapter.getItems(position) instanceof HomeTitle) {
-        } else {
+        } else if (!mAdapter.isEditing()) {
             Comic comic = mAdapter.getItems(position);
             IntentUtil.toComicChapter(mActivity, comic.getCurrentChapter(), comic);
+        } else {
+            mPresenter.uptdateToSelected(position);
         }
     }
+
+    @Override
+    public void updateList(HashMap map) {
+        mAdapter.setMap(map);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateListItem(HashMap map, int position) {
+        mAdapter.setMap(map);
+        mAdapter.notifyItemChanged(position, "isNotNull");
+    }
+
+    @Override
+    public void addAll() {
+        mHomeActivity.getEditBottom().addAll();
+    }
+
+    @Override
+    public void removeAll() {
+        mHomeActivity.getEditBottom().removeAll();
+    }
+
 }

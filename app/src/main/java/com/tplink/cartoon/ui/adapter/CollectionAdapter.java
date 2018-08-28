@@ -8,25 +8,31 @@
 package com.tplink.cartoon.ui.adapter;
 
 import android.content.Context;
+import android.view.View;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.data.common.Constants;
 
-import java.util.List;
-
-public class CollectionAdapter extends BaseRecyclerAdapter<Comic> {
+public class CollectionAdapter extends BookShelfAdapter<Comic> {
 
     public CollectionAdapter(Context context, int itemLayoutId) {
         super(context, itemLayoutId);
     }
 
-    public CollectionAdapter(Context context, List<Comic> list, int itemLayoutId) {
-        super(context, list, itemLayoutId);
-    }
-
     @Override
     public void convert(BaseRecyclerHolder holder, Comic item, int position) {
         if (item != null) {
+            if (!isEditing) {
+                holder.setVisibility(R.id.iv_image_select, View.GONE);
+            } else {
+                if (mMap.size() != 0 && mMap.get(position) == Constants.CHAPTER_SELECTED) {
+                    holder.setImageResource(R.id.iv_image_select, R.drawable.item_selected);
+                } else {
+                    holder.setImageResource(R.id.iv_image_select, R.drawable.item_select);
+                }
+                holder.setVisibility(R.id.iv_image_select, View.VISIBLE);
+            }
             holder.setText(R.id.tv_title, item.getTitle());
             holder.setImageByUrl(R.id.iv_image, item.getCover());
             if (item.getChapters() != null && item.getChapters().size() != 0) {

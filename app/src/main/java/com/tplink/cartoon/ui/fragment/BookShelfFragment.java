@@ -9,7 +9,6 @@ package com.tplink.cartoon.ui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -18,7 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.ui.activity.HomeActivity;
 import com.tplink.cartoon.ui.adapter.BookShelfFragmentAdapter;
+import com.tplink.cartoon.ui.fragment.bookshelf.BaseBookShelfFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.CollectionFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.DownloadFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.HistoryFragment;
@@ -49,6 +50,14 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
     ImageView mBottomHistory;
     @BindView(R.id.iv_bottom_download)
     ImageView mBottomDownload;
+    @BindView(R.id.iv_edit)
+    ImageView mEdit;
+
+    private boolean isEditing;
+    private HomeActivity mHomeActivity;
+    private CollectionFragment collectionFragment;
+    private HistoryFragment historyFragment;
+    private DownloadFragment downloadFragment;
 
     @OnClick(R.id.rl_collect)
     public void toCollect() {
@@ -76,7 +85,7 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
 
     BookShelfFragmentAdapter mAdapter;
     protected FragmentManager fragmentManager;
-    protected List<Fragment> fragments;
+    protected List<BaseBookShelfFragment> fragments;
 
     @Override
     public void showToast(String t) {
@@ -90,16 +99,28 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
 
     @Override
     protected void initView(View view, Bundle savedInstanceState) {
+        mHomeActivity = (HomeActivity) getActivity();
         fragments = new ArrayList<>();
-        fragments.add(new CollectionFragment());
-        fragments.add(new HistoryFragment());
-        fragments.add(new DownloadFragment());
+        collectionFragment = new CollectionFragment();
+        historyFragment = new HistoryFragment();
+        downloadFragment = new DownloadFragment();
+        fragments.add(collectionFragment);
+        fragments.add(historyFragment);
+        fragments.add(downloadFragment);
         fragmentManager = getActivity().getSupportFragmentManager();
         mAdapter = new BookShelfFragmentAdapter(fragmentManager, fragments);
         mViewpager.setAdapter(mAdapter);
         mViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (isEditing) {
+                    mEdit.setImageResource(R.drawable.edit);
+                    mHomeActivity.setEditBottomVisible(View.GONE);
+                    for (int i = 0; i < fragments.size(); i++) {
+                        fragments.get(i).onEditList(false);
+                    }
+                    isEditing = false;
+                }
             }
 
             @Override
@@ -130,6 +151,11 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         return R.layout.fragment_bookshelf;
     }
 
+    @Override
+    public void onEditList(boolean isEditing) {
+
+    }
+
     public void resetTitle() {
         mDownload.setTextColor(Color.parseColor("#999999"));
         mCollect.setTextColor(Color.parseColor("#999999"));
@@ -137,6 +163,32 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         mBottomCollect.setVisibility(View.GONE);
         mBottomDownload.setVisibility(View.GONE);
         mBottomHistory.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.iv_edit)
+    public void toEdit() {
+        if (!isEditing) {
+            mEdit.setImageResource(R.drawable.closed);
+            mHomeActivity.setEditBottomVisible(View.VISIBLE);
+            showEditModel(fragments.get(mViewpager.getCurrentItem()), true);
+        } else {
+            mEdit.setImageResource(R.drawable.edit);
+            mHomeActivity.setEditBottomVisible(View.GONE);
+            showEditModel(fragments.get(mViewpager.getCurrentItem()), false);
+        }
+        isEditing = !isEditing;
+    }
+
+    private void showEditModel(BaseFragment fragment, boolean isEdit) {
+        fragment.onEditList(isEdit);
+    }
+
+    public void onClickDelete() {
+        fragments.get(mViewpager.getCurrentItem()).onDelete();
+    }
+
+    public void onClickSelect() {
+        fragments.get(mViewpager.getCurrentItem()).onSelect();
     }
 
 }

@@ -24,11 +24,12 @@ import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 
-public class CollectionFragment extends BaseFragment<CollectionPresenter> implements
+public class CollectionFragment extends BaseBookShelfFragment<CollectionPresenter> implements
         ICollectionView<List<Comic>>, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_bookshelf)
     RecyclerView mRecycleView;
@@ -42,6 +43,14 @@ public class CollectionFragment extends BaseFragment<CollectionPresenter> implem
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_collection;
+    }
+
+    @Override
+    public void onEditList(boolean isEdit) {
+        if (mAdapter.isEditing() != isEdit) {
+            mPresenter.clearSelect();
+            mAdapter.setEditing(isEdit);
+        }
     }
 
     @Override
@@ -96,7 +105,44 @@ public class CollectionFragment extends BaseFragment<CollectionPresenter> implem
 
     @Override
     public void onItemClick(RecyclerView parent, View view, int position) {
-        Comic comic = mAdapter.getItems(position);
-        IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+        if (mAdapter.isEditing()) {
+            mPresenter.uptdateToSelected(position);
+        } else {
+            Comic comic = mAdapter.getItems(position);
+            IntentUtil.toComicDetail(mActivity, comic.getId(), comic.getTitle());
+        }
+    }
+
+    @Override
+    public void updateList(HashMap map) {
+        mAdapter.setMap(map);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateListItem(HashMap map, int position) {
+        mAdapter.setMap(map);
+        mAdapter.notifyItemChanged(position,"isNotNull");
+    }
+
+    @Override
+    public void addAll() {
+        mHomeActivity.getEditBottom().addAll();
+    }
+
+    @Override
+    public void removeAll() {
+        mHomeActivity.getEditBottom().removeAll();
+    }
+
+
+    @Override
+    public void onDelete() {
+
+    }
+
+    @Override
+    public void onSelect() {
+        mPresenter.selectOrMoveAll();
     }
 }

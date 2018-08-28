@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="50dp">
+        android:layout_height="match_parent">
 
         <fragment
             android:id="@+id/fm_home"
@@ -32,7 +31,7 @@
         android:id="@+id/rl_bottombar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
         android:background="@color/colorBg">
 
         <LinearLayout
@@ -85,7 +84,9 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="1dp"
             android:background="@color/colorBottom" />
     </RelativeLayout>
-</RelativeLayout>
+
+    <include layout="@layout/layout_edit" />
+</FrameLayout>

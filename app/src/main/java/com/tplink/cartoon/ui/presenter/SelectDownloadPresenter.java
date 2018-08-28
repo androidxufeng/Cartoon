@@ -68,7 +68,7 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadListDataSour
                             public void onNext(List<DBDownloadItem> items) {
                                 for (int i = 0; i < items.size(); i++) {
                                     map.put(items.get(i).getChapters(), Constants.CHAPTER_DOWNLOAD);
-                                    mView.updateDownloadList(map);
+                                    mView.updateList(map);
                                 }
                             }
 
@@ -99,7 +99,7 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadListDataSour
             isSelectAll = false;
             mView.removeAll();
         }
-        mView.updateDownloadList(map);
+        mView.updateList(map);
     }
 
     public void selectOrRemoveAll() {
@@ -125,7 +125,7 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadListDataSour
             }
         }
         isSelectAll = !isSelectAll;
-        mView.updateDownloadList(map);
+        mView.updateList(map);
     }
 
     public int getSelectCount() {

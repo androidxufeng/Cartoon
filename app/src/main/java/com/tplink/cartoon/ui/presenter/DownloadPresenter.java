@@ -9,7 +9,6 @@
 package com.tplink.cartoon.ui.presenter;
 
 import com.tplink.cartoon.data.bean.Comic;
-import com.tplink.cartoon.ui.fragment.bookshelf.CollectionFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.DownloadFragment;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.ICollectionView;
@@ -23,7 +22,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
-public class DownloadPresenter extends BasePresenter<BookShelfDataSource, ICollectionView> {
+public class DownloadPresenter extends SelectPresenter<BookShelfDataSource, ICollectionView> {
 
     private final CompositeDisposable mCompositeDisposable;
 
@@ -34,14 +33,15 @@ public class DownloadPresenter extends BasePresenter<BookShelfDataSource, IColle
 
     public void getDownloadList() {
         DisposableSubscriber<List<Comic>> disposableSubscriber = mDataSource.getDownloadComicList()
-                .compose(((DownloadFragment)mView).<List<Comic>>bindUntilEvent(FragmentEvent.DESTROY))
+                .compose(((DownloadFragment) mView).<List<Comic>>bindUntilEvent(FragmentEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableSubscriber<List<Comic>>() {
                     @Override
                     public void onNext(List<Comic> comics) {
+                        mComics = comics;
                         mView.fillData(comics);
-
+                        resetSelect();
                     }
 
                     @Override

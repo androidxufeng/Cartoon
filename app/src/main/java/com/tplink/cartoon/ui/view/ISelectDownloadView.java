@@ -7,15 +7,9 @@
  */
 package com.tplink.cartoon.ui.view;
 
-import java.util.HashMap;
 
-public interface ISelectDownloadView<T> extends ILoadDataView<T> {
+public interface ISelectDownloadView<T> extends ISelectDataView<T> {
 
     void startDownload();
 
-    void updateDownloadList(HashMap map);
-
-    void addAll();
-
-    void removeAll();
 }

@@ -7,7 +7,8 @@
  */
 package com.tplink.cartoon.ui.view;
 
-public interface ICollectionView<T> extends ILoadDataView<T> {
+public interface ICollectionView<T> extends ISelectDataView<T> {
 
     void showEmptyView();
+
 }

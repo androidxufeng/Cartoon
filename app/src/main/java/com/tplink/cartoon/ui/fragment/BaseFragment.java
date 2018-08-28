@@ -52,6 +52,8 @@ public abstract class BaseFragment<P extends BasePresenter> extends RxFragment {
     //获取布局文件ID
     protected abstract int getLayoutId();
 
+    public abstract void onEditList(boolean isEditing);
+
     //获取宿主Activity
     protected BaseFragmentActivity getHoldingActivity() {
         return mActivity;
