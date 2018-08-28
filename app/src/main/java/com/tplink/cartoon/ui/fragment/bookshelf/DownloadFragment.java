@@ -10,6 +10,7 @@ package com.tplink.cartoon.ui.fragment.bookshelf;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.tplink.cartoon.R;
@@ -23,6 +24,7 @@ import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -32,6 +34,8 @@ public class DownloadFragment extends BaseBookShelfFragment<DownloadPresenter> i
         ICollectionView<List<Comic>>, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_bookshelf)
     RecyclerView mRecycleView;
+    @BindView(R.id.rl_empty_view)
+    RelativeLayout mEmptyView;
     private DownloadAdapter mAdapter;
 
     @Override
@@ -54,7 +58,7 @@ public class DownloadFragment extends BaseBookShelfFragment<DownloadPresenter> i
 
     @Override
     public void onDelete() {
-
+        mPresenter.showDeteleDialog();
     }
 
     @Override
@@ -106,10 +110,13 @@ public class DownloadFragment extends BaseBookShelfFragment<DownloadPresenter> i
     @Override
     public void fillData(List<Comic> data) {
         mAdapter.updateWithClear(data);
+        mEmptyView.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyView() {
+        mAdapter.updateWithClear(new ArrayList<Comic>());
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -132,6 +139,11 @@ public class DownloadFragment extends BaseBookShelfFragment<DownloadPresenter> i
     @Override
     public void removeAll() {
         mHomeActivity.getEditBottom().removeAll();
+    }
+
+    @Override
+    public void quitEdit() {
+        mHomeActivity.quitEdit();
     }
 
     @Override

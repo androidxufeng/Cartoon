@@ -54,4 +54,33 @@
                 android:layout_marginTop="10dp" />
         </RelativeLayout>
     </com.tplink.cartoon.ui.widget.ElasticScrollView>
+
+    <RelativeLayout
+        android:id="@+id/rl_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorBgDark">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/empty_view" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="你还木有收藏任何漫画呐~"
+                android:textColor="@color/colorTextColorLight"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>

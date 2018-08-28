@@ -45,7 +45,7 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
     private DetailAdapter mAdapter;
 
     @OnClick({R.id.iv_order})
-    public void OrderList(ImageView order) {
+    public void orderList(ImageView order) {
         mAdapter.setOrder(!mAdapter.isOrder());
         if (!mAdapter.isOrder()) {
             mIvOrder.setImageResource(R.drawable.daoxu);

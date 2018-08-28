@@ -8,12 +8,15 @@
  */
 package com.tplink.cartoon.ui.presenter;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.data.bean.LoadingItem;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.ui.fragment.bookshelf.CollectionFragment;
+import com.tplink.cartoon.ui.fragment.bookshelf.DownloadFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.HistoryFragment;
 import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.ICollectionView;
@@ -67,6 +70,44 @@ public class HistoryPresenter extends SelectPresenter<BookShelfDataSource, IColl
                     @Override
                     public void onComplete() {
                         mView.getDataFinish();
+                    }
+                });
+        mCompositeDisposable.add(disposableSubscriber);
+    }
+
+    public void deleteHistoryComic() {
+        List<Comic> deleteComics = new ArrayList<>();
+        for (int i = 0; i < mHistoryList.size(); i++) {
+            if (mMap.get(i) == Constants.CHAPTER_SELECTED) {
+                deleteComics.add(mHistoryList.get(i));
+            }
+        }
+        DisposableSubscriber<List<Comic>> disposableSubscriber = mDataSource.deleteHistoryComicList(deleteComics)
+                .compose(((CollectionFragment) mView).<List<Comic>>bindUntilEvent(FragmentEvent.DESTROY))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<List<Comic>>() {
+                    @Override
+                    public void onNext(List<Comic> comics) {
+                        page = 1;
+                        clearSelect();
+                        mComics.clear();
+                        mComics.addAll(comics);
+                        if (comics.size() > 0) {
+                            mView.fillData(comics);
+                        } else {
+                            mView.showEmptyView();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        mView.quitEdit();
                     }
                 });
         mCompositeDisposable.add(disposableSubscriber);
@@ -220,5 +261,15 @@ public class HistoryPresenter extends SelectPresenter<BookShelfDataSource, IColl
             mMap.put(i, Constants.CHAPTER_FREE);
         }
         mView.updateList(mMap);
+    }
+
+    @Override
+    protected Context getContext() {
+        return ((HistoryFragment) mView).getContext();
+    }
+
+    @Override
+    protected void deleteComic() {
+        deleteHistoryComic();
     }
 }

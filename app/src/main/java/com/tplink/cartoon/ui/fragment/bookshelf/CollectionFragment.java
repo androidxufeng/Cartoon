@@ -10,6 +10,7 @@ package com.tplink.cartoon.ui.fragment.bookshelf;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.tplink.cartoon.R;
@@ -33,6 +34,8 @@ public class CollectionFragment extends BaseBookShelfFragment<CollectionPresente
         ICollectionView<List<Comic>>, BaseRecyclerAdapter.OnItemClickListener {
     @BindView(R.id.rv_bookshelf)
     RecyclerView mRecycleView;
+    @BindView(R.id.rl_empty_view)
+    RelativeLayout mEmptyView;
     private CollectionAdapter mAdapter;
 
     @Override
@@ -97,10 +100,12 @@ public class CollectionFragment extends BaseBookShelfFragment<CollectionPresente
     @Override
     public void fillData(List<Comic> data) {
         mAdapter.updateWithClear(data);
+        mEmptyView.setVisibility(View.GONE);
     }
 
     @Override
     public void showEmptyView() {
+        mEmptyView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -135,10 +140,15 @@ public class CollectionFragment extends BaseBookShelfFragment<CollectionPresente
         mHomeActivity.getEditBottom().removeAll();
     }
 
+    @Override
+    public void quitEdit() {
+        mHomeActivity.quitEdit();
+    }
+
 
     @Override
     public void onDelete() {
-
+        mPresenter.showDeteleDialog();
     }
 
     @Override

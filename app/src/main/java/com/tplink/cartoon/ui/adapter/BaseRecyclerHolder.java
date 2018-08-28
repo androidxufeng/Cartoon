@@ -170,6 +170,16 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseRecyclerHolder setImageByUrlNone(int viewId, String url) {
+        ImageView iv = getView(viewId);
+        Glide.with(context)
+                .load(url)
+                .placeholder(R.drawable.pic_default)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(iv);
+        return this;
+    }
+
     public BaseRecyclerHolder setHtmlText(int viewId, String text) {
         TextView tv = getView(viewId);
         if (text == null) {
@@ -187,13 +197,13 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
-    public BaseRecyclerHolder setVisibility(int viewId,int visible) {
+    public BaseRecyclerHolder setVisibility(int viewId, int visible) {
         View view = getView(viewId);
         view.setVisibility(visible);
         return this;
     }
 
-    public BaseRecyclerHolder startAnimation(int viewId){
+    public BaseRecyclerHolder startAnimation(int viewId) {
         ImageView tv = getView(viewId);
         tv.setImageResource(R.drawable.loading_more);
         AnimationDrawable animationDrawable = (AnimationDrawable) tv.getDrawable();

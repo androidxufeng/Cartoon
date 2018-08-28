@@ -34,6 +34,8 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
 public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChapterActivity> {
 
+    private static final String TAG = "ChapterPresenter";
+
     private final CompositeDisposable mCompositeDisposable;
     //当前三话漫画
     private PreloadChapters mPreloadChapters;
@@ -136,7 +138,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                             .subscribeWith(new DisposableSubscriber<DBChapters>() {
                                 @Override
                                 public void onNext(DBChapters chapters) {
-                                    Log.d("ceshi", "onNext: " + chapters);
+                                    Log.d(TAG, "onNext: " + chapters);
                                     //分别设置三个章节
                                     if (finalI == 0) {
                                         if (mComicChapters - 1 < 0) {
@@ -152,7 +154,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                                         mPreloadChapters.setNextlist(chapters.getComiclist());
                                     }
                                     //三个章节都不为NULL
-                                    Log.d("ceshi", "onNext: mpreload = " + mPreloadChapters);
+                                    Log.d(TAG, "onNext: mpreload = " + mPreloadChapters);
 
                                     if (mPreloadChapters.isNotNull()) {
                                         if (mPreloadChapters.getNowSize() == 1) {
@@ -166,6 +168,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
 
                                 @Override
                                 public void onError(Throwable t) {
+                                    Log.d(TAG, "onError: " + t.toString());
                                     ArrayList<String> temp = new ArrayList<>();
                                     if (mPreloadChapters.getPrelist() == null) {
                                         mPreloadChapters.setPrelist(temp);
@@ -183,7 +186,6 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
                                     } else {
                                         mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                                     }
-                                    mView.showErrorView(ShowErrorTextUtil.ShowErrorText(t));
                                 }
 
                                 @Override

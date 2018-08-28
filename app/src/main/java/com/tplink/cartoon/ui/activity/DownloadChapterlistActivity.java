@@ -111,7 +111,7 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
 
     @Override
     public void getDataFinish() {
-
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

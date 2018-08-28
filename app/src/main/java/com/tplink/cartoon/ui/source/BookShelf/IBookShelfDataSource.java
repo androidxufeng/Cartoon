@@ -22,4 +22,9 @@ public interface IBookShelfDataSource extends IDataSource {
 
     Flowable<List<Comic>> getDownloadComicList();
 
+    Flowable<List<Comic>> deleteDownloadComicList(List<Comic> list);
+
+    Flowable<List<Comic>> deleteHistoryComicList(List<Comic> list);
+
+    Flowable<List<Comic>> deleteCollectComicList(List<Comic> list);
 }

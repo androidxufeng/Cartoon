@@ -58,7 +58,7 @@ public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> imp
 
     @Override
     public void onDelete() {
-
+        mPresenter.showDeteleDialog();
     }
 
     @Override
@@ -120,6 +120,7 @@ public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> imp
 
     @Override
     public void showEmptyView() {
+        mAdapter.updateWithClear(null);
     }
 
     @Override
@@ -153,6 +154,11 @@ public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> imp
     @Override
     public void removeAll() {
         mHomeActivity.getEditBottom().removeAll();
+    }
+
+    @Override
+    public void quitEdit() {
+        mHomeActivity.quitEdit();
     }
 
 }

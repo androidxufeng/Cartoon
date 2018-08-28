@@ -144,6 +144,11 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
     }
 
     @Override
+    public void quitEdit() {
+
+    }
+
+    @Override
     public void showErrorView(String throwable) {
 
     }

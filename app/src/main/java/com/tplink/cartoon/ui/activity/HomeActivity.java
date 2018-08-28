@@ -28,6 +28,7 @@ public class HomeActivity extends BaseFragmentActivity {
     Button mMine;
     @BindView(R.id.rl_edit_bottom)
     FloatEditLayout mEditBottom;
+    private BookShelfFragment mBookShelfFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @OnClick(R.id.btn_home)
@@ -72,19 +73,19 @@ public class HomeActivity extends BaseFragmentActivity {
     private void initFragment() {
         fragments = new ArrayList<>();
         fragmentManager = getSupportFragmentManager();
-        final BookShelfFragment bookShelfFragment = (BookShelfFragment) fragmentManager.findFragmentById(R.id.fm_bookshelf);
+        mBookShelfFragment = (BookShelfFragment) fragmentManager.findFragmentById(R.id.fm_bookshelf);
         fragments.add(fragmentManager.findFragmentById(R.id.fm_home));
-        fragments.add(bookShelfFragment);
+        fragments.add(mBookShelfFragment);
         fragments.add(fragmentManager.findFragmentById(R.id.fm_mine));
         mHome.setBackgroundResource(R.drawable.homepage_press);
         mEditBottom.setListener(new FloatEditLayout.onClickListener() {
             @Override
             public void onClickSelect() {
-                bookShelfFragment.onClickSelect();
+                mBookShelfFragment.onClickSelect();
             }
             @Override
             public void onDelete() {
-                bookShelfFragment.onClickDelete();
+                mBookShelfFragment.onClickDelete();
             }
         });
         selectTab(0);
@@ -118,5 +119,10 @@ public class HomeActivity extends BaseFragmentActivity {
 
     public FloatEditLayout getEditBottom() {
         return mEditBottom;
+    }
+
+    public void quitEdit(){
+        setEditBottomVisible(View.GONE);
+        mBookShelfFragment.quitEdit();
     }
 }

@@ -10,11 +10,8 @@ package com.tplink.cartoon.ui.source.BookShelf;
 import android.content.Context;
 
 import com.tplink.cartoon.data.bean.Comic;
-import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.db.DaoHelper;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.BackpressureStrategy;
@@ -36,7 +33,7 @@ public class BookShelfDataSource implements IBookShelfDataSource {
         return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
             @Override
             public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
-                List<Comic> comics = mDaoHelper.listComicAll();
+                List<Comic> comics = mDaoHelper.queryCollect();
                 emitter.onNext(comics);
                 emitter.onComplete();
             }
@@ -67,5 +64,55 @@ public class BookShelfDataSource implements IBookShelfDataSource {
         }, BackpressureStrategy.LATEST);
     }
 
+    @Override
+    public Flowable<List<Comic>> deleteHistoryComicList(final List<Comic> list) {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                for (int i = 0; i < list.size(); i++) {
+                    Comic items = list.get(i);
+                    items.setClickTime(0);
+                    items.setCurrent_page(0);
+                    mDaoHelper.update(items);
+                }
+                List<Comic> comics = mDaoHelper.queryHistory(0);
+                emitter.onNext(comics);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
 
+    @Override
+    public Flowable<List<Comic>> deleteDownloadComicList(final List<Comic> list) {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                for (int i = 0; i < list.size(); i++) {
+                    Comic items = list.get(i);
+                    items.setStateInte(0);
+                    mDaoHelper.update(items);
+                }
+                List<Comic> comics = mDaoHelper.queryDownloadComic();
+                emitter.onNext(comics);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<List<Comic>> deleteCollectComicList(final List<Comic> list) {
+        return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
+                for (int i = 0; i < list.size(); i++) {
+                    Comic items = list.get(i);
+                    items.setIsCollected(false);
+                    mDaoHelper.update(items);
+                }
+                List<Comic> comics = mDaoHelper.queryCollect();
+                emitter.onNext(comics);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
 }

@@ -17,4 +17,6 @@ public interface ISelectDataView<T> extends ILoadDataView<T> {
     void addAll();
 
     void removeAll();
+
+    void quitEdit();
 }

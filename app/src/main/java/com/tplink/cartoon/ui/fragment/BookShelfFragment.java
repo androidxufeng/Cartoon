@@ -191,4 +191,10 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         fragments.get(mViewpager.getCurrentItem()).onSelect();
     }
 
+    public void quitEdit(){
+        mEdit.setImageResource(R.drawable.edit);
+        showEditModel(fragments.get(mViewpager.getCurrentItem()),false);
+        isEditing = false;
+    }
+
 }

@@ -7,10 +7,13 @@
  */
 package com.tplink.cartoon.ui.presenter;
 
+import android.content.Context;
+
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.source.IDataSource;
 import com.tplink.cartoon.ui.view.ISelectDataView;
+import com.tplink.cartoon.ui.widget.CustomDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,4 +100,33 @@ public abstract class SelectPresenter<M extends IDataSource, V extends ISelectDa
         }
         mView.updateList(mMap);
     }
+
+    public void showDeteleDialog() {
+        if (mSelectedNum > 0) {
+            final CustomDialog customDialog = new CustomDialog(getContext(), "提示", "确认删除选中的漫画？");
+            customDialog.setListener(new CustomDialog.onClickListener() {
+                @Override
+                public void OnClickConfirm() {
+                    deleteComic();
+                    if (customDialog.isShowing()) {
+                        customDialog.dismiss();
+                    }
+                }
+
+                @Override
+                public void OnClickCancel() {
+                    if (customDialog.isShowing()) {
+                        customDialog.dismiss();
+                    }
+                }
+            });
+            customDialog.show();
+        } else {
+            mView.showToast("请选择需要删除的作品");
+        }
+    }
+
+    protected abstract Context getContext();
+
+    protected abstract void deleteComic();
 }

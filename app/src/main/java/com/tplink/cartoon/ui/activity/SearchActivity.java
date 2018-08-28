@@ -225,6 +225,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
         mError.setVisibility(View.GONE);
         mNormal.setVisibility(View.GONE);
         mResultAdapter.updateWithClear(comics);
+        mResultAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -242,6 +243,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
     @Override
     public void fillTopSearch(List<Comic> comics) {
         mTopAdapter.updateWithClear(comics);
+        mTopAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -256,12 +258,12 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
             mSearchHistoryAdapter.updateWithClear(comics);
         } else {
             mSearchHistoryAdapter.onClear();
-            mSearchHistoryAdapter.notifyDataSetChanged();
         }
+        mSearchHistoryAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void getDataFinish() {
-
+        mDynaicAdapter.notifyDataSetChanged();
     }
 }
