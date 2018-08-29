@@ -160,9 +160,10 @@ public class DaoHelper<T> {
         return list;
     }
 
-    public List<DBDownloadItem> queryDownloaditmes(long comic_id) {
+    public List<DBDownloadItem> queryDownloadItems(long comic_id) {
         List<DBDownloadItem> list = mDaoManager.getDaoSession().getDBDownloadItemDao().queryBuilder()
-                .where(DBDownloadItemDao.Properties.Comic_id.eq(comic_id))
+                .where(DBDownloadItemDao.Properties.Comic_id.eq(comic_id),
+                        DBDownloadItemDao.Properties.StateInte.notEq(-1))
                 .list();
         return list;
     }

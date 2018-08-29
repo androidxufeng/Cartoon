@@ -3,7 +3,7 @@
     android:id="@+id/rl_edit_bottom"
     android:layout_width="match_parent"
     android:layout_height="60dp"
-    android:layout_gravity="bottom"
+    android:layout_alignParentBottom="true"
     android:background="@color/colorBg"
     android:visibility="gone">
 

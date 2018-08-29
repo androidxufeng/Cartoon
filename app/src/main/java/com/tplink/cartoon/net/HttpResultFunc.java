@@ -5,7 +5,7 @@
  *
  * Ver 1.0, 18-8-21, xufeng, Create file
  */
-package com.tplink.cartoon.ui;
+package com.tplink.cartoon.net;
 
 import com.tplink.cartoon.Exception.ApiException;
 import com.tplink.cartoon.data.bean.HttpResult;

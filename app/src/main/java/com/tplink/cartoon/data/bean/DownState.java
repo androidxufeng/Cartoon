@@ -21,8 +21,9 @@ public class DownState {
     public static final int ERROR = 4;
     public static final int FINISH = 5;
     public static final int NONE = 6;
+    public static final int DELETE = -1;
 
-    @IntDef({START, DOWN, PAUSE, STOP, ERROR, FINISH, NONE})
+    @IntDef({START, DOWN, PAUSE, STOP, ERROR, FINISH, NONE, DELETE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface state {
 

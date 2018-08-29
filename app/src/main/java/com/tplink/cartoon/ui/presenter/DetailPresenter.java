@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
+import com.tplink.cartoon.net.RetryFunction;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.source.detail.DetailDataSource;
 import com.tplink.cartoon.ui.widget.IndexItemView;
@@ -27,8 +28,12 @@ import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
+import org.reactivestreams.Publisher;
+
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
@@ -51,6 +56,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
     public void getDetail(final long comicId) {
         DisposableSubscriber<Comic> disposable = mDataSource.getDetail(comicId)
+                .retryWhen(new RetryFunction())
                 .compose(mView.<Comic>bindUntilEvent(ActivityEvent.DESTROY))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

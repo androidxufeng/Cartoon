@@ -17,6 +17,7 @@
             android:id="@+id/iv_image"
             android:layout_width="150dp"
             android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
             android:scaleType="fitXY" />
 
         <LinearLayout
@@ -55,9 +56,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginTop="10dp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:maxLines="4"
-                android:ellipsize="end"
                 android:text="描述"
                 android:textColor="@color/colorTextColorLight"
                 android:textSize="12dp" />

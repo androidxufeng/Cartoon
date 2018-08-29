@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.SearchBean;
-import com.tplink.cartoon.ui.HttpResultFunc;
+import com.tplink.cartoon.net.HttpResultFunc;
 import com.tplink.cartoon.ui.activity.SearchActivity;
 import com.tplink.cartoon.ui.source.search.SearchDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;

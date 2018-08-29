@@ -19,6 +19,7 @@ import com.tplink.cartoon.data.bean.DBChapters;
 import com.tplink.cartoon.data.bean.PreloadChapters;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.db.DaoHelper;
+import com.tplink.cartoon.net.RetryFunction;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.source.chapter.ChapterDataSource;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
@@ -133,6 +134,7 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
             final int finalI = i;
             DisposableSubscriber<DBChapters> disposable =
                     mDataSource.getChapterData(mComicId, mComicChapters - 1 + i)
+                            .retryWhen(new RetryFunction())
                             .compose(mView.<DBChapters>bindUntilEvent(ActivityEvent.DESTROY))
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())

@@ -119,8 +119,8 @@ public class DBDownloadItem extends BaseBean {
 
     @Generated(hash = 966925522)
     public DBDownloadItem(Long id, Long comic_id, String title, String chapters_title, int chapters,
-            int num, int current_num, Long create_time, Long update_time, int stateInte,
-            List<String> chapters_path, List<String> chapters_url) {
+                          int num, int current_num, Long create_time, Long update_time, int stateInte,
+                          List<String> chapters_path, List<String> chapters_url) {
         this.id = id;
         this.comic_id = comic_id;
         this.title = title;
@@ -156,6 +156,8 @@ public class DBDownloadItem extends BaseBean {
                 return DownState.FINISH;
             case 6:
                 return DownState.NONE;
+            case -1:
+                return DownState.DELETE;
             default:
                 return DownState.FINISH;
         }
@@ -184,6 +186,7 @@ public class DBDownloadItem extends BaseBean {
     public List<String> getChaptersPath() {
         return this.chapters_path;
     }
+
     public void setChaptersPath(List<String> chapters_path) {
         this.chapters_path = chapters_path;
     }

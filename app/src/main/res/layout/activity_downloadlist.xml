@@ -29,11 +29,13 @@
             android:textSize="15dp" />
 
         <ImageView
+            android:id="@+id/iv_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:padding="10dp"
             android:src="@drawable/edit" />
 
         <View
@@ -119,9 +121,6 @@
         android:layout_below="@id/rl_order"
         android:background="@color/colorBg"
         android:overScrollMode="never"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
         android:scrollbars="none" />
 
     <RelativeLayout
@@ -161,4 +160,5 @@
 
     </RelativeLayout>
 
+    <include layout="@layout/layout_edit" />
 </RelativeLayout>

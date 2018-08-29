@@ -19,15 +19,16 @@ import android.widget.TextView;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.DBDownloadItem;
-import com.tplink.cartoon.data.bean.DownState;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.DownloadChapterlistAdapter;
 import com.tplink.cartoon.ui.presenter.DownloadChapterlistPresenter;
 import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
 import com.tplink.cartoon.ui.view.IDownloadView;
+import com.tplink.cartoon.ui.widget.FloatEditLayout;
 import com.tplink.cartoon.utils.IntentUtil;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -52,6 +53,10 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
     TextView mDownloadText;
     @BindView(R.id.iv_download)
     ImageView mDownloadImage;
+    @BindView(R.id.iv_edit)
+    ImageView mEdit;
+    @BindView(R.id.rl_edit_bottom)
+    FloatEditLayout mEditLayout;
 
     private DownloadChapterlistAdapter mAdapter;
     private int recycleState = 0;
@@ -79,19 +84,22 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
         IntentUtil.toSelectDownload(this, mPresenter.getComic());
     }
 
+    @OnClick(R.id.iv_edit)
+    public void toEdit() {
+        if (!mPresenter.isEditing()) {
+            mEdit.setImageResource(R.drawable.closed);
+            mEditLayout.setVisibility(View.VISIBLE);
+        } else {
+            mEdit.setImageResource(R.drawable.edit);
+            mEditLayout.setVisibility(View.GONE);
+        }
+        mPresenter.setEditing(!mPresenter.isEditing());
+        mAdapter.setEditing(mPresenter.isEditing());
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onLoadMoreData(List<DBDownloadItem> dbDownloadItems) {
-
-    }
-
-    @Override
-    public void onSelectALL() {
-
-    }
-
-    @Override
-    public void onDeleteAll() {
 
     }
 
@@ -147,29 +155,18 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
             @Override
             public void onItemClick(RecyclerView parent, View view, int position) {
                 DBDownloadItem info = mAdapter.getItems(position);
-                switch (info.getState()) {
-                    case DownState.NONE:
-                        mPresenter.stop(info, position, false);
-                        break;
-                    case DownState.START:
-                        //mPresenter.startDown(info);
-                        break;
-                    case DownState.PAUSE:
-//                        mPresenter.startDown(info, position);
-                        break;
-                    case DownState.DOWN:
-                        mPresenter.stop(info, position, true);
-                        break;
-                    case DownState.STOP:
-                        mPresenter.ready(info, position);
-                        break;
-                    case DownState.ERROR:
-                        mPresenter.ready(info, position);
-                        break;
-                    case DownState.FINISH:
-                        mPresenter.toComicChapter(info);
-                        break;
-                }
+                mPresenter.onItemClick(info, position);
+            }
+        });
+        mEditLayout.setListener(new FloatEditLayout.onClickListener() {
+            @Override
+            public void onClickSelect() {
+                mPresenter.selectOrMoveAll();
+            }
+
+            @Override
+            public void onDelete() {
+                mPresenter.showDeteleDialog();
             }
         });
     }
@@ -216,6 +213,37 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
     }
 
     @Override
+    public void updateList(HashMap map) {
+        mAdapter.setMap(map);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateListItem(HashMap map, int position) {
+        mAdapter.setMap(map);
+        mAdapter.notifyItemChanged(position, "isNotEmpty");
+    }
+
+    @Override
+    public void addAll() {
+        mEditLayout.addAll();
+    }
+
+    @Override
+    public void removeAll() {
+        mEditLayout.removeAll();
+    }
+
+    @Override
+    public void quitEdit() {
+        mEdit.setImageResource(R.drawable.edit);
+        mEditLayout.setVisibility(View.GONE);
+        mPresenter.setEditing(false);
+        mAdapter.setEditing(mPresenter.isEditing());
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mPresenter.initData();
@@ -241,6 +269,6 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresenter.getResultComic(resultCode,data);
+        mPresenter.getResultComic(resultCode, data);
     }
 }

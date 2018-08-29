@@ -11,6 +11,7 @@ import android.content.Context;
 
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.db.DaoHelper;
+import com.tplink.cartoon.utils.FileUtil;
 
 import java.util.List;
 
@@ -108,10 +109,10 @@ public class BookShelfDataSource implements IBookShelfDataSource {
             @Override
             public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
                 for (int i = 0; i < list.size(); i++) {
-                    Comic items = list.get(i);
-                    items.setStateInte(0);
-                    mDaoHelper.update(items);
+                    list.get(i).setStateInte(-1);
+                    FileUtil.deleteDir(FileUtil.SDPATH + FileUtil.COMIC + list.get(i).getId());
                 }
+                mDaoHelper.insertList(list);
                 List<Comic> comics = mDaoHelper.queryDownloadComic();
                 emitter.onNext(comics);
                 emitter.onComplete();

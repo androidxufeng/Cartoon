@@ -32,4 +32,6 @@ public interface IDownloadListDataSource extends IDataSource {
 
     Flowable<Boolean> updateDownloadItemsList(List<DBDownloadItem> lists);
 
+    Flowable<List<DBDownloadItem>> deleteDBDownloadComic(List<DBDownloadItem> list, Comic comic);
+
 }

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_download_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="80dp"
     android:background="@color/colorBg">
 
     <View
@@ -11,34 +10,61 @@
         android:layout_height="0.5dp"
         android:background="@color/colorBottom" />
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="标题"
-        android:textColor="@color/colorTextColorDark"
-        android:textSize="14dp" />
-
-    <TextView
-        android:id="@+id/tv_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_margin="15dp"
-        android:text="点击下载"
-        android:textColor="@color/colorTextColorLight2"
-        android:textSize="14dp" />
-
-    <com.daimajia.numberprogressbar.NumberProgressBar
-        android:id="@+id/pg_download"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_title"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        custom:progress_reached_color="@color/colorPrimary"
-        custom:progress_text_color="@color/colorPrimary"
-        custom:progress_text_size="20sp" />
+        android:layout_height="match_parent"
+        android:layout_marginRight="40dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:text="标题"
+            android:textColor="@color/colorTextColorDark"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/tv_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="15dp"
+            android:text="点击下载"
+            android:textColor="@color/colorTextColorLight2"
+            android:textSize="14dp" />
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/pg_download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="15dp"
+            custom:progress_reached_color="@color/colorPrimary"
+            custom:progress_text_color="@color/colorPrimary"
+            custom:progress_text_size="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true">
+
+        <ImageView
+            android:id="@+id/iv_download_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/item_select" />
+
+        <ImageView
+            android:id="@+id/iv_download_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/item_select" />
+    </RelativeLayout>
+
 </RelativeLayout>

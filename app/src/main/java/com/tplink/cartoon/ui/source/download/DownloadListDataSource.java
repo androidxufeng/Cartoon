@@ -17,6 +17,7 @@ import com.tplink.cartoon.data.bean.DownState;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.db.DaoHelper;
 import com.tplink.cartoon.net.RetrofitClient;
+import com.tplink.cartoon.utils.FileUtil;
 import com.tplink.cartoon.utils.LogUtil;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class DownloadListDataSource implements IDownloadListDataSource {
         return Flowable.create(new FlowableOnSubscribe<List<DBDownloadItem>>() {
             @Override
             public void subscribe(FlowableEmitter<List<DBDownloadItem>> emitter) throws Exception {
-                List<DBDownloadItem> dbDownloadItems = mHelper.queryDownloaditmes(comicId);
+                List<DBDownloadItem> dbDownloadItems = mHelper.queryDownloadItems(comicId);
                 emitter.onNext(dbDownloadItems);
                 emitter.onComplete();
             }
@@ -95,7 +96,7 @@ public class DownloadListDataSource implements IDownloadListDataSource {
                         }
                     }
                 }
-                List<DBDownloadItem> results = mHelper.queryDownloaditmes(comic.getId());
+                List<DBDownloadItem> results = mHelper.queryDownloadItems(comic.getId());
                 emitter.onNext(results);
             }
         }, BackpressureStrategy.LATEST);
@@ -122,6 +123,24 @@ public class DownloadListDataSource implements IDownloadListDataSource {
                     result = mHelper.insertList(lists);
                 }
                 emitter.onNext(result);
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<List<DBDownloadItem>> deleteDBDownloadComic(final List<DBDownloadItem> list, final Comic comic) {
+        return Flowable.create(new FlowableOnSubscribe<List<DBDownloadItem>>() {
+            @Override
+            public void subscribe(FlowableEmitter<List<DBDownloadItem>> emitter) throws Exception {
+                for (int i = 0; i < list.size(); i++) {
+                    list.get(i).setStateInte(-1);
+                    list.get(i).setChapters_path(new ArrayList<String>());
+                    FileUtil.deleteDir(FileUtil.SDPATH + FileUtil.COMIC + comic.getId() + "/" + list.get(i).getChapters());
+                }
+                mHelper.insertList(list);
+                List items = mHelper.queryDownloadItems(comic.getId());
+                emitter.onNext(items);
+                emitter.onComplete();
             }
         }, BackpressureStrategy.LATEST);
     }
