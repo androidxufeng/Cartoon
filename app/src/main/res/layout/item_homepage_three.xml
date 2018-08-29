@@ -13,7 +13,7 @@
         <ImageView
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
-            android:layout_height="125dp"
+            android:layout_height="150dp"
             android:scaleType="fitXY" />
 
         <LinearLayout
@@ -33,19 +33,19 @@
                 android:maxLines="1"
                 android:text="标题"
                 android:textColor="@color/colorTextBlack"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <TextView
                 android:id="@+id/tv_describe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
-                android:ellipsize="end"
                 android:text="描述"
                 android:textColor="@color/colorTextColorLight"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
     </LinearLayout>

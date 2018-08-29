@@ -21,6 +21,8 @@ public interface IHomeDataSource extends IDataSource {
 
     Flowable<List<Comic>> loadData();
 
+    Flowable<Comic> findRecentlyComic();
+
     Flowable<List<Comic>> refreshData();
 
     Flowable<List<Comic>> loadMoreData(int page);

@@ -38,4 +38,6 @@ public interface IHomeView<T extends BaseBean> extends BaseView {
 
     void onRefreshFinish(List<T> data);
 
+    void fillRecent(String recent);
+
 }

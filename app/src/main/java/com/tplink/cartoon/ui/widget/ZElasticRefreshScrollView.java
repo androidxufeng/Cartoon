@@ -123,7 +123,7 @@ public class ZElasticRefreshScrollView extends ScrollView {
             }
             commOnTouchEvent(ev);
             //防止拉取过度的问题
-            if (mMoveView.getTop() > DisplayUtil.dip2px(getContext(), 160) && getScrollY() == 0 || mMoveView.getBottom() < inner.getMeasuredHeight() && getScrollY() == inner.getMeasuredHeight() - mLoadingBottom.getMeasuredHeight() - DisplayUtil.getScreenHeight(getContext())) {
+            if (mMoveView.getTop() > DisplayUtil.dip2px(getContext(), 200) && getScrollY() == 0 || mMoveView.getBottom() < inner.getMeasuredHeight() && getScrollY() == inner.getMeasuredHeight() - mLoadingBottom.getMeasuredHeight() - DisplayUtil.getScreenHeight(getContext())) {
                 return false;
             }
             return super.onTouchEvent(ev);
@@ -145,7 +145,7 @@ public class ZElasticRefreshScrollView extends ScrollView {
                 listener.onActionUp();
                 if (isNeedAnimation()) {
                     // Log.v("mlguitar", "will up and animation");
-                    if (mMoveView.getTop() > DisplayUtil.dip2px(getContext(), 205) && listener != null) {
+                    if (mMoveView.getTop() > DisplayUtil.dip2px(getContext(), 245) && listener != null) {
                         refreshAnimation();
                         mLoadingText.setText("努力加载中...");
                         //animation();
@@ -191,7 +191,7 @@ public class ZElasticRefreshScrollView extends ScrollView {
                                 mMoveView.getBottom() - deltaY);
                     }
 
-                    if (mMoveView.getTop() > DisplayUtil.dip2px(getContext(), 205) && listener != null) {
+                    if (mMoveView.getTop() > DisplayUtil.dip2px(getContext(), 245) && listener != null) {
                         mLoadingText.setText("松开即可刷新");
                     }
                     // 移动布局
@@ -206,7 +206,7 @@ public class ZElasticRefreshScrollView extends ScrollView {
 
     public void animation() {
         // 开启移动动画  
-        TranslateAnimation ta = new TranslateAnimation(0, 0, mMoveView.getTop() - DisplayUtil.dip2px(getContext(), 160), normal.top - DisplayUtil.dip2px(getContext(), 160));
+        TranslateAnimation ta = new TranslateAnimation(0, 0, mMoveView.getTop() - DisplayUtil.dip2px(getContext(), 200), normal.top - DisplayUtil.dip2px(getContext(), 200));
         // Log.d("zhhr112233", "inner.getTop()=" + inner.getTop() + ",normal.top=" + normal.top);
         Interpolator in = new DecelerateInterpolator();
         ta.setInterpolator(in);
@@ -219,7 +219,7 @@ public class ZElasticRefreshScrollView extends ScrollView {
 
     public void refreshAnimation() {
         // 开启移动动画
-        TranslateAnimation ta = new TranslateAnimation(0, 0, mMoveView.getTop() - DisplayUtil.dip2px(getContext(), 200), normal.top - DisplayUtil.dip2px(getContext(), 160));
+        TranslateAnimation ta = new TranslateAnimation(0, 0, mMoveView.getTop() - DisplayUtil.dip2px(getContext(), 245), normal.top - DisplayUtil.dip2px(getContext(), 200));
         // Log.d("zhhr112233", "inner.getTop()=" + inner.getTop() + ",normal.top=" + normal.top);
         Interpolator in = new DecelerateInterpolator();
         ta.setInterpolator(in);
@@ -232,7 +232,7 @@ public class ZElasticRefreshScrollView extends ScrollView {
 
     public void refreshAnimationFinish() {
         // 开启移动动画
-        TranslateAnimation ta = new TranslateAnimation(0, 0, mMoveView.getTop() - DisplayUtil.dip2px(getContext(), 160), normal.top - DisplayUtil.dip2px(getContext(), 160));
+        TranslateAnimation ta = new TranslateAnimation(0, 0, mMoveView.getTop() - DisplayUtil.dip2px(getContext(), 200), normal.top - DisplayUtil.dip2px(getContext(), 200));
         // Log.d("zhhr112233", "inner.getTop()=" + inner.getTop() + ",normal.top=" + normal.top);
         Interpolator in = new DecelerateInterpolator();
         ta.setInterpolator(in);

@@ -218,5 +218,19 @@ public class DaoHelper<T> {
                 .list();
         return list;
     }
+
+    public Comic findRecentlyComic() {
+        Comic comic = null;
+        List<Comic> list = mDaoManager.getDaoSession()
+                .getComicDao()
+                .queryBuilder()
+                .orderDesc(ComicDao.Properties.ClickTime)
+                .list();
+
+        if (!list.isEmpty()) {
+            comic = list.get(0);
+        }
+        return comic;
+    }
 }
 

@@ -10,6 +10,8 @@ package com.tplink.cartoon.ui.presenter;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.fragment.HomeFragment;
 import com.tplink.cartoon.ui.source.IHomeDataSource;
+import com.tplink.cartoon.utils.IntentUtil;
+import com.tplink.cartoon.utils.LogUtil;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 import com.trello.rxlifecycle2.android.FragmentEvent;
 
@@ -23,9 +25,11 @@ import io.reactivex.subscribers.DisposableSubscriber;
 
 public class HomePresenter extends BasePresenter<IHomeDataSource, HomeFragment> {
 
+    private static final String TAG = "HomePresenter";
     private final CompositeDisposable mDisposable;
 
     private List<Comic> mDatas, mBanners;
+    private Comic recentComic;
 
     public List<Comic> getBanners() {
         return mBanners;
@@ -103,6 +107,40 @@ public class HomePresenter extends BasePresenter<IHomeDataSource, HomeFragment> 
                     }
                 });
         mDisposable.add(disposable);
+    }
+
+    public void toRecentComic() {
+        IntentUtil.toComicChapter(mView.getContext(), recentComic.getCurrentChapter(), recentComic);
+    }
+
+    public void getRecent() {
+        DisposableSubscriber<Comic> disposableSubscriber = mDataSource.findRecentlyComic()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSubscriber<Comic>() {
+                    @Override
+                    public void onNext(Comic comic) {
+                        recentComic = comic;
+                        if (recentComic != null) {
+                            String recent = "续看:" + recentComic.getTitle() + " 第" + (recentComic.getCurrentChapter() + 1) + "话";
+                            mView.fillRecent(recent);
+                        } else {
+                            mView.fillRecent(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable t) {
+                        LogUtil.d(TAG, t.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+        mDisposable.add(disposableSubscriber);
+
     }
 
 }

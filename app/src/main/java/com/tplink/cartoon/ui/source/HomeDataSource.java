@@ -11,6 +11,8 @@ package com.tplink.cartoon.ui.source;
  * Ver 1.0, 18-7-30, xufeng, Create file
  */
 
+import android.content.Context;
+import android.media.MediaDataSource;
 import android.util.Log;
 
 import com.tplink.cartoon.data.bean.Comic;
@@ -19,6 +21,8 @@ import com.tplink.cartoon.data.bean.HomeTitle;
 import com.tplink.cartoon.data.bean.LargeHomeItem;
 import com.tplink.cartoon.data.bean.SmallHomeItem;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.db.DaoHelper;
+import com.tplink.cartoon.ui.activity.HomeActivity;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,6 +38,12 @@ import io.reactivex.FlowableEmitter;
 import io.reactivex.FlowableOnSubscribe;
 
 public class HomeDataSource implements IHomeDataSource {
+
+    private final DaoHelper mHelper;
+
+    public HomeDataSource(Context context){
+        mHelper = new DaoHelper<>(context);
+    }
     @Override
     public Flowable<List<Comic>> loadData() {
         return Flowable.create(new FlowableOnSubscribe<List<Comic>>() {
@@ -65,6 +75,18 @@ public class HomeDataSource implements IHomeDataSource {
                 mdats.add(homeTitle);
 
                 emitter.onNext(mdats);
+                emitter.onComplete();
+            }
+        }, BackpressureStrategy.LATEST);
+    }
+
+    @Override
+    public Flowable<Comic> findRecentlyComic() {
+        return Flowable.create(new FlowableOnSubscribe<Comic>() {
+            @Override
+            public void subscribe(FlowableEmitter<Comic> emitter) throws Exception {
+                Comic recentlyComic = mHelper.findRecentlyComic();
+                emitter.onNext(recentlyComic);
                 emitter.onComplete();
             }
         }, BackpressureStrategy.LATEST);

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.activity.HomeActivity">
+    android:layout_height="match_parent">
 
     <com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView
         android:id="@+id/sv_comic"
@@ -20,7 +18,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="160dp">
+                android:layout_marginTop="200dp">
 
                 <RelativeLayout
                     android:id="@+id/rl_loading"
@@ -73,18 +71,10 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/fenlei1" />
-
-                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="-5dp"
-                                android:text="男生榜"
-                                android:textSize="12sp" />
+                                android:src="@drawable/home_icon_rank" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -96,18 +86,10 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/fenlei3" />
-
-                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="-5dp"
-                                android:text="女生榜"
-                                android:textSize="12sp" />
+                                android:src="@drawable/home_icon_category" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -119,68 +101,12 @@
                             android:orientation="vertical">
 
                             <ImageView
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/fenlei2" />
-
-                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="-5dp"
-                                android:text="国漫"
-                                android:textSize="12sp" />
+                                android:src="@drawable/home_icon_new" />
                         </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/ll_category4"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@color/colorBg"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/fenlei4" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="-5dp"
-                                android:text="日漫"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:id="@+id/ll_category5"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@color/colorBg"
-                            android:orientation="vertical">
-
-                            <ImageView
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center_horizontal"
-                                android:src="@drawable/fenlei5" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:layout_marginTop="-5dp"
-                                android:text="分类"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
@@ -197,19 +123,49 @@
                     android:layout_below="@id/recycle_view"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/bottom" />
-
             </RelativeLayout>
 
-            <com.youth.banner.Banner
+            <com.youth.banner.Banner xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/B_banner"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="240dp"
                 app:delay_time="4000"
                 app:indicator_drawable_selected="@drawable/indicator_select"
                 app:indicator_drawable_unselected="@drawable/indicator_unselect"
                 app:indicator_height="8dp"
                 app:indicator_margin="5dp"
                 app:indicator_width="8dp" />
+
+            <RelativeLayout
+                android:id="@+id/rl_recent"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:layout_marginTop="204dp"
+                android:background="@drawable/background_home_recent"
+                android:paddingRight="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_recent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:text="最近看的漫画"
+                    android:textColor="@color/colorTextColorLight"
+                    android:textSize="12dp" />
+
+                <ImageView
+                    android:id="@+id/iv_recent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="2dp"
+                    android:layout_toRightOf="@id/tv_recent"
+                    android:src="@drawable/home_icon_close" />
+
+            </RelativeLayout>
+
         </RelativeLayout>
     </com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView>
 
@@ -262,6 +218,7 @@
                     android:text="女生"
                     android:textColor="@color/colorBg"
                     android:textSize="16dp" />
+
             </LinearLayout>
 
             <ImageView

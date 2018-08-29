@@ -18,6 +18,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.tplink.cartoon.R;
@@ -59,6 +60,10 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     RelativeLayout mActionBar;
     @BindView(R.id.v_actionbar_bg)
     View mActionBarBg;
+    @BindView(R.id.tv_recent)
+    TextView mTvRecent;
+    @BindView(R.id.rl_recent)
+    RelativeLayout mRlRecent;
 
     private int i = 3;
 
@@ -71,7 +76,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         mPresenter.loadData();
     }
 
-    @OnClick({R.id.ll_category1, R.id.ll_category2, R.id.ll_category3, R.id.ll_category4, R.id.ll_category5})
+    @OnClick({R.id.ll_category1, R.id.ll_category2, R.id.ll_category3})
     public void toCategory(View view) {
         switch (view.getId()) {
             case R.id.ll_category1:
@@ -81,12 +86,6 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
                 showToast("开发中，敬请期待");
                 break;
             case R.id.ll_category3:
-                showToast("开发中，敬请期待");
-                break;
-            case R.id.ll_category4:
-                showToast("开发中，敬请期待");
-                break;
-            case R.id.ll_category5:
                 showToast("开发中，敬请期待");
                 break;
             default:
@@ -99,12 +98,38 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         IntentUtil.toSearch(getActivity());
     }
 
+    @OnClick(R.id.iv_recent)
+    public void onClickClose() {
+        mRlRecent.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.rl_recent)
+    public void onClickRecnet() {
+        mPresenter.toRecentComic();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.getRecent();
+    }
+
     private MainAdapter mAdapter;
 
     @Override
     protected void initPresenter() {
-        HomeDataSource mainDataSource = new HomeDataSource();
+        HomeDataSource mainDataSource = new HomeDataSource(mActivity);
         mPresenter = new HomePresenter(mainDataSource, this);
+    }
+
+    @Override
+    public void fillRecent(String str) {
+        if (str != null) {
+            mRlRecent.setVisibility(View.VISIBLE);
+            mTvRecent.setText(str);
+        } else {
+            mRlRecent.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -117,7 +142,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 6);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
-        mAdapter = new MainAdapter(mActivity, R.layout.item_hometitle,
+        mAdapter = new MainAdapter(mActivity, R.layout.item_hometitle,R.layout.item_homepage_three,
                 R.layout.item_homepage, R.layout.item_homepage_full);
         mRecycleView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
