@@ -27,22 +27,23 @@ public class Constants {
     public static final String DB_NAME = "comic.db";
 
     //抓取腾讯漫画TOP
-    public static String TENCENTTOPURL = "http://ac.qq.com/Comic/all/state/pink/search/hot/page/";
+    public static final String TENCENTTOPURL = "http://ac.qq.com/Comic/all/state/pink/search/hot/page/";
     //抓取腾讯漫画详情页面
-    public static String TENCENTDETAIL = "http://ac.qq.com/Comic/comicInfo/id/";
+    public static final String TENCENTDETAIL = "http://ac.qq.com/Comic/comicInfo/id/";
     //抓取详细的漫画阅读界面
-    public static String TENCENTCOMICCHAPTERS = "http://120.79.66.128:5001";
+    public static final String TENCENTCOMICCHAPTERS = "http://120.79.66.128:5001";
 
-    public static String TENCENTHOMEPAGE = "http://ac.qq.com/";
+    public static final String TENCENTHOMEPAGE = "http://ac.qq.com/";
 
-    public static String TENCENTJAPANHOT = "http://ac.qq.com/Comic/all/state/pink/nation/4/search/hot/page/1";
+    public static final String TENCENTJAPANHOT = "http://ac.qq.com/Comic/all/state/pink/nation/4/search/hot/page/1";
 
-    public static String TENCENTBANNERJANPAN = "http://ac.qq.com/Jump";
+    public static final String TENCENTBANNERJANPAN = "http://ac.qq.com/Jump";
 
-    public static String TENCENTBANNER = "http://m.ac.qq.com";
+    public static final String TENCENTRANKURL = "http://m.ac.qq.com/rank/index?";
+
+    public static final String TENCENTBANNER = "http://m.ac.qq.com";
 
     //腾讯漫画搜索接口
-
     public static String TENCENTSEARCHBASE = "http://m.ac.qq.com/search/";
 
     public static String TENCENT_SEARCH_URL = TENCENTSEARCHBASE + "smart?word=";

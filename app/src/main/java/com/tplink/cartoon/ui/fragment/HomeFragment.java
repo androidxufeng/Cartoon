@@ -8,6 +8,7 @@
  */
 package com.tplink.cartoon.ui.fragment;
 
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -64,6 +65,12 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     TextView mTvRecent;
     @BindView(R.id.rl_recent)
     RelativeLayout mRlRecent;
+    @BindView(R.id.tv_hometitle1)
+    TextView mHomeTitle1;
+    @BindView(R.id.tv_hometitle2)
+    TextView mHomeTitle2;
+    @BindView(R.id.iv_search)
+    ImageView mSearch;
 
     private int i = 3;
 
@@ -80,7 +87,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     public void toCategory(View view) {
         switch (view.getId()) {
             case R.id.ll_category1:
-                showToast("开发中，敬请期待");
+                IntentUtil.toRankActivity(getActivity());
                 break;
             case R.id.ll_category2:
                 showToast("开发中，敬请期待");
@@ -104,7 +111,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     }
 
     @OnClick(R.id.rl_recent)
-    public void onClickRecnet() {
+    public void onClickRecent() {
         mPresenter.toRecentComic();
     }
 
@@ -142,7 +149,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
         NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 6);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
-        mAdapter = new MainAdapter(mActivity, R.layout.item_hometitle,R.layout.item_homepage_three,
+        mAdapter = new MainAdapter(mActivity, R.layout.item_hometitle, R.layout.item_homepage_three,
                 R.layout.item_homepage, R.layout.item_homepage_full);
         mRecycleView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
@@ -204,6 +211,15 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
             @Override
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             public void onAlphaActionBar(float a) {
+                if (a < 1) {
+                    mHomeTitle1.setTextColor(Color.parseColor("#ffffff"));
+                    mHomeTitle2.setTextColor(Color.parseColor("#ffffff"));
+                    mSearch.setImageResource(R.drawable.search);
+                } else {
+                    mHomeTitle1.setTextColor(Color.parseColor("#666666"));
+                    mHomeTitle2.setTextColor(Color.parseColor("#ff9a6a"));
+                    mSearch.setImageResource(R.drawable.search_color);
+                }
                 mActionBarBg.setAlpha(a);
                 if (a == 1) {
                     if (mHomeActivity.isTrans()) {
