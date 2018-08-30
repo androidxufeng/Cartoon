@@ -25,8 +25,13 @@ public class IndexPresenter extends BasePresenter<IndexDataSource, IndexActivity
 
     private Comic mComic;
 
-    public IndexPresenter(IndexDataSource context, IndexActivity view, Intent intent) {
-        super(context, view);
+    public IndexPresenter(IndexActivity view, Intent intent) {
+        super(view);
         mComic = (Comic) intent.getSerializableExtra(Constants.COMIC);
+    }
+
+    @Override
+    protected IndexDataSource initDataSource() {
+        return new IndexDataSource();
     }
 }

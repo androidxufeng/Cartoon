@@ -86,7 +86,7 @@ public class SearchActivity extends BaseActivity<SearchPresenter> implements ISe
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new SearchPresenter(new SearchDataSource(this), this);
+        mPresenter = new SearchPresenter(this);
     }
 
     @Override

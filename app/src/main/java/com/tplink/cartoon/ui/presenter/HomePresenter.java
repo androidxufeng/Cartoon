@@ -7,8 +7,11 @@
 package com.tplink.cartoon.ui.presenter;
 
 
+import android.test.mock.MockContext;
+
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.fragment.HomeFragment;
+import com.tplink.cartoon.ui.source.HomeDataSource;
 import com.tplink.cartoon.ui.source.IHomeDataSource;
 import com.tplink.cartoon.utils.IntentUtil;
 import com.tplink.cartoon.utils.LogUtil;
@@ -39,11 +42,16 @@ public class HomePresenter extends BasePresenter<IHomeDataSource, HomeFragment> 
         return mDatas;
     }
 
-    public HomePresenter(IHomeDataSource dataSource, HomeFragment view) {
-        super(dataSource, view);
+    public HomePresenter(HomeFragment view) {
+        super(view);
         mDisposable = new CompositeDisposable();
         mDatas = new ArrayList<>();
         mBanners = new ArrayList<>();
+    }
+
+    @Override
+    protected IHomeDataSource initDataSource() {
+        return new HomeDataSource(mView.getContext());
     }
 
     public void loadData() {

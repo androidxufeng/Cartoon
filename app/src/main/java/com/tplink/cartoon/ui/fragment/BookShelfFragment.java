@@ -94,7 +94,7 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
 
     @Override
     protected void initPresenter() {
-        mPresenter = new BookShelfPresenter(new BookShelfDataSource(mActivity), this);
+        mPresenter = new BookShelfPresenter( this);
     }
 
     @Override
@@ -151,11 +151,6 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         return R.layout.fragment_bookshelf;
     }
 
-    @Override
-    public void onEditList(boolean isEditing) {
-
-    }
-
     public void resetTitle() {
         mDownload.setTextColor(Color.parseColor("#999999"));
         mCollect.setTextColor(Color.parseColor("#999999"));
@@ -179,7 +174,7 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         isEditing = !isEditing;
     }
 
-    private void showEditModel(BaseFragment fragment, boolean isEdit) {
+    private void showEditModel(BaseBookShelfFragment fragment, boolean isEdit) {
         fragment.onEditList(isEdit);
     }
 

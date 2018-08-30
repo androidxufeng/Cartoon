@@ -96,8 +96,8 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     private int mLoadingPosition;
     private boolean isLoadingdata;
 
-    public ChapterPresenter(ChapterDataSource dataSource, ComicChapterActivity view) {
-        super(dataSource, view);
+    public ChapterPresenter(ComicChapterActivity view) {
+        super(view);
         mCompositeDisposable = new CompositeDisposable();
         mDirect = Constants.LEFT_TO_RIGHT;
         mHelper = new DaoHelper(view);
@@ -432,7 +432,12 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
         mComic.setCurrentChapter(mComicChapters);
         mHelper.update(mComic);
         Intent intent = new Intent();
-        intent.putExtra(Constants.COMIC,mComic);
-        mView.setResult(Constants.OK,intent);
+        intent.putExtra(Constants.COMIC, mComic);
+        mView.setResult(Constants.OK, intent);
+    }
+
+    @Override
+    protected ChapterDataSource initDataSource() {
+        return new ChapterDataSource(mView);
     }
 }

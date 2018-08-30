@@ -56,7 +56,7 @@ public class RankActivity extends BaseActivity<RankPresenter> implements IRankVi
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new RankPresenter(new RankDataSource(), this);
+        mPresenter = new RankPresenter(this);
     }
 
     @Override

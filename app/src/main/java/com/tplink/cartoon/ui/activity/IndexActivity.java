@@ -61,7 +61,7 @@ public class IndexActivity extends BaseActivity<IndexPresenter> implements IInde
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new IndexPresenter(new IndexDataSource(), this, intent);
+        mPresenter = new IndexPresenter(this, intent);
     }
 
     @Override

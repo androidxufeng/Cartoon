@@ -26,8 +26,8 @@ public abstract class SelectPresenter<M extends IDataSource, V extends ISelectDa
     protected int mSelectedNum = 0;
     protected List<Comic> mComics;
 
-    public SelectPresenter(M dataSource, V view) {
-        super(dataSource, view);
+    public SelectPresenter( V view) {
+        super(view);
         this.mMap = new HashMap<>();
         this.isSelectedAll = false;
         this.mComics = new ArrayList<>();

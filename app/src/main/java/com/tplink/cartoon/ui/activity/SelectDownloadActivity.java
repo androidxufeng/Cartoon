@@ -75,7 +75,7 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
     @Override
     protected void initPresenter(Intent intent) {
         mComic = (Comic) intent.getSerializableExtra(Constants.COMIC);
-        mPresenter = new SelectDownloadPresenter(new DownloadListDataSource(this), this, mComic);
+        mPresenter = new SelectDownloadPresenter(this, mComic);
     }
 
     @Override

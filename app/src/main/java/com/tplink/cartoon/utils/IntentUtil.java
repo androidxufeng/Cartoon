@@ -10,6 +10,7 @@ package com.tplink.cartoon.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
@@ -86,5 +87,17 @@ public class IntentUtil {
     public static void toRankActivity(Context context) {
         Intent intent = new Intent(context, RankActivity.class);
         context.startActivity(intent);
+    }
+
+    public static void toUrl(Context context, String url) {
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
+    }
+
+    public static void toQQchat(Context context, String number) {
+        //uin是发送过去的qq号码
+        String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + number+"version=1";
+        context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
     }
 }

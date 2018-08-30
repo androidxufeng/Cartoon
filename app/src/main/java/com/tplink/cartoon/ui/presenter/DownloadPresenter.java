@@ -30,9 +30,14 @@ public class DownloadPresenter extends SelectPresenter<BookShelfDataSource, ICol
 
     private final CompositeDisposable mCompositeDisposable;
 
-    public DownloadPresenter(BookShelfDataSource dataSource, ICollectionView view) {
-        super(dataSource, view);
+    public DownloadPresenter(ICollectionView view) {
+        super(view);
         mCompositeDisposable = new CompositeDisposable();
+    }
+
+    @Override
+    protected BookShelfDataSource initDataSource() {
+        return new BookShelfDataSource(getContext());
     }
 
     public void getDownloadList() {

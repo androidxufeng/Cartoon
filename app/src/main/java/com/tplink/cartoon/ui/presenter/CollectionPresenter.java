@@ -28,9 +28,14 @@ import io.reactivex.subscribers.DisposableSubscriber;
 public class CollectionPresenter extends SelectPresenter<BookShelfDataSource, ICollectionView> {
     private final CompositeDisposable mCompositeDisposable;
 
-    public CollectionPresenter(BookShelfDataSource dataSource, ICollectionView view) {
-        super(dataSource, view);
+    public CollectionPresenter(ICollectionView view) {
+        super(view);
         mCompositeDisposable = new CompositeDisposable();
+    }
+
+    @Override
+    protected BookShelfDataSource initDataSource() {
+        return new BookShelfDataSource(getContext());
     }
 
     @Override

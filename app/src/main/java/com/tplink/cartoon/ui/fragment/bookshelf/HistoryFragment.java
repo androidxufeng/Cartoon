@@ -45,7 +45,7 @@ public class HistoryFragment extends BaseBookShelfFragment<HistoryPresenter> imp
 
     @Override
     protected void initPresenter() {
-        mPresenter = new HistoryPresenter(new BookShelfDataSource(mActivity), this);
+        mPresenter = new HistoryPresenter(this);
     }
 
     @Override

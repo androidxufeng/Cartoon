@@ -22,7 +22,7 @@
 
         <fragment
             android:id="@+id/fm_mine"
-            android:name="com.tplink.cartoon.ui.fragment.BookShelfFragment"
+            android:name="com.tplink.cartoon.ui.fragment.MineFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </RelativeLayout>

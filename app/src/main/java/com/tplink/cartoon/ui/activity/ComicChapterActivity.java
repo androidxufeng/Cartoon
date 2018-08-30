@@ -317,7 +317,7 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new ChapterPresenter(new ChapterDataSource(this), this);
+        mPresenter = new ChapterPresenter( this);
         mPresenter.init((Comic) intent.getSerializableExtra(Constants.COMIC), intent.getIntExtra(Constants.COMIC_CHAPTERS, 0));
     }
 

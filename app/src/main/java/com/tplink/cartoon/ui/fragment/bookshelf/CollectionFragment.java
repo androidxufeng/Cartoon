@@ -39,7 +39,7 @@ public class CollectionFragment extends BaseBookShelfFragment<CollectionPresente
 
     @Override
     protected void initPresenter() {
-        mPresenter = new CollectionPresenter(new BookShelfDataSource(mActivity), this);
+        mPresenter = new CollectionPresenter(this);
     }
 
     @Override

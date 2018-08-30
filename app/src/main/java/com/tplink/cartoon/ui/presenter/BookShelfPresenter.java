@@ -12,9 +12,12 @@ import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 
 public class BookShelfPresenter extends BasePresenter<BookShelfDataSource, BookShelfFragment> {
 
-
-    public BookShelfPresenter(BookShelfDataSource dataSource, BookShelfFragment view) {
-        super(dataSource, view);
+    public BookShelfPresenter(BookShelfFragment view) {
+        super(view);
     }
 
+    @Override
+    protected BookShelfDataSource initDataSource() {
+        return new BookShelfDataSource(mView.getContext());
+    }
 }

@@ -12,6 +12,7 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.DBDownloadItem;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.SelectDownloadActivity;
+import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
 import com.tplink.cartoon.ui.source.download.IDownloadListDataSource;
 import com.tplink.cartoon.utils.LogUtil;
 
@@ -39,8 +40,8 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadListDataSour
     private boolean isSelectAll;
     private int selectCount;
 
-    public SelectDownloadPresenter(IDownloadListDataSource dataSource, SelectDownloadActivity view, Comic comic) {
-        super(dataSource, view);
+    public SelectDownloadPresenter(SelectDownloadActivity view, Comic comic) {
+        super(view);
         this.mChapters = comic.getChapters();
         mCompositeDisposable = new CompositeDisposable();
         mComic = comic;
@@ -130,5 +131,10 @@ public class SelectDownloadPresenter extends BasePresenter<IDownloadListDataSour
 
     public int getSelectCount() {
         return selectCount;
+    }
+
+    @Override
+    protected IDownloadListDataSource initDataSource() {
+        return new DownloadListDataSource(mView);
     }
 }

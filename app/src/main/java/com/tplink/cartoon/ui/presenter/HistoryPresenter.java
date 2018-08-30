@@ -39,10 +39,15 @@ public class HistoryPresenter extends SelectPresenter<BookShelfDataSource, IColl
     private boolean isloadingdata;
     private List<Comic> mHistoryList;
 
-    public HistoryPresenter(BookShelfDataSource dataSource, ICollectionView view) {
-        super(dataSource, view);
+    public HistoryPresenter(ICollectionView view) {
+        super(view);
         mCompositeDisposable = new CompositeDisposable();
         mHistoryList = new ArrayList<>();
+    }
+
+    @Override
+    protected BookShelfDataSource initDataSource() {
+        return new BookShelfDataSource(getContext());
     }
 
     public void getHistoryList() {

@@ -40,7 +40,7 @@ public class DownloadFragment extends BaseBookShelfFragment<DownloadPresenter> i
 
     @Override
     protected void initPresenter() {
-        mPresenter = new DownloadPresenter(new BookShelfDataSource(mActivity), this);
+        mPresenter = new DownloadPresenter(this);
     }
 
     @Override

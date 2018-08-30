@@ -15,6 +15,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -47,11 +48,16 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
 
     private Comic mComic;
 
-    public DetailPresenter(DetailDataSource dataSource, ComicDetailActivity view) {
-        super(dataSource, view);
+    public DetailPresenter(ComicDetailActivity view) {
+        super( view);
         mCompositeDisposable = new CompositeDisposable();
         mContext = view;
         mComic = new Comic();
+    }
+
+    @Override
+    protected DetailDataSource initDataSource() {
+        return new DetailDataSource(mView);
     }
 
     public void getDetail(final long comicId) {

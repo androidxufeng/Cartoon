@@ -124,7 +124,7 @@ public class DownloadChapterlistActivity extends BaseActivity<DownloadChapterlis
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new DownloadChapterlistPresenter(new DownloadListDataSource(this), this, intent);
+        mPresenter = new DownloadChapterlistPresenter(this, intent);
         mTitle.setText(((Comic) intent.getSerializableExtra(Constants.COMIC)).getTitle());
     }
 

@@ -88,8 +88,8 @@ public class DownloadChapterlistPresenter extends BasePresenter
         isEditing = editing;
     }
 
-    public DownloadChapterlistPresenter(DownloadListDataSource dataSource, DownloadChapterlistActivity view, Intent intent) {
-        super(dataSource, view);
+    public DownloadChapterlistPresenter(DownloadChapterlistActivity view, Intent intent) {
+        super(view);
         mCompositeDisposable = new CompositeDisposable();
         mComic = (Comic) intent.getSerializableExtra(Constants.COMIC);
         mMap = (HashMap<Integer, Integer>) intent.getSerializableExtra(Constants.COMIC_SELECT_DOWNLOAD);
@@ -446,6 +446,11 @@ public class DownloadChapterlistPresenter extends BasePresenter
 
     public void toComicChapter(DBDownloadItem info) {
         IntentUtil.toComicChapterForResult(mView, info.getChapters(), mComic);
+    }
+
+    @Override
+    protected DownloadListDataSource initDataSource() {
+        return new DownloadListDataSource(mView);
     }
 
     public class DownloadComicDisposableObserver extends DisposableObserver<DBDownloadItem> {

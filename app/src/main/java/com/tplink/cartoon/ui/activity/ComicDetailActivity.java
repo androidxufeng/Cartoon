@@ -166,7 +166,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
 
     @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new DetailPresenter(new DetailDataSource(this), this);
+        mPresenter = new DetailPresenter(this);
     }
 
     @Override

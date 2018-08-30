@@ -31,10 +31,15 @@ public class SearchPresenter extends BasePresenter<SearchDataSource, SearchActiv
     private final CompositeDisposable mCompositeDisposable;
     private List<Comic> mHistroys;
 
-    public SearchPresenter(SearchDataSource dataSource, SearchActivity view) {
-        super(dataSource, view);
+    public SearchPresenter(SearchActivity view) {
+        super(view);
         mCompositeDisposable = new CompositeDisposable();
         mHistroys = new ArrayList<>();
+    }
+
+    @Override
+    protected SearchDataSource initDataSource() {
+        return new SearchDataSource(mView);
     }
 
     public void getDynamicResult(String title) {

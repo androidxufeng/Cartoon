@@ -28,7 +28,6 @@ import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.activity.HomeActivity;
 import com.tplink.cartoon.ui.adapter.MainAdapter;
 import com.tplink.cartoon.ui.presenter.HomePresenter;
-import com.tplink.cartoon.ui.source.HomeDataSource;
 import com.tplink.cartoon.ui.view.IHomeView;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.ui.widget.ZElasticRefreshScrollView;
@@ -125,8 +124,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
 
     @Override
     protected void initPresenter() {
-        HomeDataSource mainDataSource = new HomeDataSource(mActivity);
-        mPresenter = new HomePresenter(mainDataSource, this);
+        mPresenter = new HomePresenter(this);
     }
 
     @Override
@@ -246,11 +244,6 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_home;
-    }
-
-    @Override
-    public void onEditList(boolean isEditing) {
-
     }
 
     @Override

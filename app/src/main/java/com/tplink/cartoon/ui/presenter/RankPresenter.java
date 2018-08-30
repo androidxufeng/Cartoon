@@ -28,9 +28,14 @@ public class RankPresenter extends BasePresenter<RankDataSource, RankActivity> {
     private boolean isloadingdata;
     private String type = "upt";
 
-    public RankPresenter(RankDataSource dataSource, RankActivity view) {
-        super(dataSource, view);
+    public RankPresenter(RankActivity view) {
+        super(view);
         mList = new ArrayList<>();
+    }
+
+    @Override
+    protected RankDataSource initDataSource() {
+        return new RankDataSource();
     }
 
     public void loadData() {
