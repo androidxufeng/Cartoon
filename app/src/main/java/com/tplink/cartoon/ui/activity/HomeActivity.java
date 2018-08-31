@@ -11,6 +11,7 @@ import android.widget.Button;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.ui.fragment.BookShelfFragment;
 import com.tplink.cartoon.ui.widget.FloatEditLayout;
+import com.tplink.cartoon.ui.widget.SwitchNightRelativeLayout;
 import com.tplink.cartoon.utils.LogUtil;
 import com.tplink.cartoon.utils.PermissionUtils;
 
@@ -28,6 +29,9 @@ public class HomeActivity extends BaseFragmentActivity {
     Button mMine;
     @BindView(R.id.rl_edit_bottom)
     FloatEditLayout mEditBottom;
+    @BindView(R.id.rl_switch_night)
+    SwitchNightRelativeLayout mSwitchNight;
+
     private BookShelfFragment mBookShelfFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -133,5 +137,9 @@ public class HomeActivity extends BaseFragmentActivity {
     public void quitEdit(){
         setEditBottomVisible(View.GONE);
         mBookShelfFragment.quitEdit();
+    }
+
+    public void setSwitchNightVisible(int Visible,boolean isNight){
+        mSwitchNight.setVisibility(Visible,isNight);
     }
 }

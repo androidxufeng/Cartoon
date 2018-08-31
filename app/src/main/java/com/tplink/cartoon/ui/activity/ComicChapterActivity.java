@@ -21,10 +21,10 @@ import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.ChapterRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.ChapterViewpagerAdapter;
 import com.tplink.cartoon.ui.presenter.ChapterPresenter;
-import com.tplink.cartoon.ui.source.chapter.ChapterDataSource;
 import com.tplink.cartoon.ui.view.IChapterView;
 import com.tplink.cartoon.ui.widget.ComicReaderViewpager;
 import com.tplink.cartoon.ui.widget.ReaderMenuLayout;
+import com.tplink.cartoon.ui.widget.SwitchNightRelativeLayout;
 import com.tplink.cartoon.ui.widget.SwitchRelativeLayout;
 import com.tplink.cartoon.ui.widget.ZBubbleSeekBar;
 import com.tplink.cartoon.utils.IntentUtil;
@@ -75,6 +75,9 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     Button mDown;
     @BindView(R.id.rv_chapters)
     RecyclerView mRecycleView;
+    @BindView(R.id.rl_switch_night)
+    SwitchNightRelativeLayout mSwitchNight;
+
     private LinearLayoutManager mLayoutManager;
 
     @OnClick(R.id.iv_error)
@@ -125,11 +128,21 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
         IntentUtil.toSelectDownload(this, mPresenter.getComic());
     }
 
+    @OnClick(R.id.iv_light)
+    public void toSwitchNight(View view) {
+        mPresenter.switchNight(isNight);
+    }
+
     private ChapterViewpagerAdapter mAdapter;
 
     ChapterRecyclerAdapter mVerticalAdapter;
 
     private int mCurrentPosition;
+
+    @Override
+    public void setSwitchNightVisible(int visible, boolean isNight) {
+        mSwitchNight.setVisibility(visible, isNight);
+    }
 
     @Override
     public void getDataFinish() {
@@ -316,8 +329,13 @@ public class ComicChapterActivity extends BaseActivity<ChapterPresenter> impleme
     }
 
     @Override
+    public void switchSkin() {
+        switchModel();
+    }
+
+    @Override
     protected void initPresenter(Intent intent) {
-        mPresenter = new ChapterPresenter( this);
+        mPresenter = new ChapterPresenter(this);
         mPresenter.init((Comic) intent.getSerializableExtra(Constants.COMIC), intent.getIntExtra(Constants.COMIC_CHAPTERS, 0));
     }
 

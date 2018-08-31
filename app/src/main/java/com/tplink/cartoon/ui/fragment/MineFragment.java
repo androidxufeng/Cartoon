@@ -93,4 +93,10 @@ public class MineFragment extends BaseFragment<MinePresenter> implements IMineVi
     public void toGithub(){
         IntentUtil.toUrl(getActivity().getApplicationContext(),"https://github.com/androidxufeng/Cartoon");
     }
+
+    @Override
+    public void switchSkin(boolean isNight) {
+        mineAdapter.setNight(isNight);
+        mActivity.switchModel();
+    }
 }

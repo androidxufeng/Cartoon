@@ -8,9 +8,13 @@
 package com.tplink.cartoon.ui.presenter;
 
 import android.content.Context;
+import android.view.View;
 
+import com.orhanobut.hawk.Hawk;
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.MineTitle;
+import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.ui.activity.HomeActivity;
 import com.tplink.cartoon.ui.fragment.MineFragment;
 import com.tplink.cartoon.ui.source.Mine.MineDataSource;
 import com.tplink.cartoon.ui.widget.CustomDialog;
@@ -23,12 +27,14 @@ import java.util.List;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
+import skin.support.SkinCompatManager;
 
 public class MinePresenter extends BasePresenter<MineDataSource, MineFragment> {
 
     private List<MineTitle> mLists;
 
     private String size;
+    private boolean isNight;
 
     public MinePresenter(MineFragment view) {
         super(view);
@@ -63,6 +69,13 @@ public class MinePresenter extends BasePresenter<MineDataSource, MineFragment> {
         mLists.add(mTitle);
         mView.fillData(mLists);
         mView.getDataFinish();
+
+        try {
+            isNight = Hawk.get(Constants.MODEL);
+        } catch (Exception e) {
+            isNight = false;
+        }
+        mView.switchSkin(isNight);
     }
 
     public void onItemClick(int position) {
@@ -93,6 +106,33 @@ public class MinePresenter extends BasePresenter<MineDataSource, MineFragment> {
      * 更换皮肤
      */
     private void switchSkin() {
+        if (isNight) {
+            ((HomeActivity) mView.getActivity()).setSwitchNightVisible(View.GONE, isNight);
+            SkinCompatManager.getInstance().restoreDefaultTheme();
+            mView.showToast("更换成功");
+            Hawk.put(Constants.MODEL, Constants.DEFAULT_MODEL);
+            mView.switchSkin(!isNight);
+        } else {
+            SkinCompatManager.getInstance().loadSkin("night", new SkinCompatManager.SkinLoaderListener() {
+                @Override
+                public void onStart() {
+                    //mView.ShowToast("开始更换皮肤");
+                    ((HomeActivity) mView.getActivity()).setSwitchNightVisible(View.GONE, isNight);
+                }
+
+                @Override
+                public void onSuccess() {
+                    Hawk.put(Constants.MODEL, Constants.NIGHT_MODEL);
+                    mView.switchSkin(isNight);
+                }
+
+                @Override
+                public void onFailed(String errMsg) {
+                    mView.showToast("更换失败");
+                }
+            }, SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN); // load by suffix
+        }
+        isNight = !isNight;
     }
 
     /**

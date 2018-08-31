@@ -8,4 +8,6 @@
 package com.tplink.cartoon.ui.view;
 
 public interface IMineView<T> extends ILoadDataView<T> {
+
+     void switchSkin(boolean isNight);
 }

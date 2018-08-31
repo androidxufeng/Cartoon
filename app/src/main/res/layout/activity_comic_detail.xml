@@ -14,16 +14,14 @@
             android:id="@+id/iv_image"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/pic_default" />
+            android:scaleType="fitXY" />
 
         <ImageView
             android:id="@+id/iv_image_bg"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:alpha="0"
-            android:scaleType="fitXY"
-            android:src="@drawable/pic_default" />
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:id="@+id/ll_text"
@@ -39,14 +37,14 @@
                 android:id="@+id/tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorBg"
+                android:textColor="@color/colorWhite"
                 android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/tv_author_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorBg"
+                android:textColor="@color/colorWhite"
                 android:textSize="12dp" />
         </LinearLayout>
 
@@ -106,16 +104,17 @@
 
                         <Button
                             android:id="@+id/btn_read"
+                            style="?android:borderlessButtonStyle"
                             android:layout_width="0dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
                             android:layout_marginLeft="10dp"
                             android:layout_marginRight="10dp"
                             android:layout_weight="4"
-                            android:background="@drawable/detail_read_btn"
+                            android:background="@drawable/btn_start_read"
                             android:gravity="center"
                             android:text="开始阅读"
-                            android:textColor="@color/colorBg" />
+                            android:textColor="@color/colorWhite" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -301,6 +300,13 @@
                         android:background="@color/colorBg"
                         android:orientation="vertical" />
 
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycle_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ll_info"
+                        android:background="@color/colorBg" />
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
@@ -362,8 +368,6 @@
 
     <include layout="@layout/layout_floatbutton" />
 
-    <include layout="@layout/layout_loading" />
-
     <LinearLayout
         android:id="@+id/layout1_banner"
         android:layout_width="match_parent"
@@ -371,4 +375,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical" />
 
+    <include layout="@layout/layout_loading" />
+
+    <include layout="@layout/layout_night_cover" />
 </RelativeLayout>

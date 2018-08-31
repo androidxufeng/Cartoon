@@ -20,7 +20,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.orhanobut.hawk.Hawk;
 import com.tplink.cartoon.R;
+import com.tplink.cartoon.data.common.Constants;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.util.List;
@@ -33,6 +35,7 @@ public abstract class BaseFragmentActivity extends RxAppCompatActivity {
     protected List<Fragment> fragments;
 
     protected boolean isTrans;
+    private View NightModel;
 
     public boolean isTrans() {
         return isTrans;
@@ -88,6 +91,25 @@ public abstract class BaseFragmentActivity extends RxAppCompatActivity {
             e.printStackTrace();
         } finally {
             fragmentTransaction.commitAllowingStateLoss();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        switchModel();
+    }
+
+    public void switchModel() {
+        NightModel = findViewById(R.id.v_night);
+        try {
+            if (Hawk.get(Constants.MODEL)) {
+                NightModel.setVisibility(View.VISIBLE);
+            } else {
+                NightModel.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            NightModel.setVisibility(View.GONE);
         }
     }
 }

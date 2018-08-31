@@ -72,8 +72,10 @@ public class HistoryAdapter extends BookShelfAdapter<Comic> {
                     break;
                 case ITEM_FULL:
                     if (!isEditing) {
-                        holder.setImageResource(R.id.iv_select, R.drawable.continue_read);
+                        holder.setImageResource(R.id.iv_select, R.drawable.download_icon_finish);
+                        holder.setVisibility(R.id.tv_download_info, View.VISIBLE);
                     } else {
+                        holder.setVisibility(R.id.tv_download_info, View.GONE);
                         if (mMap.size() != 0 && mMap.get(position) == Constants.CHAPTER_SELECTED) {
                             holder.setImageResource(R.id.iv_select, R.drawable.item_selected);
                         } else {

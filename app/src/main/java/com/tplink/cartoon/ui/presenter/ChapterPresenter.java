@@ -13,7 +13,9 @@ package com.tplink.cartoon.ui.presenter;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
 
+import com.orhanobut.hawk.Hawk;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.bean.DBChapters;
 import com.tplink.cartoon.data.bean.PreloadChapters;
@@ -33,6 +35,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
+import skin.support.SkinCompatManager;
 
 public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChapterActivity> {
 
@@ -439,5 +442,35 @@ public class ChapterPresenter extends BasePresenter<ChapterDataSource, ComicChap
     @Override
     protected ChapterDataSource initDataSource() {
         return new ChapterDataSource(mView);
+    }
+
+    public void switchNight(final boolean isNight) {
+
+        if (isNight) {
+            mView.setSwitchNightVisible(View.GONE, isNight);
+            SkinCompatManager.getInstance().restoreDefaultTheme();
+            mView.showToast("更换成功");
+            Hawk.put(Constants.MODEL, Constants.DEFAULT_MODEL);
+            mView.switchSkin();
+        } else {
+            SkinCompatManager.getInstance().loadSkin("night", new SkinCompatManager.SkinLoaderListener() {
+                @Override
+                public void onStart() {
+                    //mView.ShowToast("开始更换皮肤");
+                    mView.setSwitchNightVisible(View.GONE, isNight);
+                }
+
+                @Override
+                public void onSuccess() {
+                    Hawk.put(Constants.MODEL, Constants.NIGHT_MODEL);
+                    mView.switchSkin();
+                }
+
+                @Override
+                public void onFailed(String errMsg) {
+                    mView.showToast("更换失败");
+                }
+            }, SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN); // load by suffix
+        }
     }
 }

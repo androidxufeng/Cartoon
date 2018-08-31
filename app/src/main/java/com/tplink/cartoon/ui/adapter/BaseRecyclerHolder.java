@@ -211,4 +211,10 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
         return this;
     }
 
+    public BaseRecyclerHolder setTextViewAppearanceColor(int viewId, int resId) {
+        TextView iv = getView(viewId);
+        iv.setTextAppearance(context,resId);
+        return this;
+    }
+
 }

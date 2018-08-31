@@ -19,13 +19,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <include layout="@layout/layout_reader_top"></include>
+        <include layout="@layout/layout_reader_top" />
 
-        <include layout="@layout/layout_reader_bottom"></include>
+        <include layout="@layout/layout_reader_bottom" />
 
     </com.tplink.cartoon.ui.widget.ReaderMenuLayout>
 
     <include layout="@layout/layout_switch_model" />
 
     <include layout="@layout/layout_loading" />
+
+    <include layout="@layout/layout_night_cover"/>
+
+    <com.tplink.cartoon.ui.widget.SwitchNightRelativeLayout
+        android:id="@+id/rl_switch_night"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </RelativeLayout>

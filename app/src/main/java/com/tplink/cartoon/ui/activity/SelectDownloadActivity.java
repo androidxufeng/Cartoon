@@ -19,9 +19,7 @@ import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.SelectDownloadAdapter;
 import com.tplink.cartoon.ui.presenter.SelectDownloadPresenter;
-import com.tplink.cartoon.ui.source.download.DownloadListDataSource;
 import com.tplink.cartoon.ui.view.ISelectDownloadView;
-import com.tplink.cartoon.ui.widget.DividerGridItemDecoration;
 import com.tplink.cartoon.ui.widget.NoScrollGridLayoutManager;
 import com.tplink.cartoon.utils.IntentUtil;
 
@@ -100,7 +98,6 @@ public class SelectDownloadActivity extends BaseActivity<SelectDownloadPresenter
             }
         });
         mRecycleView.setAdapter(mAdapter);
-        mRecycleView.addItemDecoration(new DividerGridItemDecoration(this, R.drawable.decorationlist_dark));
         mChapterNum.setText("共" + mComic.getChapters().size() + "话");
     }
 

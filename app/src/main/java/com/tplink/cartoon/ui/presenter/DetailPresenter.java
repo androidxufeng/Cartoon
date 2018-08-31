@@ -11,11 +11,11 @@ package com.tplink.cartoon.ui.presenter;
  * Ver 1.0, 18-8-1, xufeng, Create file
  */
 
+import android.annotation.TargetApi;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,12 +29,8 @@ import com.tplink.cartoon.utils.DisplayUtil;
 import com.tplink.cartoon.utils.ShowErrorTextUtil;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
-import org.reactivestreams.Publisher;
-
-import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
@@ -49,7 +45,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
     private Comic mComic;
 
     public DetailPresenter(ComicDetailActivity view) {
-        super( view);
+        super(view);
         mCompositeDisposable = new CompositeDisposable();
         mContext = view;
         mComic = new Comic();
@@ -171,6 +167,7 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
         mCompositeDisposable.add(disposable);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     public void orderIndex(LinearLayout mlayout) {
         Drawable img_location = mContext.getResources().getDrawable(R.drawable.location);
         img_location.setBounds(0, 0, img_location.getMinimumWidth(), img_location.getMinimumHeight());
@@ -179,24 +176,25 @@ public class DetailPresenter extends BasePresenter<DetailDataSource, ComicDetail
             TextView textView = itemView.getTextView();
             if (!isOrder()) {
                 textView.setText((position + 1) + " - " + mComic.getChapters().get(position));
-                if (mComic.getCurrentChapter() == (position + 1)) {
-                    textView.setTextColor(Color.parseColor("#ff9a6a"));
+                if (mComic.getCurrentChapter() == position) {
+                    textView.setTextAppearance(R.style.colorTextPrimary);
                     textView.setCompoundDrawables(null, null, img_location, null);
                     textView.setCompoundDrawablePadding(DisplayUtil.dip2px(mContext, 10));
                 } else {
-                    textView.setTextColor(Color.parseColor("#666666"));
+                    textView.setTextAppearance(R.style.colorTextBlack);
                     textView.setCompoundDrawables(null, null, null, null);
                 }
             } else {
-                if (mComic.getChapters().size() - mComic.getCurrentChapter() == position) {
-                    textView.setTextColor(Color.parseColor("#ff9a6a"));
+                if (mComic.getChapters().size() - mComic.getCurrentChapter() == position + 1) {
+                    textView.setTextAppearance(R.style.colorTextPrimary);
                     textView.setCompoundDrawables(null, null, img_location, null);
                     textView.setCompoundDrawablePadding(DisplayUtil.dip2px(mContext, 10));
                 } else {
-                    textView.setTextColor(Color.parseColor("#666666"));
+                    textView.setTextAppearance(R.style.colorTextBlack);
                     textView.setCompoundDrawables(null, null, null, null);
                 }
-                textView.setText((mComic.getChapters().size() - position) + " - " + mComic.getChapters().get(mComic.getChapters().size() - 1 - position));
+                textView.setText((mComic.getChapters().size() - position) + " - " +
+                        mComic.getChapters().get(mComic.getChapters().size() - 1 - position));
             }
 
             if (!isOrder()) {

@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#e2e2e2" />
+            android:background="@color/colorBottom" />
 
         <TextView
             android:id="@+id/tv_selected"
@@ -28,8 +28,8 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="#e2e2e2" />
+            android:layout_height="1dp"
+            android:background="@color/colorBottom" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,7 +65,7 @@
             <ImageView
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#e2e2e2" />
+                android:background="@color/colorBottom" />
 
             <RelativeLayout
                 android:id="@+id/rl_download"
@@ -101,10 +101,9 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/ll_bottom"
         android:layout_below="@id/rl_order"
-        android:background="@color/colorBgDark"
         android:overScrollMode="never"
-        android:padding="10dp"
-        android:scrollbars="none"/>
+        android:padding="5dp"
+        android:scrollbars="none" />
 
     <RelativeLayout
         android:id="@+id/rl_actionbar"
@@ -159,5 +158,6 @@
             android:src="@drawable/zhengxu" />
     </RelativeLayout>
 
+    <include layout="@layout/layout_night_cover"/>
 
 </RelativeLayout>

@@ -74,6 +74,14 @@ dependencies {
     implementation "org.greenrobot:greendao:$rootProject.ext.greenDao_version"
     implementation "org.greenrobot:greendao-generator:$rootProject.ext.greenDao_version"
 
+    //skin
+    implementation 'skin.support:skin-support:2.2.3'                   // skin-support basic widget
+    implementation 'skin.support:skin-support-design:2.2.3'            // skin-support-design material design support [selectable]
+    implementation 'skin.support:skin-support-cardview:2.2.3'          // skin-support-cardview CardView support [selectable]
+    implementation 'skin.support:skin-support-constraint-layout:2.2.3'
+
+    implementation 'com.orhanobut:hawk:2.0.1'
+
     //test
     testImplementation "junit:junit:$rootProject.ext.junit_version"
     androidTestImplementation "com.android.support.test:runner:$rootProject.ext.runner_version"

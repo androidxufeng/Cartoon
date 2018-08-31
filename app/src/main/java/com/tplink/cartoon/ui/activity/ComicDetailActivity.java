@@ -26,7 +26,6 @@ import com.tplink.cartoon.R;
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
 import com.tplink.cartoon.ui.presenter.DetailPresenter;
-import com.tplink.cartoon.ui.source.detail.DetailDataSource;
 import com.tplink.cartoon.ui.view.IDetailView;
 import com.tplink.cartoon.ui.widget.DetailFloatLinearLayout;
 import com.tplink.cartoon.ui.widget.DetailScrollView;

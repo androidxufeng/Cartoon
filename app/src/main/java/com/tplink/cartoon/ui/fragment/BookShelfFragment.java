@@ -7,7 +7,8 @@
  */
 package com.tplink.cartoon.ui.fragment;
 
-import android.graphics.Color;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -24,7 +25,6 @@ import com.tplink.cartoon.ui.fragment.bookshelf.CollectionFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.DownloadFragment;
 import com.tplink.cartoon.ui.fragment.bookshelf.HistoryFragment;
 import com.tplink.cartoon.ui.presenter.BookShelfPresenter;
-import com.tplink.cartoon.ui.source.BookShelf.BookShelfDataSource;
 import com.tplink.cartoon.ui.view.IBookShelfView;
 
 import java.util.ArrayList;
@@ -59,26 +59,29 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
     private HistoryFragment historyFragment;
     private DownloadFragment downloadFragment;
 
+    @TargetApi(Build.VERSION_CODES.M)
     @OnClick(R.id.rl_collect)
     public void toCollect() {
         resetTitle();
-        mCollect.setTextColor(Color.parseColor("#333333"));
+        mCollect.setTextAppearance(R.style.colorTextBlack);
         mViewpager.setCurrentItem(0);
         mBottomCollect.setVisibility(View.VISIBLE);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @OnClick(R.id.rl_history)
     public void toHistory() {
         resetTitle();
-        mHistory.setTextColor(Color.parseColor("#333333"));
+        mHistory.setTextAppearance(R.style.colorTextBlack);
         mViewpager.setCurrentItem(1);
         mBottomHistory.setVisibility(View.VISIBLE);
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @OnClick(R.id.rl_download)
     public void toDownload() {
         resetTitle();
-        mDownload.setTextColor(Color.parseColor("#333333"));
+        mDownload.setTextAppearance(R.style.colorTextBlack);
         mViewpager.setCurrentItem(2);
         mBottomDownload.setVisibility(View.VISIBLE);
     }
@@ -94,7 +97,7 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
 
     @Override
     protected void initPresenter() {
-        mPresenter = new BookShelfPresenter( this);
+        mPresenter = new BookShelfPresenter(this);
     }
 
     @Override
@@ -152,9 +155,9 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
     }
 
     public void resetTitle() {
-        mDownload.setTextColor(Color.parseColor("#999999"));
-        mCollect.setTextColor(Color.parseColor("#999999"));
-        mHistory.setTextColor(Color.parseColor("#999999"));
+        mDownload.setTextAppearance(R.style.colorTextColorLight);
+        mCollect.setTextAppearance(R.style.colorTextColorLight);
+        mHistory.setTextAppearance(R.style.colorTextColorLight);
         mBottomCollect.setVisibility(View.GONE);
         mBottomDownload.setVisibility(View.GONE);
         mBottomHistory.setVisibility(View.GONE);
@@ -186,9 +189,9 @@ public class BookShelfFragment extends BaseFragment<BookShelfPresenter> implemen
         fragments.get(mViewpager.getCurrentItem()).onSelect();
     }
 
-    public void quitEdit(){
+    public void quitEdit() {
         mEdit.setImageResource(R.drawable.edit);
-        showEditModel(fragments.get(mViewpager.getCurrentItem()),false);
+        showEditModel(fragments.get(mViewpager.getCurrentItem()), false);
         isEditing = false;
     }
 

@@ -60,7 +60,6 @@ public class CollectionFragment extends BaseBookShelfFragment<CollectionPresente
         NoScrollGridLayoutManager layoutManager = new NoScrollGridLayoutManager(mActivity, 3);
         layoutManager.setScrollEnabled(false);
         mRecycleView.setLayoutManager(layoutManager);
-        mRecycleView.addItemDecoration(new DividerGridItemDecoration(mActivity));
         mAdapter = new CollectionAdapter(mActivity, R.layout.item_collection);
         mRecycleView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);

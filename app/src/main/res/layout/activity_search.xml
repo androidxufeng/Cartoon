@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBg">
 
     <RelativeLayout
         android:id="@+id/rl_actionbar"
@@ -41,8 +42,8 @@
                 android:hint="输入作品名或作者名"
                 android:imeOptions="actionSearch"
                 android:singleLine="true"
-                android:textColor="@color/colorTextBlack"
-                android:textColorHint="@color/colorTextColorLight"
+                android:textColor="@color/colorSearchHintTextColorLight"
+                android:textColorHint="@color/colorHintTextColorLight"
                 android:textSize="14sp" />
 
             <ImageView
@@ -184,5 +185,6 @@
         android:textSize="14dp"
         android:visibility="gone" />
 
+    <include layout="@layout/layout_night_cover"/>
 
 </RelativeLayout>

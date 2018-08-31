@@ -11,9 +11,12 @@ package com.tplink.cartoon.ui.widget;
  * Ver 1.0, 18-8-9, xufeng, Create file
  */
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -43,13 +46,6 @@ public class IndexItemView extends LinearLayout {
         img_location.setBounds(0, 0, img_location.getMinimumWidth(), img_location.getMinimumHeight());
         mTitle = (TextView) view.findViewById(R.id.tv_title);
         mTitle.setText((position + 1) + "-" + title);
-        /*if (current == position + 1) {
-            mTitle.setTextColor(Color.parseColor("#ff9a6a"));
-            mTitle.setCompoundDrawables(null, null, img_location, null);
-            mTitle.setCompoundDrawablePadding(DisplayUtil.dip2px(getContext(), 10));
-        } else {
-            mTitle.setTextColor(Color.parseColor("#666666"));
-        }*/
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,13 +56,14 @@ public class IndexItemView extends LinearLayout {
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     public void setCurrentColor(boolean isCurrent) {
         if (isCurrent) {
-            mTitle.setTextColor(Color.parseColor("#ff9a6a"));
+            mTitle.setTextAppearance(R.style.colorTextPrimary);
             mTitle.setCompoundDrawables(null, null, img_location, null);
             mTitle.setCompoundDrawablePadding(DisplayUtil.dip2px(getContext(), 10));
         } else {
-            mTitle.setTextColor(Color.parseColor("#666666"));
+            mTitle.setTextAppearance(R.style.colorTextBlack);
             mTitle.setCompoundDrawables(null, null, null, null);
         }
     }
