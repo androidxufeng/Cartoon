@@ -19,6 +19,7 @@ import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.activity.DownloadChapterlistActivity;
 import com.tplink.cartoon.ui.activity.IndexActivity;
+import com.tplink.cartoon.ui.activity.NewListActivity;
 import com.tplink.cartoon.ui.activity.RankActivity;
 import com.tplink.cartoon.ui.activity.SearchActivity;
 import com.tplink.cartoon.ui.activity.SelectDownloadActivity;
@@ -110,6 +111,11 @@ public class IntentUtil {
     public static void toCategoryActivity(Context context, String type, int value) {
         Intent intent = new Intent(context, CategoryActivity.class);
         intent.putExtra(type, value);
+        context.startActivity(intent);
+    }
+
+    public static void toNewActivity(Context context) {
+        Intent intent = new Intent(context, NewListActivity.class);
         context.startActivity(intent);
     }
 }

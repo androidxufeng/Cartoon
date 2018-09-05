@@ -50,13 +50,8 @@ public class HomeDataSource implements IHomeDataSource {
             @Override
             public void subscribe(FlowableEmitter<List<Comic>> emitter) throws Exception {
                 List<Comic> mdats = new ArrayList<>();
-
                 //强推作品
-
                 Document recommend = Jsoup.connect(Constants.TENCENTHOMEPAGE).get();
-
-                //热门连载
-
                 //日漫馆
                 Document japan = Jsoup.connect(Constants.TENCENTJAPANHOT).get();
 

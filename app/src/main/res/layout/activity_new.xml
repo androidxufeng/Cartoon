@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBg"
+    android:orientation="vertical">
+
+    <com.tplink.cartoon.ui.widget.ElasticImageScrollView
+        android:id="@+id/ev_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_new"
+                android:layout_width="match_parent"
+                android:layout_height="175dp"
+                android:background="@drawable/head_new_bg" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_bookshelf"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/iv_new" />
+        </RelativeLayout>
+    </com.tplink.cartoon.ui.widget.ElasticImageScrollView>
+
+    <RelativeLayout
+        android:id="@+id/ll_actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_actionbar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
+
+            <RelativeLayout
+                android:id="@+id/rl_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0"
+                android:background="@color/colorBg">
+
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/colorBg"
+                    android:gravity="center"
+                    android:text="当季新作"
+                    android:textColor="@color/colorTextColor"
+                    android:textSize="17dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/iv_back_color"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:padding="12.5dp"
+                    android:src="@drawable/btn_back_color" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <include layout="@layout/layout_night_cover" />
+</RelativeLayout>

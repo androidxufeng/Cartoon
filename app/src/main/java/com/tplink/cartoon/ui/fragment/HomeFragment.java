@@ -93,7 +93,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
                 IntentUtil.toCategoryActivity(getActivity().getApplicationContext());
                 break;
             case R.id.ll_category3:
-                showToast("开发中，敬请期待");
+                IntentUtil.toNewActivity(getActivity());
                 break;
             default:
                 break;

@@ -58,6 +58,8 @@ public class Constants {
     public static String TENCENT_CATEGORY_URL_MIDDLE = "/state/pink";
     public static String TENCENT_CATEGORY_URL_FOOT = "/search/time/page/";
 
+    public static String TENCENT_NEWURL = "http://ac.qq.com/Comic/index/search/week/page/";
+
     /**
      * 表示当前章节的状态
      * 0 未选取 1 已选择 2 已下载
