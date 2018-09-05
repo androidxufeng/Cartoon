@@ -52,6 +52,12 @@ public class Constants {
 
     public static String TENCENT_SEARCH_RECOMMEND = TENCENTSEARCHBASE + "index";
 
+    public static String TENCENTCATEGORYURL = "http://ac.qq.com/Comic/index/state/pink";
+
+    public static String TENCENT_CATEGORY_URL_HEAD = "http://ac.qq.com/Comic/all";
+    public static String TENCENT_CATEGORY_URL_MIDDLE = "/state/pink";
+    public static String TENCENT_CATEGORY_URL_FOOT = "/search/time/page/";
+
     /**
      * 表示当前章节的状态
      * 0 未选取 1 已选择 2 已下载
@@ -74,5 +80,10 @@ public class Constants {
     public static final String MODEL = "model";
     public static final boolean DEFAULT_MODEL = false;
     public static final boolean NIGHT_MODEL = true;
+
+    public final static String CATEGORY_TITLE_THEME = "theme";
+    public final static String CATEGORY_TITLE_FINISH = "finish";
+    public final static String CATEGORY_TITLE_AUDIENCE = "audience";
+    public final static String CATEGORY_TITLE_NATION = "nation";
 
 }

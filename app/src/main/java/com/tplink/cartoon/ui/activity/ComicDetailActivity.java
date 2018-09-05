@@ -247,6 +247,7 @@ public class ComicDetailActivity extends BaseActivity<DetailPresenter> implement
             indexItemView.setListener(this);
             mIndex.addView(indexItemView);
         }
+        mScrollView.setInnerHeight();
         setCollect(comic.getIsCollected());
     }
 

@@ -8,10 +8,11 @@
  */
 package com.tplink.cartoon.ui.fragment;
 
-import android.graphics.Color;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -89,7 +90,7 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
                 IntentUtil.toRankActivity(getActivity());
                 break;
             case R.id.ll_category2:
-                showToast("开发中，敬请期待");
+                IntentUtil.toCategoryActivity(getActivity().getApplicationContext());
                 break;
             case R.id.ll_category3:
                 showToast("开发中，敬请期待");
@@ -207,15 +208,16 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
             }
 
             @Override
+            @TargetApi(Build.VERSION_CODES.M)
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             public void onAlphaActionBar(float a) {
                 if (a < 1) {
-                    mHomeTitle1.setTextColor(Color.parseColor("#ffffff"));
-                    mHomeTitle2.setTextColor(Color.parseColor("#ffffff"));
+                    mHomeTitle1.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorWhite));
+                    mHomeTitle2.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorWhite));
                     mSearch.setImageResource(R.drawable.search);
                 } else {
-                    mHomeTitle1.setTextColor(Color.parseColor("#666666"));
-                    mHomeTitle2.setTextColor(Color.parseColor("#ff9a6a"));
+                    mHomeTitle1.setTextAppearance(R.style.colorTextBlack);
+                    mHomeTitle2.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
                     mSearch.setImageResource(R.drawable.search_color);
                 }
                 mActionBarBg.setAlpha(a);
@@ -310,10 +312,22 @@ public class HomeFragment extends BaseFragment<HomePresenter> implements
     public void onTitleClick(RecyclerView parent, View view, int type) {
         switch (type) {
             case Constants.TYPE_RANK_LIST:
-                showToast("更多排行开发中");
+                IntentUtil.toRankActivity(getActivity());
                 break;
             case Constants.TYPE_RECOMMEND:
                 showToast("更多热门推荐开发中");
+                break;
+            case Constants.TYPE_GIRL_RANK:
+                IntentUtil.toCategoryActivity(getActivity(), Constants.CATEGORY_TITLE_AUDIENCE, 2);
+                break;
+            case Constants.TYPE_BOY_RANK:
+                IntentUtil.toCategoryActivity(getActivity(), Constants.CATEGORY_TITLE_AUDIENCE, 1);
+                break;
+            case Constants.TYPE_HOT_SERIAL:
+                IntentUtil.toCategoryActivity(getActivity(), Constants.CATEGORY_TITLE_FINISH, 1);
+                break;
+            case Constants.TYPE_HOT_JAPAN:
+                IntentUtil.toCategoryActivity(getActivity(), Constants.CATEGORY_TITLE_NATION, 4);
                 break;
             default:
                 showToast("开发中");

@@ -20,6 +20,7 @@
             android:id="@+id/iv_image_bg"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:contentDescription="@string/app_name"
             android:alpha="0"
             android:scaleType="fitXY" />
 
@@ -300,12 +301,12 @@
                         android:background="@color/colorBg"
                         android:orientation="vertical" />
 
-                    <android.support.v7.widget.RecyclerView
-                        android:id="@+id/recycle_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/ll_info"
-                        android:background="@color/colorBg" />
+                    <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/recycle_view"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@id/ll_info"-->
+                        <!--android:background="@color/colorBg" />-->
 
                     <ImageView
                         android:layout_width="match_parent"

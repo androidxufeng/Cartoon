@@ -2,7 +2,6 @@ package com.tplink.cartoon.ui.widget;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -11,59 +10,64 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import com.tplink.cartoon.R;
 import com.tplink.cartoon.utils.DisplayUtil;
+
 
 /***
  * 下拉回弹的ScrollView
  * @author 皓然
  *
  */
-public class ElasticScrollView extends ScrollView {
+public class ElasticHeadScrollView extends ScrollView {
     private OnScrollListener listener;
     // 拖动的距离 size = 4 的意思 只允许拖动屏幕的1/4
     private static final int size = 3;
     private ViewGroup inner;
     private float y;
     private Rect normal = new Rect();
+
     private RecyclerView mRecyclerView;
     private Context context;
+    private RecyclerView mSelectRecycleView;
+
 
     public void setListener(OnScrollListener listener) {
         this.listener = listener;
     }
 
-    public ElasticScrollView(Context context, AttributeSet attrs) {
+    public ElasticHeadScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
         // TODO Auto-generated constructor stub
     }
 
 
-    public ElasticScrollView(Context context) {
+    public ElasticHeadScrollView(Context context) {
         super(context);
         // TODO Auto-generated constructor stub
     }
 
 
-    private ElasticScrollView scrollViewListener = null;
+    private ElasticHeadScrollView scrollViewListener = null;
 
 
     @Override
     protected void onScrollChanged(int x, int y, int oldx, int oldy) {
         super.onScrollChanged(x, y, oldx, oldy);
         int height = mRecyclerView.getHeight() - y + DisplayUtil.getBottomStatusHeight(context);
-        if (height == DisplayUtil.dip2px(context, 534) ||
-                height == DisplayUtil.dip2px(context, 535)) {
-            if (listener != null) {
+        if (listener != null) {
+            if (height == DisplayUtil.dip2px(context, 375)) {
                 listener.onScrollToBottom();
+            }
+            if (y <= DisplayUtil.dip2px(context, 40)) {
+                listener.onAlphaActionBar(((float) y) / DisplayUtil.dip2px(context, 40));
+            } else {
+                listener.onAlphaActionBar(1f);
             }
         }
     }
-
-    ImageView mLoadingTop;
 
     //获取到ScrollView内部的子View,并赋值给inner
     @Override
@@ -73,19 +77,11 @@ public class ElasticScrollView extends ScrollView {
         if (getChildCount() > 0) {
             inner = (ViewGroup) getChildAt(0);
             if (inner.getChildCount() != 1) {
-                mLoadingTop = (ImageView) inner.findViewById(R.id.iv_loading_top);
                 mRecyclerView = (RecyclerView) inner.findViewById(R.id.rv_bookshelf);
-                initAnimation();
+                mSelectRecycleView = (RecyclerView) inner.findViewById(R.id.rv_select);
             }
         }
         setOverScrollMode(OVER_SCROLL_NEVER);//取消5.0效果
-    }
-
-    //初始化动画
-    private void initAnimation() {
-        mLoadingTop.setImageResource(R.drawable.loading_top);
-        AnimationDrawable animationDrawable = (AnimationDrawable) mLoadingTop.getDrawable();
-        animationDrawable.start();
     }
 
     //重写滑动方法
@@ -114,9 +110,6 @@ public class ElasticScrollView extends ScrollView {
             case MotionEvent.ACTION_MOVE:
                 final float preY = y;
                 float nowY = ev.getY();
-                /**
-                 * size=4 表示 拖动的距离为屏幕的高度的1/4
-                 */
                 int deltaY;
                 deltaY = (int) Math.sqrt(Math.abs(nowY - preY) * 2);
                 // 滚动
@@ -177,15 +170,17 @@ public class ElasticScrollView extends ScrollView {
 
     public interface OnScrollListener {
         void onScrollToBottom();
+
+        void onAlphaActionBar(float a);
     }
 
     /**
      * 强制设置内层VIEW的高度，防止刷新较慢导致显示不全
      */
-    public void setInnerHeight(){
-        if(inner!=null){
-            int height = mRecyclerView.getHeight()+mLoadingTop.getHeight();
-            inner.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,height));
+    public void setInnerHeight() {
+        if (inner != null) {
+            int height = mRecyclerView.getHeight() + mSelectRecycleView.getHeight();
+            inner.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
         }
     }
 }

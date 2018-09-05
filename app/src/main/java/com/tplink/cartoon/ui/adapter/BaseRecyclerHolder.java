@@ -83,6 +83,7 @@ public class BaseRecyclerHolder extends RecyclerView.ViewHolder {
         if (text == null) {
             tv.setVisibility(View.GONE);
         } else {
+            tv.setVisibility(View.VISIBLE);
             tv.setText(text);
         }
         return this;

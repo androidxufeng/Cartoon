@@ -16,7 +16,6 @@ import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.ui.adapter.BaseRecyclerAdapter;
 import com.tplink.cartoon.ui.adapter.RankAdapter;
 import com.tplink.cartoon.ui.presenter.RankPresenter;
-import com.tplink.cartoon.ui.source.rank.RankDataSource;
 import com.tplink.cartoon.ui.view.IRankView;
 import com.tplink.cartoon.ui.widget.CustomTab;
 import com.tplink.cartoon.ui.widget.ElasticScrollView;
@@ -81,8 +80,10 @@ public class RankActivity extends BaseActivity<RankPresenter> implements IRankVi
         mAdapter.setOnItemClickListener(new BaseRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(RecyclerView parent, View view, int position) {
-                Comic comic = mAdapter.getItems(position);
-                IntentUtil.toComicDetail(RankActivity.this, comic.getId(), comic.getTitle());
+                if (position != mAdapter.getItemCount() - 1) {
+                    Comic comic = mAdapter.getItems(position);
+                    IntentUtil.toComicDetail(RankActivity.this, comic.getId(), comic.getTitle());
+                }
             }
         });
     }
@@ -93,8 +94,8 @@ public class RankActivity extends BaseActivity<RankPresenter> implements IRankVi
     }
 
     @OnClick(R.id.iv_back_color)
-    public void finish(View view) {
-        this.finish();
+    public void back(View view) {
+        finish();
     }
 
     @OnClick(R.id.iv_search)

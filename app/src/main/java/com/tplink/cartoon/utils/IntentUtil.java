@@ -14,6 +14,7 @@ import android.net.Uri;
 
 import com.tplink.cartoon.data.bean.Comic;
 import com.tplink.cartoon.data.common.Constants;
+import com.tplink.cartoon.ui.activity.CategoryActivity;
 import com.tplink.cartoon.ui.activity.ComicChapterActivity;
 import com.tplink.cartoon.ui.activity.ComicDetailActivity;
 import com.tplink.cartoon.ui.activity.DownloadChapterlistActivity;
@@ -97,7 +98,18 @@ public class IntentUtil {
 
     public static void toQQchat(Context context, String number) {
         //uin是发送过去的qq号码
-        String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + number+"version=1";
+        String url = "mqqwpa://im/chat?chat_type=wpa&uin=" + number + "version=1";
         context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+    }
+
+    public static void toCategoryActivity(Context context) {
+        Intent intent = new Intent(context, CategoryActivity.class);
+        context.startActivity(intent);
+    }
+
+    public static void toCategoryActivity(Context context, String type, int value) {
+        Intent intent = new Intent(context, CategoryActivity.class);
+        intent.putExtra(type, value);
+        context.startActivity(intent);
     }
 }

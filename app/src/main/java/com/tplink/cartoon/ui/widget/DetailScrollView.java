@@ -9,9 +9,11 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
@@ -109,6 +111,16 @@ public class DetailScrollView extends ScrollView {
         mDetailView = mMoveView.getChildAt(1);
         mLoadingBottom = mMoveView.getChildAt(3);
         setOverScrollMode(OVER_SCROLL_NEVER);//取消5.0效果
+    }
+
+    /**
+     * 强制设置内层VIEW的高度，防止刷新较慢导致显示不全
+     */
+    public void setInnerHeight() {
+        if (inner != null) {
+            int height = mMoveView.getHeight() + DisplayUtil.dip2px(getContext(), 140);
+            inner.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+        }
     }
 
     //重写滑动方法

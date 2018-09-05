@@ -199,7 +199,7 @@
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
                     android:text="别家"
-                    android:textColor="@color/colorBg"
+                    android:textColor="@color/colorWhite"
                     android:textSize="16dp" />
 
                 <TextView
@@ -209,7 +209,7 @@
                     android:layout_gravity="center_vertical"
                     android:padding="5dp"
                     android:text="腾讯"
-                    android:textColor="@color/colorBg"
+                    android:textColor="@color/colorWhite"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
